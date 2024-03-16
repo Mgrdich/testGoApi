@@ -22,7 +22,7 @@ func GetAppConfig() *AppConfig {
 	if appConfig == nil {
 		appConfig = &AppConfig{
 			Port:          os.Getenv("PORT"),
-			PostgresqlUrl: os.Getenv("postgresql"),
+			PostgresqlUrl: os.Getenv("POSTGRESQL"),
 		}
 	}
 
