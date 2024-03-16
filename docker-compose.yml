@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  server:
+    build:
+      context: .
+    ports:
+      - 8080:8080
+
+  postgres:
+    image: 'postgres:16.2'
+    ports:
+      - 5433:5432
+    restart: always
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+    volumes:
+      - ./db-data/postgres/:/var/lib/postgresql/data/
