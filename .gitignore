@@ -261,3 +261,5 @@ fabric.properties
 db-data/
 
 .idea/
+
+.env
