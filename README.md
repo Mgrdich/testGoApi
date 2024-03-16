@@ -9,6 +9,12 @@ Project demonstrates how to create Go Backend project using
 
 ## Start the application
 
+create `.env` file
+```shell
+PORT=****
+postgresql=postgres://username:password@localhost:5432/db-name
+```
+
 ```shell
 make run
 ```
