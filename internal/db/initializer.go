@@ -1,7 +1,6 @@
 package db
 
 import (
-	".com/configs"
 	".com/internal/db/sqlc"
 	"context"
 	"errors"
@@ -22,7 +21,7 @@ func ConnectPostgresql(url string) (*pgx.Conn, error) {
 		return nil, errors.New("database instance exists")
 	}
 
-	conn, err := pgx.Connect(context.Background(), configs.GetAppConfig().PostgresqlUrl)
+	conn, err := pgx.Connect(context.Background(), url)
 	if err != nil {
 		log.Fatalf("Unable to connect to database: %v\n", err)
 	}
