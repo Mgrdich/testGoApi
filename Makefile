@@ -20,3 +20,8 @@ migrate-create:
 	--dir "file://internal/db/migrations" \
 	--to file://internal/db/schemas.sql \
 	--dev-url ${POSTGRESQL}?sslmode=disable
+
+migrate-apply:
+	atlas migrate push test-go-api \
+	--dir "file://internal/db/migrations" \
+	--dev-url ${POSTGRESQL}?sslmode=disable
