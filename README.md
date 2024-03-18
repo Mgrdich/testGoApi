@@ -15,7 +15,7 @@ create `.env` file at root
 PORT=8080
 POSTGRESQL=postgres://username:password@localhost:5432/db-name
 GOOSE_DRIVER=postgres
-GOOSE_DBSTRING="user=username password=password dbname=db-name sslmode=disable"
+GOOSE_DBSTRING=${POSTGRESQL}
 GOOSE_MIGRATION_DIR=./internal/db/migrations
 ```
 
