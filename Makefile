@@ -1,3 +1,5 @@
+include .env
+
 generate:
 	sqlc generate
 
@@ -12,3 +14,9 @@ build: generate
 
 run: generate
 	go run cmd/server.go
+
+migrate-create:
+	atlas migrate diff "${name}" \
+	--dir "file://internal/db/migrations" \
+	--to file://internal/db/schemas.sql \
+	--dev-url ${POSTGRESQL}?sslmode=disable

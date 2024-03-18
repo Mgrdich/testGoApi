@@ -263,3 +263,5 @@ db-data/
 .idea/
 
 .env
+
+atlas.hcl
