@@ -1,4 +1,6 @@
-CREATE TABLE movies
+-- +goose Up
+-- +goose StatementBegin
+CREATE TABLE MOVIES
 (
     id           uuid PRIMARY KEY DEFAULT GEN_RANDOM_UUID(),
     title        varchar(30),
@@ -8,11 +10,9 @@ CREATE TABLE movies
     created_at   TIMESTAMP        DEFAULT CURRENT_TIMESTAMP,
     updated_at   TIMESTAMP        DEFAULT CURRENT_TIMESTAMP
 );
+-- +goose StatementEnd
 
-
-CREATE TABLE person
-(
-    id         uuid PRIMARY KEY DEFAULT GEN_RANDOM_UUID(),
-    first_name varchar(30),
-    last_name  varchar(40)
-);
+-- +goose Down
+-- +goose StatementBegin
+DROP TABLE MOVIES;
+-- +goose StatementEnd

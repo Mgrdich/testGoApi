@@ -16,12 +16,22 @@ run: generate
 	go run cmd/server.go
 
 migrate-create:
-	atlas migrate diff "${name}" \
-	--dir "file://internal/db/migrations" \
-	--to file://internal/db/schemas.sql \
-	--dev-url ${POSTGRESQL}?sslmode=disable
+	goose create ${n} sql
 
-migrate-apply:
-	atlas migrate push test-go-api \
-	--dir "file://internal/db/migrations" \
-	--dev-url ${POSTGRESQL}?sslmode=disable
+migrate-up:
+	goose up
+
+migrate-up-to:
+	goose up-to ${v}
+
+migrate-down:
+	goose down
+
+migrate-down-to:
+	goose down-to ${v}
+
+migrate-status:
+	goose status
+
+migrate-version:
+	goose version
