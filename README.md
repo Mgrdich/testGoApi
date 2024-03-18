@@ -22,3 +22,9 @@ GOOSE_MIGRATION_DIR=./internal/db/migrations
 ```shell
 make run
 ```
+
+## For Migrations
+* if you want to create new migration run `make migrate-create n=name-of-migration` it will create new file in `internal/db/migrations` with the correct name edit the up and down statements.
+* make you database up to date `make migrate-up`.
+* with `make migrate-down` please remove the associated file with it as well.
+* Make migrations file for `atomic` operations.

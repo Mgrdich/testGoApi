@@ -36,3 +36,6 @@ migrate-status:
 
 migrate-version:
 	goose version
+
+migrate-validate:
+	goose validate
