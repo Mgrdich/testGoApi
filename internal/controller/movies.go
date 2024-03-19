@@ -1,16 +1,17 @@
 package controller
 
 import (
+	"errors"
+	"net/http"
+	"time"
+
 	".com/internal/db"
 	".com/internal/models"
 	".com/internal/server"
 	".com/internal/util"
-	"errors"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 	"github.com/google/uuid"
-	"net/http"
-	"time"
 )
 
 type movieDTO struct {
