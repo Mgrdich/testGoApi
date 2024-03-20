@@ -12,8 +12,8 @@ import (
 )
 
 const createMovie = `-- name: CreateMovie :one
-INSERT INTO movies (title, director, release_at, ticket_price, updated_at)
-values ($1, $2, $3, $4, $5)
+INSERT INTO MOVIES (TITLE, DIRECTOR, RELEASE_AT, TICKET_PRICE)
+VALUES ($1, $2, $3, $4)
 RETURNING id, title, director, release_at, ticket_price, created_at, updated_at
 `
 
@@ -22,7 +22,6 @@ type CreateMovieParams struct {
 	Director    pgtype.Text
 	ReleaseAt   pgtype.Date
 	TicketPrice pgtype.Numeric
-	UpdatedAt   pgtype.Timestamp
 }
 
 func (q *Queries) CreateMovie(ctx context.Context, arg CreateMovieParams) (Movie, error) {
@@ -31,7 +30,6 @@ func (q *Queries) CreateMovie(ctx context.Context, arg CreateMovieParams) (Movie
 		arg.Director,
 		arg.ReleaseAt,
 		arg.TicketPrice,
-		arg.UpdatedAt,
 	)
 	var i Movie
 	err := row.Scan(
@@ -48,8 +46,8 @@ func (q *Queries) CreateMovie(ctx context.Context, arg CreateMovieParams) (Movie
 
 const deleteMovie = `-- name: DeleteMovie :exec
 DELETE
-FROM movies
-where id = $1
+FROM MOVIES
+WHERE ID = $1
 `
 
 func (q *Queries) DeleteMovie(ctx context.Context, id pgtype.UUID) error {
@@ -59,7 +57,7 @@ func (q *Queries) DeleteMovie(ctx context.Context, id pgtype.UUID) error {
 
 const getAllMovies = `-- name: GetAllMovies :many
 SELECT id, title, director, release_at, ticket_price, created_at, updated_at
-from movies
+FROM MOVIES
 `
 
 func (q *Queries) GetAllMovies(ctx context.Context) ([]Movie, error) {
@@ -92,7 +90,7 @@ func (q *Queries) GetAllMovies(ctx context.Context) ([]Movie, error) {
 
 const getMovie = `-- name: GetMovie :one
 SELECT id, title, director, release_at, ticket_price, created_at, updated_at
-FROM movies
+FROM MOVIES
 WHERE ID = $1
 `
 
@@ -113,11 +111,11 @@ func (q *Queries) GetMovie(ctx context.Context, id pgtype.UUID) (Movie, error) {
 
 const updateMovie = `-- name: UpdateMovie :one
 UPDATE movies
-SET title=$2,
-    director=$3,
-    release_at=$4,
-    ticket_price=$5,
-    updated_at=$6
+SET TITLE=$2,
+    DIRECTOR=$3,
+    RELEASE_AT=$4,
+    TICKET_PRICE=$5,
+    UPDATED_AT=$6
 WHERE id = $1
 RETURNING id, title, director, release_at, ticket_price, created_at, updated_at
 `

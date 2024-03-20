@@ -8,7 +8,7 @@ import (
 
 func GetMoviesRouter(r chi.Router) {
 
-	moviesController := controller.NewMoviesController(services.NewMemoryMoviesStore())
+	moviesController := controller.NewMoviesController(services.NewMoviesService())
 
 	r.Get("/", moviesController.HandleGetAllMovies)
 	r.Post("/", moviesController.HandleCreateMovie)

@@ -129,6 +129,7 @@ func (mC *MoviesController) HandleCreateMovie(w http.ResponseWriter, r *http.Req
 		return
 	}
 
+	render.Status(r, http.StatusCreated)
 	render.Render(w, r, newMovieDTO(movie))
 }
 

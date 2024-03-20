@@ -7,6 +7,8 @@ import (
 	"context"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
+	"math/big"
+	"time"
 )
 
 type MoviesService struct {
@@ -48,7 +50,7 @@ func (s *MoviesService) GetAll() ([]models.Movie, error) {
 }
 
 func (s *MoviesService) GetByID(id uuid.UUID) (*models.Movie, error) {
-	dbMovie, err := s.q.GetMovie(context.Background(), pgtype.UUID{Bytes: id})
+	dbMovie, err := s.q.GetMovie(context.Background(), pgtype.UUID{Bytes: id, Valid: true})
 	if err != nil {
 		return nil, err
 	}
@@ -59,13 +61,43 @@ func (s *MoviesService) GetByID(id uuid.UUID) (*models.Movie, error) {
 }
 
 func (s *MoviesService) Create(param models.CreateMovieParam) (*models.Movie, error) {
-	return nil, nil
+	dbParam := db.CreateMovieParams{
+		Title:       db2.ToText(param.Title),
+		Director:    db2.ToText(param.Director),
+		ReleaseAt:   db2.ToDate(param.ReleaseDate),
+		TicketPrice: db2.ToNumeric(big.NewInt(int64(param.TicketPrice))), // TODO research and fix this type
+	}
+	dbMovie, err := s.q.CreateMovie(context.Background(), dbParam)
+	if err != nil {
+		return nil, err
+	}
+
+	movie := dbMovieToMovie(dbMovie)
+
+	return &movie, nil
 }
 
 func (s *MoviesService) Update(id uuid.UUID, param models.UpdateMovieParam) (*models.Movie, error) {
-	return nil, nil
+	dbParam := db.UpdateMovieParams{
+		Title:       db2.ToText(param.Title),
+		Director:    db2.ToText(param.Director),
+		ReleaseAt:   db2.ToDate(param.ReleaseDate),
+		TicketPrice: db2.ToNumeric(big.NewInt(int64(param.TicketPrice))), // TODO research and fix this type , i think it should be string
+		UpdatedAt:   db2.ToTimeStamp(time.Now().UTC()),
+	}
+	dbMovie, err := s.q.UpdateMovie(context.Background(), dbParam)
+	if err != nil {
+		return nil, err
+	}
+
+	movie := dbMovieToMovie(dbMovie)
+
+	return &movie, nil
 }
 
 func (s *MoviesService) Delete(id uuid.UUID) error {
-	return nil
+	return s.q.DeleteMovie(context.Background(), pgtype.UUID{
+		Bytes: id,
+		Valid: true,
+	})
 }
