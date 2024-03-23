@@ -13,24 +13,18 @@ import (
 	"github.com/google/uuid"
 )
 
-type movieCtxKeyType string
-
-const movieCtxKey movieCtxKeyType = "movie"
-
-// Define other keys as needed
-
-func GetMovieCtx(ctx context.Context) models.Movie {
-	return ctx.Value(movieCtxKey).(models.Movie)
+func GetMovieCtx(ctx context.Context) *models.Movie {
+	return ctx.Value("movie").(*models.Movie)
 }
 
 func SetMovieCtx(ctx context.Context, movie *models.Movie) context.Context {
-	return context.WithValue(ctx, movieCtxKey, movie)
+	return context.WithValue(ctx, "movie", movie)
 }
 
 // MovieCtx middleware adds movie information to the request context
 func MovieCtx(moviesStore db.MoviesStore) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fn := (func(w http.ResponseWriter, r *http.Request) {
 			movieID := chi.URLParam(r, "id")
 			if movieID == "" {
 				render.Render(w, r, server.ErrorBadRequest)
@@ -44,7 +38,7 @@ func MovieCtx(moviesStore db.MoviesStore) func(next http.Handler) http.Handler {
 			}
 
 			movie, err := moviesStore.GetByID(id)
-			fmt.Println(movie)
+
 			if err != nil {
 				render.Render(w, r, server.ErrorNotFound)
 				return
@@ -57,5 +51,6 @@ func MovieCtx(moviesStore db.MoviesStore) func(next http.Handler) http.Handler {
 			fmt.Println(ctx)
 			next.ServeHTTP(w, r.WithContext(ctx))
 		})
+		return http.HandlerFunc(fn)
 	}
 }

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	".com/internal/db"
+	".com/internal/middlewares"
 	".com/internal/models"
 	".com/internal/server"
 	".com/internal/util"
@@ -45,23 +46,7 @@ func NewMoviesController(store db.MoviesStore) *MoviesController {
 }
 
 func (mC *MoviesController) HandleGetMovie(w http.ResponseWriter, r *http.Request) {
-	idParam := chi.URLParam(r, "id")
-	id, err := uuid.Parse(idParam)
-	if err != nil {
-		render.Render(w, r, server.ErrorBadRequest)
-		return
-	}
-
-	movie, err := mC.moviesStore.GetByID(id)
-	if err != nil {
-		var rnfErr *util.RecordNotFoundError
-		if errors.As(err, &rnfErr) {
-			render.Render(w, r, server.ErrorNotFound)
-			return
-		}
-		render.Render(w, r, server.ErrorInternalServerError)
-	}
-
+	movie := middlewares.GetMovieCtx(r.Context())
 	mr := newMovieDTO(movie)
 	render.Render(w, r, mr)
 }

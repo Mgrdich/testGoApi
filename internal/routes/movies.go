@@ -2,7 +2,7 @@ package routes
 
 import (
 	".com/internal/controller"
-	".com/internal/routes/middlewares"
+	".com/internal/middlewares"
 	".com/internal/services"
 	"github.com/go-chi/chi/v5"
 )
