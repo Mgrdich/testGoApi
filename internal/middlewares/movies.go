@@ -15,8 +15,9 @@ import (
 const movieContextKey = "middlewares.movieContextKey"
 
 // GetMovieCtx GetMovieContext retrieves movie information from the context
-func GetMovieCtx(ctx context.Context) *models.Movie {
-	return ctx.Value(movieContextKey).(*models.Movie)
+func GetMovieCtx(ctx context.Context) (*models.Movie, bool) {
+	movie, ok := ctx.Value(movieContextKey).(*models.Movie)
+	return movie, ok
 }
 
 // SetMovieCtx SetMovieContext sets movie information in the context
