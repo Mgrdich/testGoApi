@@ -12,7 +12,7 @@ import (
 	"github.com/google/uuid"
 )
 
-const movieContextKey = "movieContextKey"
+const movieContextKey = "middlewares.movieContextKey"
 
 // GetMovieCtx GetMovieContext retrieves movie information from the context
 func GetMovieCtx(ctx context.Context) *models.Movie {
