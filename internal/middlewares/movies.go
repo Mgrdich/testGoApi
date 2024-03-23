@@ -12,28 +12,19 @@ import (
 	"github.com/google/uuid"
 )
 
-// Define a custom type for the context key
-type movieContextKeyType struct{}
+const movieContextKey = "movieContextKey"
 
-// Implement the String method for the context key type
-func (k *movieContextKeyType) String() string {
-	return "movie"
-}
-
-// Create a global instance of the movie context key
-var movieContextKey = &movieContextKeyType{}
-
-// GetMovieContext retrieves movie information from the context
+// GetMovieCtx GetMovieContext retrieves movie information from the context
 func GetMovieCtx(ctx context.Context) *models.Movie {
 	return ctx.Value(movieContextKey).(*models.Movie)
 }
 
-// SetMovieContext sets movie information in the context
+// SetMovieCtx SetMovieContext sets movie information in the context
 func SetMovieCtx(ctx context.Context, movie *models.Movie) context.Context {
 	return context.WithValue(ctx, movieContextKey, movie)
 }
 
-// MovieContextMiddleware adds movie information to the request context
+// MovieCtx MovieContextMiddleware adds movie information to the request context
 func MovieCtx(moviesStore db.MoviesStore) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		fn := func(w http.ResponseWriter, r *http.Request) {
