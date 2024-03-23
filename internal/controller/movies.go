@@ -1,16 +1,17 @@
 package controller
 
 import (
+	"errors"
+	"net/http"
+	"time"
+
 	".com/internal/db"
+	".com/internal/middlewares"
 	".com/internal/models"
 	".com/internal/server"
 	".com/internal/util"
-	"errors"
-	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 	"github.com/google/uuid"
-	"net/http"
-	"time"
 )
 
 type movieDTO struct {
@@ -44,21 +45,10 @@ func NewMoviesController(store db.MoviesStore) *MoviesController {
 }
 
 func (mC *MoviesController) HandleGetMovie(w http.ResponseWriter, r *http.Request) {
-	idParam := chi.URLParam(r, "id")
-	id, err := uuid.Parse(idParam)
-	if err != nil {
+	movie, ok := middlewares.GetMovieCtx(r.Context())
+	if !ok {
 		render.Render(w, r, server.ErrorBadRequest)
 		return
-	}
-
-	movie, err := mC.moviesStore.GetByID(id)
-	if err != nil {
-		var rnfErr *util.RecordNotFoundError
-		if errors.As(err, &rnfErr) {
-			render.Render(w, r, server.ErrorNotFound)
-			return
-		}
-		render.Render(w, r, server.ErrorInternalServerError)
 	}
 
 	mr := newMovieDTO(movie)
@@ -148,9 +138,8 @@ func (mr *UpdateMovieRequest) Bind(r *http.Request) error {
 }
 
 func (mC *MoviesController) HandleUpdateMovie(w http.ResponseWriter, r *http.Request) {
-	idParam := chi.URLParam(r, "id")
-	id, err := uuid.Parse(idParam)
-	if err != nil {
+	movie, ok := middlewares.GetMovieCtx(r.Context())
+	if !ok {
 		render.Render(w, r, server.ErrorBadRequest)
 		return
 	}
@@ -161,7 +150,7 @@ func (mC *MoviesController) HandleUpdateMovie(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	movie, err := mC.moviesStore.Update(id, models.UpdateMovieParam{
+	updatedMovie, err := mC.moviesStore.Update(movie.ID, models.UpdateMovieParam{
 		Title:       data.Title,
 		Director:    data.Director,
 		ReleaseDate: time.Now().UTC(),
@@ -179,18 +168,17 @@ func (mC *MoviesController) HandleUpdateMovie(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	render.Render(w, r, newMovieDTO(movie))
+	render.Render(w, r, newMovieDTO(updatedMovie))
 }
 
 func (mC *MoviesController) HandleDeleteMovie(w http.ResponseWriter, r *http.Request) {
-	idParam := chi.URLParam(r, "id")
-	id, err := uuid.Parse(idParam)
-	if err != nil {
+	movie, ok := middlewares.GetMovieCtx(r.Context())
+	if !ok {
 		render.Render(w, r, server.ErrorBadRequest)
 		return
 	}
 
-	err = mC.moviesStore.Delete(id)
+	err := mC.moviesStore.Delete(movie.ID)
 	if err != nil {
 		var rnfErr *util.RecordNotFoundError
 		if errors.As(err, &rnfErr) {
