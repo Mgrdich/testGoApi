@@ -18,7 +18,7 @@ linters:
     - asciicheck
     - containedctx
 #    - contextcheck # this needs better research
-    - copyloopvar
+#    - copyloopvar # open it with Go 1.22.x
     - errorlint
     - funlen
     - goconst

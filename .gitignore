@@ -265,3 +265,5 @@ db-data/
 .env
 
 atlas.hcl
+
+**/sqlc/
