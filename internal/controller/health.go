@@ -15,5 +15,5 @@ func (h *healthResponse) Render(w http.ResponseWriter, r *http.Request) error {
 
 func HandleGetHealth(w http.ResponseWriter, r *http.Request) {
 	health := &healthResponse{OK: true}
-	render.Render(w, r, health) // TODO check the error here
+	_ = render.Render(w, r, health)
 }

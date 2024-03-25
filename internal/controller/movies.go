@@ -47,34 +47,34 @@ func NewMoviesController(store db.MoviesStore) *MoviesController {
 func (mC *MoviesController) HandleGetMovie(w http.ResponseWriter, r *http.Request) {
 	movie, ok := middlewares.GetMovieCtx(r.Context())
 	if !ok {
-		render.Render(w, r, server.ErrorBadRequest)
+		_ = render.Render(w, r, server.ErrorBadRequest)
 		return
 	}
 
 	mr := newMovieDTO(movie)
-	render.Render(w, r, mr)
+	_ = render.Render(w, r, mr)
 }
 
 func (mC *MoviesController) HandleGetAllMovies(w http.ResponseWriter, r *http.Request) {
-
 	movies, err := mC.moviesStore.GetAll()
 	if err != nil {
 		var rnfErr *util.RecordNotFoundError
 		if errors.As(err, &rnfErr) {
-			render.Render(w, r, server.ErrorNotFound)
+			_ = render.Render(w, r, server.ErrorNotFound)
 			return
 		}
-		render.Render(w, r, server.ErrorInternalServerError)
+
+		_ = render.Render(w, r, server.ErrorInternalServerError)
 	}
 
 	var moviesDTO []render.Renderer
-	for _, movie := range movies {
-		moviesDTO = append(moviesDTO, newMovieDTO(&movie))
+	for i := range movies {
+		moviesDTO = append(moviesDTO, newMovieDTO(&movies[i]))
 	}
 
 	err = render.RenderList(w, r, moviesDTO)
 	if err != nil {
-		render.Render(w, r, server.ErrorConflict(err))
+		_ = render.Render(w, r, server.ErrorConflict(err))
 		return
 	}
 }
@@ -96,7 +96,7 @@ func (mr *CreateMovieRequest) Bind(r *http.Request) error {
 func (mC *MoviesController) HandleCreateMovie(w http.ResponseWriter, r *http.Request) {
 	data := &CreateMovieRequest{}
 	if err := render.Bind(r, data); err != nil {
-		render.Render(w, r, server.ErrorBadRequest)
+		_ = render.Render(w, r, server.ErrorBadRequest)
 		return
 	}
 
@@ -111,16 +111,17 @@ func (mC *MoviesController) HandleCreateMovie(w http.ResponseWriter, r *http.Req
 	if err != nil {
 		var dupKetErr *util.DuplicateKeyError
 		if errors.As(err, &dupKetErr) {
-			render.Render(w, r, server.ErrorConflict(err))
+			_ = render.Render(w, r, server.ErrorConflict(err))
 			return
 		}
 
-		render.Render(w, r, server.ErrorInternalServerError)
+		_ = render.Render(w, r, server.ErrorInternalServerError)
+
 		return
 	}
 
 	render.Status(r, http.StatusCreated)
-	render.Render(w, r, newMovieDTO(movie))
+	_ = render.Render(w, r, newMovieDTO(movie))
 }
 
 type UpdateMovieRequest struct {
@@ -140,13 +141,13 @@ func (mr *UpdateMovieRequest) Bind(r *http.Request) error {
 func (mC *MoviesController) HandleUpdateMovie(w http.ResponseWriter, r *http.Request) {
 	movie, ok := middlewares.GetMovieCtx(r.Context())
 	if !ok {
-		render.Render(w, r, server.ErrorBadRequest)
+		_ = render.Render(w, r, server.ErrorBadRequest)
 		return
 	}
 
 	data := &UpdateMovieRequest{}
 	if err := render.Bind(r, data); err != nil {
-		render.Render(w, r, server.ErrorBadRequest)
+		_ = render.Render(w, r, server.ErrorBadRequest)
 		return
 	}
 
@@ -160,21 +161,22 @@ func (mC *MoviesController) HandleUpdateMovie(w http.ResponseWriter, r *http.Req
 	if err != nil {
 		var rnfError *util.RecordNotFoundError
 		if errors.As(err, &rnfError) {
-			// TODO fix it later This is wrong
-			render.Render(w, r, server.ErrorNotFound)
+			_ = render.Render(w, r, server.ErrorNotFound)
 			return
 		}
-		render.Render(w, r, server.ErrorInternalServerError)
+
+		_ = render.Render(w, r, server.ErrorInternalServerError)
+
 		return
 	}
 
-	render.Render(w, r, newMovieDTO(updatedMovie))
+	_ = render.Render(w, r, newMovieDTO(updatedMovie))
 }
 
 func (mC *MoviesController) HandleDeleteMovie(w http.ResponseWriter, r *http.Request) {
 	movie, ok := middlewares.GetMovieCtx(r.Context())
 	if !ok {
-		render.Render(w, r, server.ErrorBadRequest)
+		_ = render.Render(w, r, server.ErrorBadRequest)
 		return
 	}
 
@@ -182,13 +184,20 @@ func (mC *MoviesController) HandleDeleteMovie(w http.ResponseWriter, r *http.Req
 	if err != nil {
 		var rnfErr *util.RecordNotFoundError
 		if errors.As(err, &rnfErr) {
-			render.Render(w, r, server.ErrorNotFound)
+			_ = render.Render(w, r, server.ErrorNotFound)
 			return
 		}
-		render.Render(w, r, server.ErrorInternalServerError)
+
+		_ = render.Render(w, r, server.ErrorInternalServerError)
+
 		return
 	}
 
-	w.WriteHeader(200)
-	w.Write(nil)
+	w.WriteHeader(http.StatusOK)
+	_, err = w.Write(nil)
+
+	if err != nil {
+		_ = render.Render(w, r, server.ErrorInternalServerError)
+		return
+	}
 }

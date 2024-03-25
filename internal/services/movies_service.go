@@ -68,6 +68,7 @@ func (s *MoviesService) Create(param models.CreateMovieParam) (*models.Movie, er
 		TicketPrice: db2.ToNumeric(big.NewInt(int64(param.TicketPrice))), // TODO research and fix this type
 	}
 	dbMovie, err := s.q.CreateMovie(context.Background(), dbParam)
+
 	if err != nil {
 		return nil, err
 	}
@@ -79,13 +80,15 @@ func (s *MoviesService) Create(param models.CreateMovieParam) (*models.Movie, er
 
 func (s *MoviesService) Update(id uuid.UUID, param models.UpdateMovieParam) (*models.Movie, error) {
 	dbParam := db.UpdateMovieParams{
-		Title:       db2.ToText(param.Title),
-		Director:    db2.ToText(param.Director),
-		ReleaseAt:   db2.ToDate(param.ReleaseDate),
-		TicketPrice: db2.ToNumeric(big.NewInt(int64(param.TicketPrice))), // TODO research and fix this type , i think it should be string
+		Title:     db2.ToText(param.Title),
+		Director:  db2.ToText(param.Director),
+		ReleaseAt: db2.ToDate(param.ReleaseDate),
+		// TODO research and fix this type , i think it should be string
+		TicketPrice: db2.ToNumeric(big.NewInt(int64(param.TicketPrice))),
 		UpdatedAt:   db2.ToTimeStamp(time.Now().UTC()),
 	}
 	dbMovie, err := s.q.UpdateMovie(context.Background(), dbParam)
+
 	if err != nil {
 		return nil, err
 	}

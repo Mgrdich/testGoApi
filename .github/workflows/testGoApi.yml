@@ -1,0 +1,60 @@
+name: testGoApi
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+    branches:
+      - master
+      - main
+
+permissions:
+  contents: read
+
+
+jobs:
+  lint:
+    strategy:
+      matrix:
+        go-version: [ '1.21.x' ]
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go-version }}
+          cache: false
+      - uses: sqlc-dev/setup-sqlc@v4
+        with:
+           sqlc-version: '1.25.0'
+      - run: sqlc generate
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v4
+        with:
+          version: v1.57.1
+#          args: --timeout=30m --config=${{ github.workspace }}/.golangci.yml --issues-exit-code=0
+          skip-cache: true
+
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: [ '1.21.x' ]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go-version }}
+      - name: Install dependencies
+        run: go mod download
+      - uses: sqlc-dev/setup-sqlc@v4
+        with:
+          sqlc-version: '1.25.0'
+      - run: sqlc generate
+      - name: Compile the binary
+        run: CGO_ENABLED=0 GOOS=linux go build -o server cmd/server.go

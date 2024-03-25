@@ -47,6 +47,7 @@ func (s *Server) Start(ctx context.Context) {
 	})
 
 	fmt.Printf("Server is starting at %s", addr)
+
 	if err := server.ListenAndServe(); errors.Is(err, http.ErrServerClosed) {
 		<-shutdownCompleted
 	} else {

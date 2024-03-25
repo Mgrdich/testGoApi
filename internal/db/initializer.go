@@ -25,6 +25,7 @@ func ConnectPostgresql(url string) (*pgx.Conn, error) {
 	if err != nil {
 		log.Fatalf("Unable to connect to database: %v\n", err)
 	}
+
 	postgresqlDbConnection = conn
 
 	pQueries = db.New(conn)

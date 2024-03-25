@@ -85,6 +85,7 @@ func (s *MemoryMoviesStore) Update(id uuid.UUID, param models.UpdateMovieParam) 
 	m.UpdatedAt = time.Now().UTC()
 
 	s.movies[id] = m
+
 	return &m, nil
 }
 
@@ -97,5 +98,6 @@ func (s *MemoryMoviesStore) Delete(id uuid.UUID) error {
 	}
 
 	delete(s.movies, id)
+
 	return nil
 }

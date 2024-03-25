@@ -22,7 +22,10 @@ func (e *ErrorResponse) Render(w http.ResponseWriter, r *http.Request) error {
 var (
 	ErrorNotFound            = &ErrorResponse{HTTPStatusCode: http.StatusNotFound, StatusText: "Resource not found."}
 	ErrorBadRequest          = &ErrorResponse{HTTPStatusCode: http.StatusBadRequest, StatusText: "Bad request"}
-	ErrorInternalServerError = &ErrorResponse{HTTPStatusCode: http.StatusInternalServerError, StatusText: "Internal Server Error"}
+	ErrorInternalServerError = &ErrorResponse{
+		HTTPStatusCode: http.StatusInternalServerError,
+		StatusText:     "Internal Server Error",
+	}
 )
 
 func ErrorConflict(err error) render.Renderer {
