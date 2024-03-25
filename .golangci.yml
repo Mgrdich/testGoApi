@@ -1,0 +1,8 @@
+linters:
+  disable-all: true
+  enable:
+    - bodyclose
+    - dupl
+    - errcheck
+run:
+  issues-exit-code: 1

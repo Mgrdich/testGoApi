@@ -31,20 +31,21 @@ func MovieCtx(moviesStore db.MoviesStore) func(next http.Handler) http.Handler {
 		fn := func(w http.ResponseWriter, r *http.Request) {
 			movieID := chi.URLParam(r, "id")
 			if movieID == "" {
-				render.Render(w, r, server.ErrorBadRequest)
+				_ = render.Render(w, r, server.ErrorBadRequest)
 				return
 			}
 
 			id, err := uuid.Parse(movieID)
+
 			if err != nil {
-				render.Render(w, r, server.ErrorBadRequest)
+				_ = render.Render(w, r, server.ErrorBadRequest)
 				return
 			}
 
 			movie, err := moviesStore.GetByID(id)
 
 			if err != nil {
-				render.Render(w, r, server.ErrorNotFound)
+				_ = render.Render(w, r, server.ErrorNotFound)
 				return
 			}
 

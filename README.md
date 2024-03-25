@@ -28,3 +28,18 @@ make run
 * make you database up to date `make migrate-up`.
 * with `make migrate-down` please remove the associated file with it as well.
 * Make migrations file for `atomic` operations.
+
+
+## For Linting on the local machine
+Install `golangci` https://golangci-lint.run/usage/install/ recommended way is to put it in the golang binary directory
+curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin `VERSION_NUMBER_HERE`
+then add the `$(go env GOPATH)` to `PATH`
+
+
+### For VsCode users
+```json
+"go.lintTool" : "golangci-lint",
+"go.lintFlags": [
+"--fast"
+]
+```
