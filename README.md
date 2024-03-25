@@ -32,8 +32,12 @@ make run
 
 ## For Linting on the local machine
 Install `golangci` https://golangci-lint.run/usage/install/ recommended way is to put it in the golang binary directory
-curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin `VERSION_NUMBER_HERE`
-then add the `$(go env GOPATH)` to `PATH`
+
+```shell 
+curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin VERSION_NUMBER_HERE
+```
+
+add the `$(go env GOPATH)` to `PATH`
 
 
 ### For VsCode users
