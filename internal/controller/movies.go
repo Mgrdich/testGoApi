@@ -64,6 +64,7 @@ func (mC *MoviesController) HandleGetAllMovies(w http.ResponseWriter, r *http.Re
 			_ = render.Render(w, r, server.ErrorNotFound)
 			return
 		}
+
 		_ = render.Render(w, r, server.ErrorInternalServerError)
 	}
 
@@ -116,6 +117,7 @@ func (mC *MoviesController) HandleCreateMovie(w http.ResponseWriter, r *http.Req
 		}
 
 		_ = render.Render(w, r, server.ErrorInternalServerError)
+
 		return
 	}
 
@@ -163,7 +165,9 @@ func (mC *MoviesController) HandleUpdateMovie(w http.ResponseWriter, r *http.Req
 			_ = render.Render(w, r, server.ErrorNotFound)
 			return
 		}
+
 		_ = render.Render(w, r, server.ErrorInternalServerError)
+
 		return
 	}
 
@@ -184,12 +188,15 @@ func (mC *MoviesController) HandleDeleteMovie(w http.ResponseWriter, r *http.Req
 			_ = render.Render(w, r, server.ErrorNotFound)
 			return
 		}
+
 		_ = render.Render(w, r, server.ErrorInternalServerError)
+
 		return
 	}
 
-	w.WriteHeader(200)
+	w.WriteHeader(http.StatusOK)
 	_, err = w.Write(nil)
+
 	if err != nil {
 		_ = render.Render(w, r, server.ErrorInternalServerError)
 		return

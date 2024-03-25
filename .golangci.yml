@@ -1,8 +1,37 @@
+linters-settings:
+  decorder:
+    # Required order of `type`, `const`, `var` and `func` declarations inside a file.
+    # Default: types before constants before variables before functions.
+    dec-order:
+      - type
+      - const
+      - var
+      - func
+
 linters:
   disable-all: true
   enable:
     - bodyclose
     - dupl
     - errcheck
+    - asasalint
+    - asciicheck
+    - containedctx
+#    - contextcheck # this needs better research
+    - copyloopvar
+    - errorlint
+    - funlen
+    - goconst
+    - gosec
+    - lll
+    - misspell
+    - nilerr
+    - nestif # let's remove it if it causes too much problems
+    - noctx
+    - unconvert
+    - unparam
+    - usestdlibvars
+    - whitespace
+    - wsl
 run:
   issues-exit-code: 1
