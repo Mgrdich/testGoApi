@@ -56,7 +56,6 @@ func (mC *MoviesController) HandleGetMovie(w http.ResponseWriter, r *http.Reques
 }
 
 func (mC *MoviesController) HandleGetAllMovies(w http.ResponseWriter, r *http.Request) {
-
 	movies, err := mC.moviesStore.GetAll()
 	if err != nil {
 		var rnfErr *util.RecordNotFoundError
@@ -69,8 +68,8 @@ func (mC *MoviesController) HandleGetAllMovies(w http.ResponseWriter, r *http.Re
 	}
 
 	var moviesDTO []render.Renderer
-	for _, movie := range movies {
-		moviesDTO = append(moviesDTO, newMovieDTO(&movie))
+	for i := range movies {
+		moviesDTO = append(moviesDTO, newMovieDTO(&movies[i]))
 	}
 
 	err = render.RenderList(w, r, moviesDTO)
