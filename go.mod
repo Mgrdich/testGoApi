@@ -1,6 +1,6 @@
 module .com
 
-go 1.21.1
+go 1.22.1
 
 require (
 	github.com/ajg/form v1.5.1 // indirect
