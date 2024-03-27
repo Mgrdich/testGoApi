@@ -1,14 +1,15 @@
 package services
 
 import (
-	db2 ".com/internal/db"
-	".com/internal/db/sqlc"
-	".com/internal/models"
 	"context"
-	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 	"math/big"
 	"time"
+
+	db2 ".com/internal/db"
+	db ".com/internal/db/sqlc"
+	".com/internal/models"
+	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type MoviesService struct {
@@ -50,7 +51,7 @@ func (s *MoviesService) GetAll() ([]models.Movie, error) {
 }
 
 func (s *MoviesService) GetByID(id uuid.UUID) (*models.Movie, error) {
-	dbMovie, err := s.q.GetMovie(context.Background(), pgtype.UUID{Bytes: id, Valid: true})
+	dbMovie, err := s.q.GetMovie(context.Background(), db2.ToUUID(id))
 	if err != nil {
 		return nil, err
 	}
@@ -80,6 +81,7 @@ func (s *MoviesService) Create(param models.CreateMovieParam) (*models.Movie, er
 
 func (s *MoviesService) Update(id uuid.UUID, param models.UpdateMovieParam) (*models.Movie, error) {
 	dbParam := db.UpdateMovieParams{
+		ID:        db2.ToUUID(id),
 		Title:     db2.ToText(param.Title),
 		Director:  db2.ToText(param.Director),
 		ReleaseAt: db2.ToDate(param.ReleaseDate),
