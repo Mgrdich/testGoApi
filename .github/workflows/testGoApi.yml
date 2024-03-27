@@ -13,12 +13,36 @@ on:
 permissions:
   contents: read
 
+env:
+  SQLC_VERSION: '1.25.0'
+
+
+
 
 jobs:
+  create-env-file:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read .env file
+        id: set-env
+        run: |
+          touch .env
+          echo PORT=8080 >> .env
+          echo POSTGRESQL=${{ secrets.POSTGRESQL }} >> .env
+          echo GOOSE_DRIVER=postgres >> .env
+          echo GOOSE_DBSTRING=${{ secrets.POSTGRESQL }} >> .env
+          echo GOOSE_MIGRATION_DIR=./internal/db/migrations >> .env
+      - name: Upload .env file
+        uses: actions/upload-artifact@v4
+        with:
+          name: env-file
+          path: .env
+
   lint:
+    needs: create-env-file
     strategy:
       matrix:
-        go-version: [ '1.21.x' ]
+        go-version: [ '1.22.x' ]
     name: lint
     runs-on: ubuntu-latest
     steps:
@@ -27,10 +51,18 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
           cache: false
+      - name: download .env file
+        uses: actions/download-artifact@v4
+        with:
+          name: env-file
+          path: .
       - uses: sqlc-dev/setup-sqlc@v4
         with:
-           sqlc-version: '1.25.0'
-      - run: sqlc generate
+           sqlc-version: ${{ env.SQLC_VERSION }}
+      - run: make sqlc-lint
+      - run: make generate
+      - name: go internal linting mechanism
+        run: make vet
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v4
         with:
@@ -39,10 +71,11 @@ jobs:
           skip-cache: true
 
   build:
+    needs: [lint, create-env-file]
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go-version: [ '1.21.x' ]
+        go-version: [ '1.22.x' ]
 
     steps:
       - uses: actions/checkout@v4
@@ -50,11 +83,16 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go-version }}
+      - name: download .env file
+        uses: actions/download-artifact@v4
+        with:
+          name: env-file
+          path: .
       - name: Install dependencies
-        run: go mod download
+        run: make install
       - uses: sqlc-dev/setup-sqlc@v4
         with:
-          sqlc-version: '1.25.0'
-      - run: sqlc generate
+          sqlc-version: ${{ env.SQLC_VERSION }}
+      - run: make generate
       - name: Compile the binary
-        run: CGO_ENABLED=0 GOOS=linux go build -o server cmd/server.go
+        run: make build_ci
