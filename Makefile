@@ -7,14 +7,25 @@ generate:
 diff:
 	sqlc diff
 
-lint:
+sqlc-lint:
 	sqlc vet
 
-build: generate
+vet:
+	go vet ./...
+
+lint: sqlc-lint vet
+	golangci-lint run
+
+build_ci:
 	CGO_ENABLED=0 GOOS=linux go build -o server cmd/server.go
+
+build: generate build_ci
 
 run: generate
 	go run cmd/server.go
+
+install:
+	go mod download
 
 migrate-create:
 	goose create ${n} sql

@@ -23,6 +23,9 @@ GOOSE_MIGRATION_DIR=./internal/db/migrations
 make run
 ```
 
+## Before Opening MR 
+* make sure to sure to run `make lint` to check for linter bugs
+
 ## For Migrations
 * if you want to create new migration run `make migrate-create n=name-of-migration` it will create new file in `internal/db/migrations` with the correct name edit the up and down statements.
 * make you database up to date `make migrate-up`.
