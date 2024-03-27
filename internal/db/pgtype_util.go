@@ -1,9 +1,11 @@
 package db
 
 import (
-	"github.com/jackc/pgx/v5/pgtype"
 	"math/big"
 	"time"
+
+	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 func ToText(text string) pgtype.Text {
@@ -20,4 +22,8 @@ func ToNumeric(bigInt *big.Int) pgtype.Numeric {
 
 func ToTimeStamp(time time.Time) pgtype.Timestamp {
 	return pgtype.Timestamp{Time: time, Valid: true}
+}
+
+func ToUUID(id uuid.UUID) pgtype.UUID {
+	return pgtype.UUID{Bytes: id, Valid: true}
 }
