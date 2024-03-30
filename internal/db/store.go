@@ -18,3 +18,7 @@ type PersonStore interface {
 	GetByID(id uuid.UUID) (*models.Person, error)
 	Create(param models.CreatePerson) (*models.Person, error)
 }
+
+type GetByIdStore[K interface{}] interface {
+	GetByID(id uuid.UUID) (*K, error)
+}
