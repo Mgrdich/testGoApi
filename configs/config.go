@@ -3,8 +3,9 @@ package configs
 import (
 	"log"
 	"os"
+
+	"github.com/joho/godotenv"
 )
-import "github.com/joho/godotenv"
 
 type AppConfig struct {
 	Port          string

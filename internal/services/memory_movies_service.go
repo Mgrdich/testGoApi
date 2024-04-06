@@ -1,11 +1,12 @@
 package services
 
 import (
+	"sync"
+	"time"
+
 	".com/internal/models"
 	".com/internal/util"
 	"github.com/google/uuid"
-	"sync"
-	"time"
 )
 
 type MemoryMoviesStore struct {

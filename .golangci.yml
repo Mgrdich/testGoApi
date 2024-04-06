@@ -33,5 +33,6 @@ linters:
     - usestdlibvars
     - whitespace
     - wsl
+    - gci
 run:
   issues-exit-code: 1

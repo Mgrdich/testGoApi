@@ -1,11 +1,12 @@
 package db
 
 import (
-	".com/internal/db/sqlc"
 	"context"
 	"errors"
-	"github.com/jackc/pgx/v5"
 	"log"
+
+	".com/internal/db/sqlc"
+	"github.com/jackc/pgx/v5"
 )
 
 var pQueries *db.Queries

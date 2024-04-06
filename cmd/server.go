@@ -1,12 +1,13 @@
 package main
 
 import (
+	"context"
+	"log"
+
 	".com/configs"
 	".com/internal/db"
 	".com/internal/routes"
 	".com/internal/server"
-	"context"
-	"log"
 )
 
 func main() {
