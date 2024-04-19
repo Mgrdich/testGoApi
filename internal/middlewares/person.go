@@ -25,8 +25,7 @@ func SetPersonCtx(ctx context.Context, person *models.Person) context.Context {
 func PersonCtx(personStore db.PersonStore) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		fn := func(w http.ResponseWriter, r *http.Request) {
-
-			person, err := CheckSlugId(w, r, personStore)
+			person, err := CheckSlugId[models.Person](w, r, personStore)
 			if err != nil {
 				return
 			}
