@@ -34,5 +34,10 @@ linters:
     - whitespace
     - wsl
     - gci
+    - unused
+    - ineffassign
+    - errcheck
+    - gosimple
+    - govet
 run:
   issues-exit-code: 1
