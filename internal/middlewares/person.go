@@ -4,8 +4,8 @@ import (
 	"context"
 	"net/http"
 
-	".com/internal/db"
 	".com/internal/models"
+	".com/internal/util"
 )
 
 const personContextKey = "middlewares.personContextKey"
@@ -22,18 +22,17 @@ func SetPersonCtx(ctx context.Context, person *models.Person) context.Context {
 }
 
 // PersonCtx Middleware adds person information to the request context
-func PersonCtx(personStore db.PersonStore) func(next http.Handler) http.Handler {
+func PersonCtx(getIdFunc util.GetByIDFunc[models.Person]) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
-		fn := func(w http.ResponseWriter, r *http.Request) {
-			person, err := CheckSlugId[models.Person](w, r, personStore)
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			person, err := CheckSlugId(w, r, getIdFunc)
 			if err != nil {
 				return
 			}
+
 			// Set person information in the request context
 			ctx := SetPersonCtx(r.Context(), person)
 			next.ServeHTTP(w, r.WithContext(ctx))
-		}
-
-		return http.HandlerFunc(fn)
+		})
 	}
 }
