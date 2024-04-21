@@ -1,34 +1,44 @@
 package middlewares
 
 import (
-	"errors"
+	"context"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 	"github.com/google/uuid"
+	"testGoApi.com/internal/models"
 	"testGoApi.com/internal/server"
 	"testGoApi.com/internal/util"
 )
 
-func CheckSlugId[K any](w http.ResponseWriter, r *http.Request, getByID util.GetByIDFunc[K]) (*K, error) {
-	slugId := chi.URLParam(r, "id")
-	if slugId == "" {
-		_ = render.Render(w, r, server.ErrorBadRequest)
-		return nil, errors.New("slug ID is empty")
-	}
+func GetContextIdFunc[K models.Movie | models.Person](getByIdFunc util.GetByIDFunc[K],
+	contextSetter func(ctx context.Context, value *K) context.Context) func(next http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			movieID := chi.URLParam(r, "id")
+			if movieID == "" {
+				_ = render.Render(w, r, server.ErrorBadRequest)
+				return
+			}
 
-	id, err := uuid.Parse(slugId)
-	if err != nil {
-		_ = render.Render(w, r, server.ErrorBadRequest)
-		return nil, errors.New("invalid slug ID")
-	}
+			id, err := uuid.Parse(movieID)
 
-	storeValue, err := getByID(id)
-	if err != nil {
-		_ = render.Render(w, r, server.ErrorNotFound)
-		return nil, errors.New("ID not found in store")
-	}
+			if err != nil {
+				_ = render.Render(w, r, server.ErrorBadRequest)
+				return
+			}
 
-	return storeValue, nil
+			storeValue, err := getByIdFunc(id)
+
+			if err != nil {
+				_ = render.Render(w, r, server.ErrorNotFound)
+				return
+			}
+
+			// Set movie information in the request context
+			ctx := contextSetter(r.Context(), storeValue)
+			next.ServeHTTP(w, r.WithContext(ctx))
+		})
+	}
 }

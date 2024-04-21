@@ -2,13 +2,13 @@ package middlewares
 
 import (
 	"context"
-	"net/http"
 
 	"testGoApi.com/internal/models"
-	"testGoApi.com/internal/util"
 )
 
-const movieContextKey = "middlewares.movieContextKey"
+type movieContentKeyType int
+
+const movieContextKey movieContentKeyType = 0
 
 // GetMovieCtx GetMovieContext retrieves movie information from the context
 func GetMovieCtx(ctx context.Context) (*models.Movie, bool) {
@@ -19,19 +19,4 @@ func GetMovieCtx(ctx context.Context) (*models.Movie, bool) {
 // SetMovieCtx SetMovieContext sets movie information in the context
 func SetMovieCtx(ctx context.Context, movie *models.Movie) context.Context {
 	return context.WithValue(ctx, movieContextKey, movie)
-}
-
-// MovieCtx Middleware adds person information to the request context
-func MovieCtx(getIdFunc util.GetByIDFunc[models.Movie]) func(next http.Handler) http.Handler {
-	return func(next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			person, err := CheckSlugId(w, r, getIdFunc)
-			if err != nil {
-				return
-			}
-			// Set person information in the request context
-			ctx := SetMovieCtx(r.Context(), person)
-			next.ServeHTTP(w, r.WithContext(ctx))
-		})
-	}
 }

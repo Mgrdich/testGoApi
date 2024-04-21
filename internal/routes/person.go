@@ -15,7 +15,7 @@ func GetPersonRouter(r chi.Router) {
 	r.Post("/", personController.HandleCreatePerson)
 
 	r.Route("/{id}", func(r chi.Router) {
-		r.Use(middlewares.PersonCtx(personStoreService.GetByID))
+		r.Use(middlewares.GetContextIdFunc(personStoreService.GetByID, middlewares.SetPersonCtx))
 		r.Get("/", personController.HandleGetPerson)
 	})
 }
