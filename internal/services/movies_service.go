@@ -5,11 +5,11 @@ import (
 	"math/big"
 	"time"
 
-	db2 ".com/internal/db"
-	db ".com/internal/db/sqlc"
-	".com/internal/models"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
+	db2 "testGoApi.com/internal/db"
+	db "testGoApi.com/internal/db/sqlc"
+	"testGoApi.com/internal/models"
 )
 
 type MoviesService struct {

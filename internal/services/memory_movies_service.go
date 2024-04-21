@@ -4,9 +4,9 @@ import (
 	"sync"
 	"time"
 
-	".com/internal/models"
-	".com/internal/util"
 	"github.com/google/uuid"
+	"testGoApi.com/internal/models"
+	"testGoApi.com/internal/util"
 )
 
 type MemoryMoviesStore struct {

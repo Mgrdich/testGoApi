@@ -5,8 +5,8 @@ import (
 	"errors"
 	"log"
 
-	db ".com/internal/db/sqlc"
 	"github.com/jackc/pgx/v5"
+	db "testGoApi.com/internal/db/sqlc"
 )
 
 var pQueries *db.Queries

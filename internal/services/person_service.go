@@ -3,10 +3,10 @@ package services
 import (
 	"context"
 
-	db2 ".com/internal/db"
-	db ".com/internal/db/sqlc"
-	".com/internal/models"
 	"github.com/google/uuid"
+	db2 "testGoApi.com/internal/db"
+	db "testGoApi.com/internal/db/sqlc"
+	"testGoApi.com/internal/models"
 )
 
 type PersonService struct {

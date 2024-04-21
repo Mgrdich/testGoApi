@@ -4,11 +4,11 @@ import (
 	"errors"
 	"net/http"
 
-	".com/internal/server"
-	".com/internal/util"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 	"github.com/google/uuid"
+	"testGoApi.com/internal/server"
+	"testGoApi.com/internal/util"
 )
 
 func CheckSlugId[K any](w http.ResponseWriter, r *http.Request, getByID util.GetByIDFunc[K]) (*K, error) {

@@ -4,8 +4,8 @@ import (
 	"context"
 	"net/http"
 
-	".com/internal/models"
-	".com/internal/util"
+	"testGoApi.com/internal/models"
+	"testGoApi.com/internal/util"
 )
 
 const movieContextKey = "middlewares.movieContextKey"

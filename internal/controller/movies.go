@@ -5,13 +5,13 @@ import (
 	"net/http"
 	"time"
 
-	".com/internal/db"
-	".com/internal/middlewares"
-	".com/internal/models"
-	".com/internal/server"
-	".com/internal/util"
 	"github.com/go-chi/render"
 	"github.com/google/uuid"
+	"testGoApi.com/internal/db"
+	"testGoApi.com/internal/middlewares"
+	"testGoApi.com/internal/models"
+	"testGoApi.com/internal/server"
+	"testGoApi.com/internal/util"
 )
 
 type movieDTO struct {

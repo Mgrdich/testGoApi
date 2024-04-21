@@ -1,4 +1,4 @@
-module .com
+module testGoApi.com
 
 go 1.22.1
 
