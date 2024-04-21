@@ -39,5 +39,6 @@ linters:
     - errcheck
     - gosimple
     - govet
+    - staticcheck
 run:
   issues-exit-code: 1

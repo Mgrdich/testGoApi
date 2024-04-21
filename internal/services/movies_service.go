@@ -5,11 +5,11 @@ import (
 	"math/big"
 	"time"
 
-	db2 ".com/internal/db"
-	db ".com/internal/db/sqlc"
-	".com/internal/models"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
+	db2 "testGoApi.com/internal/db"
+	db "testGoApi.com/internal/db/sqlc"
+	"testGoApi.com/internal/models"
 )
 
 type MoviesService struct {
@@ -22,10 +22,10 @@ func NewMoviesService() *MoviesService {
 	}
 }
 
-func dbMovieToMovie(movie db.Movie) models.Movie {
+func dbMovieToMovie(movie db.Movie) *models.Movie {
 	ticketPrice, _ := movie.TicketPrice.Float64Value()
 
-	return models.Movie{
+	return &models.Movie{
 		ID:          movie.ID.Bytes,
 		Title:       movie.Title.String,
 		Director:    movie.Director.String,
@@ -36,13 +36,13 @@ func dbMovieToMovie(movie db.Movie) models.Movie {
 	}
 }
 
-func (s *MoviesService) GetAll() ([]models.Movie, error) {
+func (s *MoviesService) GetAll() ([]*models.Movie, error) {
 	dbMovies, err := s.q.GetAllMovies(context.Background())
 	if err != nil {
 		return nil, err
 	}
 
-	var movies []models.Movie
+	var movies []*models.Movie
 	for _, mm := range dbMovies {
 		movies = append(movies, dbMovieToMovie(mm))
 	}
@@ -58,7 +58,7 @@ func (s *MoviesService) GetByID(id uuid.UUID) (*models.Movie, error) {
 
 	movie := dbMovieToMovie(dbMovie)
 
-	return &movie, nil
+	return movie, nil
 }
 
 func (s *MoviesService) Create(param models.CreateMovieParam) (*models.Movie, error) {
@@ -76,7 +76,7 @@ func (s *MoviesService) Create(param models.CreateMovieParam) (*models.Movie, er
 
 	movie := dbMovieToMovie(dbMovie)
 
-	return &movie, nil
+	return movie, nil
 }
 
 func (s *MoviesService) Update(id uuid.UUID, param models.UpdateMovieParam) (*models.Movie, error) {
@@ -97,7 +97,7 @@ func (s *MoviesService) Update(id uuid.UUID, param models.UpdateMovieParam) (*mo
 
 	movie := dbMovieToMovie(dbMovie)
 
-	return &movie, nil
+	return movie, nil
 }
 
 func (s *MoviesService) Delete(id uuid.UUID) error {

@@ -5,13 +5,13 @@ import (
 	"net/http"
 	"time"
 
-	".com/internal/db"
-	".com/internal/middlewares"
-	".com/internal/models"
-	".com/internal/server"
-	".com/internal/util"
 	"github.com/go-chi/render"
 	"github.com/google/uuid"
+	"testGoApi.com/internal/db"
+	"testGoApi.com/internal/middlewares"
+	"testGoApi.com/internal/models"
+	"testGoApi.com/internal/server"
+	"testGoApi.com/internal/util"
 )
 
 type movieDTO struct {
@@ -69,7 +69,7 @@ func (mC *MoviesController) HandleGetAllMovies(w http.ResponseWriter, r *http.Re
 
 	var moviesDTO []render.Renderer
 	for i := range movies {
-		moviesDTO = append(moviesDTO, newMovieDTO(&movies[i]))
+		moviesDTO = append(moviesDTO, newMovieDTO(movies[i]))
 	}
 
 	err = render.RenderList(w, r, moviesDTO)

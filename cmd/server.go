@@ -4,10 +4,10 @@ import (
 	"context"
 	"log"
 
-	".com/configs"
-	".com/internal/db"
-	".com/internal/routes"
-	".com/internal/server"
+	"testGoApi.com/configs"
+	"testGoApi.com/internal/db"
+	"testGoApi.com/internal/routes"
+	"testGoApi.com/internal/server"
 )
 
 func main() {
