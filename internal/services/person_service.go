@@ -19,8 +19,8 @@ func NewPersonService() *PersonService {
 	}
 }
 
-func dbPersonToPerson(person db.Person) models.Person {
-	return models.Person{
+func dbPersonToPerson(person db.Person) *models.Person {
+	return &models.Person{
 		ID:        person.ID.Bytes,
 		FirstName: person.FirstName.String,
 		LastName:  person.LastName.String,
@@ -28,14 +28,14 @@ func dbPersonToPerson(person db.Person) models.Person {
 	}
 }
 
-func (p *PersonService) GetAll() ([]models.Person, error) {
+func (p *PersonService) GetAll() ([]*models.Person, error) {
 	dbPeople, err := p.q.GetAllPerson(context.Background())
 
 	if err != nil {
 		return nil, err
 	}
 
-	var people []models.Person
+	var people []*models.Person
 
 	for _, person := range dbPeople {
 		people = append(people, dbPersonToPerson(person))
@@ -52,7 +52,7 @@ func (s *PersonService) GetByID(id uuid.UUID) (*models.Person, error) {
 
 	person := dbPersonToPerson(dbPerson)
 
-	return &person, nil
+	return person, nil
 }
 
 func (s *PersonService) Create(param models.CreatePerson) (*models.Person, error) {
@@ -68,5 +68,5 @@ func (s *PersonService) Create(param models.CreatePerson) (*models.Person, error
 
 	person := dbPersonToPerson(dbPerson)
 
-	return &person, nil
+	return person, nil
 }

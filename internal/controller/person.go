@@ -82,7 +82,7 @@ func (pC *PersonController) HandleGetAllPerson(w http.ResponseWriter, r *http.Re
 
 	var peopleDTO []render.Renderer
 	for i := range people {
-		peopleDTO = append(peopleDTO, newPersonDTO(&people[i]))
+		peopleDTO = append(peopleDTO, newPersonDTO(people[i]))
 	}
 
 	err = render.RenderList(w, r, peopleDTO)

@@ -21,7 +21,7 @@ func SetPersonCtx(ctx context.Context, person *models.Person) context.Context {
 	return context.WithValue(ctx, personContextKey, person)
 }
 
-// PersonCtxMiddleware adds person information to the request context
+// PersonCtx Middleware adds person information to the request context
 func PersonCtx(personStore db.PersonStore) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		fn := func(w http.ResponseWriter, r *http.Request) {

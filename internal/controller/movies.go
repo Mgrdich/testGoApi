@@ -69,7 +69,7 @@ func (mC *MoviesController) HandleGetAllMovies(w http.ResponseWriter, r *http.Re
 
 	var moviesDTO []render.Renderer
 	for i := range movies {
-		moviesDTO = append(moviesDTO, newMovieDTO(&movies[i]))
+		moviesDTO = append(moviesDTO, newMovieDTO(movies[i]))
 	}
 
 	err = render.RenderList(w, r, moviesDTO)

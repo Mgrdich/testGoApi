@@ -5,7 +5,7 @@ import (
 	"errors"
 	"log"
 
-	".com/internal/db/sqlc"
+	db ".com/internal/db/sqlc"
 	"github.com/jackc/pgx/v5"
 )
 
@@ -14,6 +14,10 @@ var pQueries *db.Queries
 var postgresqlDbConnection *pgx.Conn
 
 func GetPQueries() *db.Queries {
+	if pQueries == nil {
+		log.Fatalf("queries is not defined")
+	}
+
 	return pQueries
 }
 

@@ -21,13 +21,13 @@ func NewMemoryMoviesStore() *MemoryMoviesStore {
 	}
 }
 
-func (s *MemoryMoviesStore) GetAll() ([]models.Movie, error) {
+func (s *MemoryMoviesStore) GetAll() ([]*models.Movie, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
-	var movies []models.Movie
+	var movies []*models.Movie
 	for _, m := range s.movies {
-		movies = append(movies, m)
+		movies = append(movies, &m) //nolint:gosec
 	}
 
 	return movies, nil
