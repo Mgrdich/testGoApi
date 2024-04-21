@@ -3,11 +3,11 @@ package middlewares
 import (
 	"context"
 	"net/http"
-	"testGoApi.com/internal/models"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 	"github.com/google/uuid"
+	"testGoApi.com/internal/models"
 	"testGoApi.com/internal/server"
 	"testGoApi.com/internal/util"
 )
