@@ -3,16 +3,16 @@ package middlewares
 import (
 	"context"
 	"net/http"
+	"testGoApi.com/internal/models"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 	"github.com/google/uuid"
-	"testGoApi.com/internal/models"
 	"testGoApi.com/internal/server"
 	"testGoApi.com/internal/util"
 )
 
-func GetContextIdFunc[K models.Movie | models.Person](getByIdFunc util.GetByIDFunc[K],
+func GetContextIdFunc[K models.Models](getByIdFunc util.GetByIDFunc[K],
 	contextSetter func(ctx context.Context, value *K) context.Context) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
