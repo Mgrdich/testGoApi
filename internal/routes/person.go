@@ -2,6 +2,7 @@ package routes
 
 import (
 	".com/internal/controller"
+	".com/internal/middlewares"
 	".com/internal/services"
 	"github.com/go-chi/chi/v5"
 )
@@ -14,7 +15,7 @@ func GetPersonRouter(r chi.Router) {
 	r.Post("/", personController.HandleCreatePerson)
 
 	r.Route("/{id}", func(r chi.Router) {
-		//r.Use(middlewares.PersonCtx(personStoreService))
+		r.Use(middlewares.PersonCtx(personStoreService))
 		r.Get("/", personController.HandleGetPerson)
 	})
 }
