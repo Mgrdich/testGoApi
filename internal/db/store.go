@@ -2,7 +2,7 @@ package db
 
 import (
 	"github.com/google/uuid"
-	"testGoApi.com/internal/models"
+	"testGoApi/internal/models"
 )
 
 type MoviesStore interface {

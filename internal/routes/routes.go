@@ -3,8 +3,8 @@ package routes
 import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
-	"testGoApi.com/internal/controller"
-	"testGoApi.com/internal/server"
+	"testGoApi/internal/controller"
+	"testGoApi/internal/server"
 )
 
 func AddRoutes(s *server.Server) {

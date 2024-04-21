@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"testGoApi.com/internal/models"
-	"testGoApi.com/internal/util"
+	"testGoApi/internal/models"
+	"testGoApi/internal/util"
 )
 
 type MemoryMoviesStore struct {

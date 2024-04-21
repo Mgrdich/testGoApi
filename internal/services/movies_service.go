@@ -7,9 +7,9 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
-	db2 "testGoApi.com/internal/db"
-	db "testGoApi.com/internal/db/sqlc"
-	"testGoApi.com/internal/models"
+	db2 "testGoApi/internal/db"
+	db "testGoApi/internal/db/sqlc"
+	"testGoApi/internal/models"
 )
 
 type MoviesService struct {

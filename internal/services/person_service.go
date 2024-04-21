@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	db2 "testGoApi.com/internal/db"
-	db "testGoApi.com/internal/db/sqlc"
-	"testGoApi.com/internal/models"
+	db2 "testGoApi/internal/db"
+	db "testGoApi/internal/db/sqlc"
+	"testGoApi/internal/models"
 )
 
 type PersonService struct {

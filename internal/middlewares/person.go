@@ -3,7 +3,7 @@ package middlewares
 import (
 	"context"
 
-	"testGoApi.com/internal/models"
+	"testGoApi/internal/models"
 )
 
 type personContentKeyType int

@@ -6,7 +6,7 @@ import (
 	"log"
 
 	"github.com/jackc/pgx/v5"
-	db "testGoApi.com/internal/db/sqlc"
+	db "testGoApi/internal/db/sqlc"
 )
 
 var pQueries *db.Queries

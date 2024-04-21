@@ -2,9 +2,9 @@ package routes
 
 import (
 	"github.com/go-chi/chi/v5"
-	"testGoApi.com/internal/controller"
-	"testGoApi.com/internal/middlewares"
-	"testGoApi.com/internal/services"
+	"testGoApi/internal/controller"
+	"testGoApi/internal/middlewares"
+	"testGoApi/internal/services"
 )
 
 func GetPersonRouter(r chi.Router) {

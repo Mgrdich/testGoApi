@@ -8,10 +8,10 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 	"github.com/google/uuid"
-	"testGoApi.com/internal/db"
-	"testGoApi.com/internal/models"
-	"testGoApi.com/internal/server"
-	"testGoApi.com/internal/util"
+	"testGoApi/internal/db"
+	"testGoApi/internal/models"
+	"testGoApi/internal/server"
+	"testGoApi/internal/util"
 )
 
 type personDTO struct {

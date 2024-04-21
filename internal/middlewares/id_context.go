@@ -7,9 +7,9 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 	"github.com/google/uuid"
-	"testGoApi.com/internal/models"
-	"testGoApi.com/internal/server"
-	"testGoApi.com/internal/util"
+	"testGoApi/internal/models"
+	"testGoApi/internal/server"
+	"testGoApi/internal/util"
 )
 
 func GetContextIdFunc[K models.Models](getByIdFunc util.GetByIDFunc[K],
