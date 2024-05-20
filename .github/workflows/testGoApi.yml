@@ -70,6 +70,29 @@ jobs:
 #          args: --timeout=30m --config=${{ github.workspace }}/.golangci.yml --issues-exit-code=0
           skip-cache: true
 
+  test:
+    needs: [lint, create-env-file]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: [ '1.22.x' ]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go-version }}
+      - name: download .env file
+        uses: actions/download-artifact@v4
+        with:
+          name: env-file
+          path: .
+      - name: Install dependencies
+        run: make install
+      - name: Run tests
+        run: make test
+
   build:
     needs: [lint, create-env-file]
     runs-on: ubuntu-latest
