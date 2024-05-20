@@ -22,8 +22,8 @@ func main() {
 
 	apiServer := server.NewServer(conn)
 	routes.AddRoutes(apiServer, &routes.ApplicationServices{
-		MovieStore:  services.NewMoviesService(pQueries),
-		PersonStore: services.NewPersonService(pQueries),
+		MovieService:  services.NewMoviesServiceImpl(pQueries),
+		PersonService: services.NewPersonServiceImpl(pQueries),
 	})
 	apiServer.Start(ctx)
 }

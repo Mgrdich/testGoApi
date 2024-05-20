@@ -8,9 +8,9 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 	"github.com/google/uuid"
-	"testGoApi/internal/db"
 	"testGoApi/internal/models"
 	"testGoApi/internal/server"
+	"testGoApi/internal/services"
 	"testGoApi/internal/util"
 )
 
@@ -34,12 +34,12 @@ func (hr *personDTO) Render(w http.ResponseWriter, r *http.Request) error {
 }
 
 type PersonController struct {
-	personStore db.PersonStore
+	PersonService services.PersonService
 }
 
-func NewPersonController(store db.PersonStore) *PersonController {
+func NewPersonController(store services.PersonService) *PersonController {
 	return &PersonController{
-		personStore: store,
+		PersonService: store,
 	}
 }
 
@@ -57,7 +57,7 @@ func (pC *PersonController) HandleGetPerson(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	person, err := pC.personStore.GetByID(id)
+	person, err := pC.PersonService.GetByID(id)
 
 	if err != nil {
 		_ = render.Render(w, r, server.ErrorNotFound)
@@ -69,7 +69,7 @@ func (pC *PersonController) HandleGetPerson(w http.ResponseWriter, r *http.Reque
 }
 
 func (pC *PersonController) HandleGetAllPerson(w http.ResponseWriter, r *http.Request) {
-	people, err := pC.personStore.GetAll()
+	people, err := pC.PersonService.GetAll()
 	if err != nil {
 		var rnfErr *util.RecordNotFoundError
 		if errors.As(err, &rnfErr) {
@@ -112,7 +112,7 @@ func (pC *PersonController) HandleCreatePerson(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	person, err := pC.personStore.Create(models.CreatePerson{
+	person, err := pC.PersonService.Create(models.CreatePerson{
 		ID:        uuid.New(),
 		FirstName: data.FirstName,
 		LastName:  data.LastName,

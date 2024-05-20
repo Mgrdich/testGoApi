@@ -3,11 +3,11 @@ package routes
 import (
 	"github.com/go-chi/chi/v5"
 	"testGoApi/internal/controller"
-	"testGoApi/internal/db"
 	"testGoApi/internal/middlewares"
+	"testGoApi/internal/services"
 )
 
-func GetMoviesRouter(movieStoreService db.MoviesStore) func(router chi.Router) {
+func GetMoviesRouter(movieStoreService services.MovieService) func(router chi.Router) {
 	return func(r chi.Router) {
 		moviesController := controller.NewMoviesController(movieStoreService)
 		r.Get("/", moviesController.HandleGetAllMovies)

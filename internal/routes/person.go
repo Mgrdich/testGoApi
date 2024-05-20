@@ -3,11 +3,11 @@ package routes
 import (
 	"github.com/go-chi/chi/v5"
 	"testGoApi/internal/controller"
-	"testGoApi/internal/db"
 	"testGoApi/internal/middlewares"
+	"testGoApi/internal/services"
 )
 
-func GetPersonRouter(personStoreService db.PersonStore) func(router chi.Router) {
+func GetPersonRouter(personStoreService services.PersonService) func(router chi.Router) {
 	return func(r chi.Router) {
 		personController := controller.NewPersonController(personStoreService)
 

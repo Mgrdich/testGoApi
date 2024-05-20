@@ -9,12 +9,12 @@ import (
 	"testGoApi/internal/models"
 )
 
-type PersonService struct {
+type PersonServiceImpl struct {
 	q *db.Queries
 }
 
-func NewPersonService(queries *db.Queries) *PersonService {
-	return &PersonService{
+func NewPersonServiceImpl(queries *db.Queries) *PersonServiceImpl {
+	return &PersonServiceImpl{
 		q: queries,
 	}
 }
@@ -28,7 +28,7 @@ func dbPersonToPerson(person db.Person) *models.Person {
 	}
 }
 
-func (s *PersonService) GetAll() ([]*models.Person, error) {
+func (s *PersonServiceImpl) GetAll() ([]*models.Person, error) {
 	dbPeople, err := s.q.GetAllPerson(context.Background())
 
 	if err != nil {
@@ -44,7 +44,7 @@ func (s *PersonService) GetAll() ([]*models.Person, error) {
 	return people, nil
 }
 
-func (s *PersonService) GetByID(id uuid.UUID) (*models.Person, error) {
+func (s *PersonServiceImpl) GetByID(id uuid.UUID) (*models.Person, error) {
 	dbPerson, err := s.q.GetPerson(context.Background(), db2.ToUUID(id))
 	if err != nil {
 		return nil, err
@@ -55,7 +55,7 @@ func (s *PersonService) GetByID(id uuid.UUID) (*models.Person, error) {
 	return person, nil
 }
 
-func (s *PersonService) Create(param models.CreatePerson) (*models.Person, error) {
+func (s *PersonServiceImpl) Create(param models.CreatePerson) (*models.Person, error) {
 	dbParam := db.CreatePersonParams{
 		FirstName: db2.ToText(param.FirstName),
 		LastName:  db2.ToText(param.LastName),

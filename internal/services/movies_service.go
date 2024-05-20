@@ -12,12 +12,12 @@ import (
 	"testGoApi/internal/models"
 )
 
-type MoviesService struct {
+type MoviesServiceImpl struct {
 	q *db.Queries
 }
 
-func NewMoviesService(queries *db.Queries) *MoviesService {
-	return &MoviesService{
+func NewMoviesServiceImpl(queries *db.Queries) *MoviesServiceImpl {
+	return &MoviesServiceImpl{
 		q: queries,
 	}
 }
@@ -36,7 +36,7 @@ func dbMovieToMovie(movie db.Movie) *models.Movie {
 	}
 }
 
-func (s *MoviesService) GetAll() ([]*models.Movie, error) {
+func (s *MoviesServiceImpl) GetAll() ([]*models.Movie, error) {
 	dbMovies, err := s.q.GetAllMovies(context.Background())
 	if err != nil {
 		return nil, err
@@ -50,7 +50,7 @@ func (s *MoviesService) GetAll() ([]*models.Movie, error) {
 	return movies, nil
 }
 
-func (s *MoviesService) GetByID(id uuid.UUID) (*models.Movie, error) {
+func (s *MoviesServiceImpl) GetByID(id uuid.UUID) (*models.Movie, error) {
 	dbMovie, err := s.q.GetMovie(context.Background(), db2.ToUUID(id))
 	if err != nil {
 		return nil, err
@@ -61,7 +61,7 @@ func (s *MoviesService) GetByID(id uuid.UUID) (*models.Movie, error) {
 	return movie, nil
 }
 
-func (s *MoviesService) Create(param models.CreateMovieParam) (*models.Movie, error) {
+func (s *MoviesServiceImpl) Create(param models.CreateMovieParam) (*models.Movie, error) {
 	dbParam := db.CreateMovieParams{
 		Title:       db2.ToText(param.Title),
 		Director:    db2.ToText(param.Director),
@@ -79,7 +79,7 @@ func (s *MoviesService) Create(param models.CreateMovieParam) (*models.Movie, er
 	return movie, nil
 }
 
-func (s *MoviesService) Update(id uuid.UUID, param models.UpdateMovieParam) (*models.Movie, error) {
+func (s *MoviesServiceImpl) Update(id uuid.UUID, param models.UpdateMovieParam) (*models.Movie, error) {
 	dbParam := db.UpdateMovieParams{
 		ID:        db2.ToUUID(id),
 		Title:     db2.ToText(param.Title),
@@ -100,7 +100,7 @@ func (s *MoviesService) Update(id uuid.UUID, param models.UpdateMovieParam) (*mo
 	return movie, nil
 }
 
-func (s *MoviesService) Delete(id uuid.UUID) error {
+func (s *MoviesServiceImpl) Delete(id uuid.UUID) error {
 	return s.q.DeleteMovie(context.Background(), pgtype.UUID{
 		Bytes: id,
 		Valid: true,

@@ -4,13 +4,13 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 	"testGoApi/internal/controller"
-	"testGoApi/internal/db"
 	"testGoApi/internal/server"
+	"testGoApi/internal/services"
 )
 
 type ApplicationServices struct {
-	MovieStore  db.MoviesStore
-	PersonStore db.PersonStore
+	MovieService  services.MovieService
+	PersonService services.PersonService
 }
 
 func AddRoutes(s *server.Server, services *ApplicationServices) {
@@ -19,7 +19,7 @@ func AddRoutes(s *server.Server, services *ApplicationServices) {
 	s.Router.Get("/health", controller.HandleGetHealth)
 
 	s.Router.Route("/api/v1", func(r chi.Router) {
-		r.Route("/movies", GetMoviesRouter(services.MovieStore))
-		r.Route("/person", GetPersonRouter(services.PersonStore))
+		r.Route("/movies", GetMoviesRouter(services.MovieService))
+		r.Route("/person", GetPersonRouter(services.PersonService))
 	})
 }
