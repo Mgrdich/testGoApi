@@ -15,6 +15,7 @@ permissions:
 
 env:
   SQLC_VERSION: '1.25.0'
+  GO_VERSION: '1.22.x'
 
 
 
@@ -42,7 +43,7 @@ jobs:
     needs: create-env-file
     strategy:
       matrix:
-        go-version: [ '1.22.x' ]
+        go-version: [ ${{ env.GO_VERSION }}  ]
     name: lint
     runs-on: ubuntu-latest
     steps:
@@ -75,7 +76,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go-version: [ '1.22.x' ]
+        go-version: [ ${{ env.GO_VERSION }}  ]
 
     steps:
       - uses: actions/checkout@v4
@@ -102,7 +103,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go-version: [ '1.22.x' ]
+        go-version: [ ${{ env.GO_VERSION }}  ]
 
     steps:
       - uses: actions/checkout@v4
