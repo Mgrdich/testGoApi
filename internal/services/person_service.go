@@ -13,9 +13,9 @@ type PersonService struct {
 	q *db.Queries
 }
 
-func NewPersonService() *PersonService {
+func NewPersonService(queries *db.Queries) *PersonService {
 	return &PersonService{
-		q: db2.GetPQueries(),
+		q: queries,
 	}
 }
 
@@ -28,8 +28,8 @@ func dbPersonToPerson(person db.Person) *models.Person {
 	}
 }
 
-func (p *PersonService) GetAll() ([]*models.Person, error) {
-	dbPeople, err := p.q.GetAllPerson(context.Background())
+func (s *PersonService) GetAll() ([]*models.Person, error) {
+	dbPeople, err := s.q.GetAllPerson(context.Background())
 
 	if err != nil {
 		return nil, err

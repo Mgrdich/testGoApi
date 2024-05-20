@@ -16,9 +16,9 @@ type MoviesService struct {
 	q *db.Queries
 }
 
-func NewMoviesService() *MoviesService {
+func NewMoviesService(queries *db.Queries) *MoviesService {
 	return &MoviesService{
-		q: db2.GetPQueries(),
+		q: queries,
 	}
 }
 
