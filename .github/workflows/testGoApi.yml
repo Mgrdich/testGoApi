@@ -71,7 +71,7 @@ jobs:
           skip-cache: true
 
   test:
-    needs: [lint, create-env-file]
+    needs: [create-env-file]
     runs-on: ubuntu-latest
     strategy:
       matrix:
