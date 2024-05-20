@@ -88,6 +88,10 @@ jobs:
         with:
           name: env-file
           path: .
+      - uses: sqlc-dev/setup-sqlc@v4
+        with:
+          sqlc-version: ${{ env.SQLC_VERSION }}
+      - run: make generate
       - name: Install dependencies
         run: make install
       - name: Run tests
