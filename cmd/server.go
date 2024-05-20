@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"testGoApi/configs"
+	_ "testGoApi/docs"
 	"testGoApi/internal/db"
 	"testGoApi/internal/repository"
 	"testGoApi/internal/routes"
@@ -12,6 +13,11 @@ import (
 	"testGoApi/internal/services"
 )
 
+// @title TestGoApi
+// @version 1.0
+// @description This is a sample server.
+// @host localhost:8080
+// @BasePath /
 func main() {
 	ctx := context.Background()
 

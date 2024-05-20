@@ -4,6 +4,9 @@ export
 generate:
 	sqlc generate
 
+gen-swagger:
+	swag init -g "cmd/server.go"
+
 diff:
 	sqlc diff
 

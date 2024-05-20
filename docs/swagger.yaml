@@ -1,0 +1,321 @@
+basePath: /
+definitions:
+  controller.CreateMovieRequest:
+    description: Create Movie Request
+    properties:
+      director:
+        type: string
+      ticket_price:
+        type: number
+      title:
+        type: string
+    type: object
+  controller.CreatePersonRequest:
+    description: Create Person Request
+    properties:
+      first_name:
+        type: string
+      last_name:
+        type: string
+    type: object
+  controller.UpdateMovieRequest:
+    description: Update Movie Request
+    properties:
+      director:
+        type: string
+      ticket_price:
+        type: number
+      title:
+        type: string
+    type: object
+  controller.healthResponse:
+    properties:
+      ok:
+        type: boolean
+    type: object
+  controller.movieDTO:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  controller.personDTO:
+    properties:
+      created_at:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: string
+      last_name:
+        type: string
+    type: object
+  server.ErrorResponse:
+    properties:
+      code:
+        description: application level error code
+        type: integer
+      error:
+        type: string
+      status:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a sample server.
+  title: TestGoApi
+  version: "1.0"
+paths:
+  /api/v1/movie:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a movie using the context set by middleware
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.movieDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      summary: Get a movie by context
+      tags:
+      - movie
+  /api/v1/movies:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves all movies from the database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/controller.movieDTO'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      summary: Get all movies
+      tags:
+      - movie
+    post:
+      consumes:
+      - application/json
+      description: Creates a new movie with the provided details
+      parameters:
+      - description: Create Movie Request
+        in: body
+        name: movie
+        required: true
+        schema:
+          $ref: '#/definitions/controller.CreateMovieRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/controller.movieDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      summary: Create a new movie
+      tags:
+      - movie
+  /api/v1/movies/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a movie by its ID
+      parameters:
+      - description: Movie ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      summary: Delete a movie by ID
+      tags:
+      - movie
+    put:
+      consumes:
+      - application/json
+      description: Updates an existing movie with the provided details
+      parameters:
+      - description: Movie ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update Movie Request
+        in: body
+        name: movie
+        required: true
+        schema:
+          $ref: '#/definitions/controller.UpdateMovieRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.movieDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      summary: Update an existing movie
+      tags:
+      - movie
+  /api/v1/person:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves all people
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/controller.personDTO'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      summary: Get all people
+      tags:
+      - person
+    post:
+      consumes:
+      - application/json
+      description: Creates a new person with the provided data
+      parameters:
+      - description: Person data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/controller.CreatePersonRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/controller.personDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      summary: Create a new person
+      tags:
+      - person
+  /api/v1/person/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a person by their ID
+      parameters:
+      - description: Person ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.personDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      summary: Get a person by ID
+      tags:
+      - person
+  /health:
+    get:
+      description: Returns the health status of the service
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.healthResponse'
+      summary: Health Check
+      tags:
+      - health
+swagger: "2.0"

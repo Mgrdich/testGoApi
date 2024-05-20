@@ -43,6 +43,17 @@ func NewPersonController(store services.PersonService) *PersonController {
 	}
 }
 
+// HandleGetPerson retrieves a person by ID
+// @Summary Get a person by ID
+// @Description Retrieves a person by their ID
+// @Tags person
+// @Accept  json
+// @Produce  json
+// @Param id path string true "Person ID"
+// @Success 200 {object} personDTO
+// @Failure 400 {object} server.ErrorResponse
+// @Failure 404 {object} server.ErrorResponse
+// @Router /api/v1/person/{id} [get]
 func (pC *PersonController) HandleGetPerson(w http.ResponseWriter, r *http.Request) {
 	personId := chi.URLParam(r, "id")
 	if personId == "" {
@@ -68,6 +79,16 @@ func (pC *PersonController) HandleGetPerson(w http.ResponseWriter, r *http.Reque
 	_ = render.Render(w, r, mr)
 }
 
+// HandleGetAllPerson retrieves all persons
+// @Summary Get all people
+// @Description Retrieves all people
+// @Tags person
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} personDTO
+// @Failure 404 {object} server.ErrorResponse
+// @Failure 500 {object} server.ErrorResponse
+// @Router /api/v1/person [get]
 func (pC *PersonController) HandleGetAllPerson(w http.ResponseWriter, r *http.Request) {
 	people, err := pC.PersonService.GetAll()
 	if err != nil {
@@ -92,6 +113,8 @@ func (pC *PersonController) HandleGetAllPerson(w http.ResponseWriter, r *http.Re
 	}
 }
 
+// CreatePersonRequest represents the request payload for creating a person
+// @Description Create Person Request
 type CreatePersonRequest struct {
 	FirstName string `json:"first_name"`
 	LastName  string `json:"last_name"`
@@ -105,6 +128,18 @@ func (pr *CreatePersonRequest) Bind(r *http.Request) error {
 	return nil
 }
 
+// HandleCreatePerson creates a new person
+// @Summary Create a new person
+// @Description Creates a new person with the provided data
+// @Tags person
+// @Accept json
+// @Produce json
+// @Param data body CreatePersonRequest true "Person data"
+// @Success 201 {object} personDTO
+// @Failure 400 {object} server.ErrorResponse
+// @Failure 409 {object} server.ErrorResponse
+// @Failure 500 {object} server.ErrorResponse
+// @Router /api/v1/person [post]
 func (pC *PersonController) HandleCreatePerson(w http.ResponseWriter, r *http.Request) {
 	data := &CreatePersonRequest{}
 	if err := render.Bind(r, data); err != nil {

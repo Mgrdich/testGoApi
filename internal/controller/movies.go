@@ -44,6 +44,15 @@ func NewMoviesController(store services.MovieService) *MoviesController {
 	}
 }
 
+// HandleGetMovie retrieves a movie by its context
+// @Summary Get a movie by context
+// @Description Retrieves a movie using the context set by middleware
+// @Tags movie
+// @Accept json
+// @Produce json
+// @Success 200 {object} movieDTO
+// @Failure 400 {object} server.ErrorResponse
+// @Router /api/v1/movie [get]
 func (mC *MoviesController) HandleGetMovie(w http.ResponseWriter, r *http.Request) {
 	movie, ok := middlewares.GetMovieCtx(r.Context())
 	if !ok {
@@ -55,6 +64,16 @@ func (mC *MoviesController) HandleGetMovie(w http.ResponseWriter, r *http.Reques
 	_ = render.Render(w, r, mr)
 }
 
+// HandleGetAllMovies retrieves all movies
+// @Summary Get all movies
+// @Description Retrieves all movies from the database
+// @Tags movie
+// @Accept json
+// @Produce json
+// @Success 200 {array} movieDTO
+// @Failure 404 {object} server.ErrorResponse
+// @Failure 500 {object} server.ErrorResponse
+// @Router /api/v1/movies [get]
 func (mC *MoviesController) HandleGetAllMovies(w http.ResponseWriter, r *http.Request) {
 	movies, err := mC.MovieService.GetAll()
 	if err != nil {
@@ -79,6 +98,8 @@ func (mC *MoviesController) HandleGetAllMovies(w http.ResponseWriter, r *http.Re
 	}
 }
 
+// CreateMovieRequest represents the request payload for creating a movie
+// @Description Create Movie Request
 type CreateMovieRequest struct {
 	Title       string  `json:"title"`
 	Director    string  `json:"director"`
@@ -93,6 +114,18 @@ func (mr *CreateMovieRequest) Bind(r *http.Request) error {
 	return nil
 }
 
+// HandleCreateMovie creates a new movie
+// @Summary Create a new movie
+// @Description Creates a new movie with the provided details
+// @Tags movie
+// @Accept json
+// @Produce json
+// @Param movie body CreateMovieRequest true "Create Movie Request"
+// @Success 201 {object} movieDTO
+// @Failure 400 {object} server.ErrorResponse
+// @Failure 409 {object} server.ErrorResponse
+// @Failure 500 {object} server.ErrorResponse
+// @Router /api/v1/movies [post]
 func (mC *MoviesController) HandleCreateMovie(w http.ResponseWriter, r *http.Request) {
 	data := &CreateMovieRequest{}
 	if err := render.Bind(r, data); err != nil {
@@ -124,6 +157,8 @@ func (mC *MoviesController) HandleCreateMovie(w http.ResponseWriter, r *http.Req
 	_ = render.Render(w, r, newMovieDTO(movie))
 }
 
+// UpdateMovieRequest represents the request payload for updating a movie
+// @Description Update Movie Request
 type UpdateMovieRequest struct {
 	Title       string  `json:"title"`
 	Director    string  `json:"director"`
@@ -138,6 +173,19 @@ func (mr *UpdateMovieRequest) Bind(r *http.Request) error {
 	return nil
 }
 
+// HandleUpdateMovie updates an existing movie
+// @Summary Update an existing movie
+// @Description Updates an existing movie with the provided details
+// @Tags movie
+// @Accept json
+// @Produce json
+// @Param id path string true "Movie ID"
+// @Param movie body UpdateMovieRequest true "Update Movie Request"
+// @Success 200 {object} movieDTO
+// @Failure 400 {object} server.ErrorResponse
+// @Failure 404 {object} server.ErrorResponse
+// @Failure 500 {object} server.ErrorResponse
+// @Router /api/v1/movies/{id} [put]
 func (mC *MoviesController) HandleUpdateMovie(w http.ResponseWriter, r *http.Request) {
 	movie, ok := middlewares.GetMovieCtx(r.Context())
 	if !ok {
@@ -173,6 +221,18 @@ func (mC *MoviesController) HandleUpdateMovie(w http.ResponseWriter, r *http.Req
 	_ = render.Render(w, r, newMovieDTO(updatedMovie))
 }
 
+// HandleDeleteMovie deletes a movie by ID
+// @Summary Delete a movie by ID
+// @Description Deletes a movie by its ID
+// @Tags movie
+// @Accept json
+// @Produce json
+// @Param id path string true "Movie ID"
+// @Success 200
+// @Failure 400 {object} server.ErrorResponse
+// @Failure 404 {object} server.ErrorResponse
+// @Failure 500 {object} server.ErrorResponse
+// @Router /api/v1/movies/{id} [delete]
 func (mC *MoviesController) HandleDeleteMovie(w http.ResponseWriter, r *http.Request) {
 	movie, ok := middlewares.GetMovieCtx(r.Context())
 	if !ok {
