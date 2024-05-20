@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
-	"net/http/httptest"
 	"testing"
 )
 
@@ -15,13 +14,9 @@ func TestHandleGetHealth(t *testing.T) {
 		t.Errorf("Error creating a new request: %v", err)
 	}
 
-	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(HandleGetHealth)
-	handler.ServeHTTP(rr, req)
+	rr := ExecuteRequest(req, HandleGetHealth)
 
-	if status := rr.Code; status != http.StatusOK {
-		t.Errorf("Handler returned wrong status code. Expected: %d. Got: %d.", http.StatusOK, status)
-	}
+	CheckStatusOK(t, rr)
 
 	var response healthResponse
 
