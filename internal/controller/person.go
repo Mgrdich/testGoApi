@@ -57,7 +57,7 @@ func (pC *PersonController) HandleGetPerson(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	person, err := pC.PersonService.GetByID(id)
+	person, err := pC.PersonService.Get(id)
 
 	if err != nil {
 		_ = render.Render(w, r, server.ErrorNotFound)

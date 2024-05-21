@@ -1,108 +1,38 @@
 package services
 
 import (
-	"context"
-	"math/big"
-	"time"
-
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
-	db2 "testGoApi/internal/db"
-	db "testGoApi/internal/db/sqlc"
+
 	"testGoApi/internal/models"
+	"testGoApi/internal/repository"
 )
 
 type MoviesServiceImpl struct {
-	q *db.Queries
+	movieRepository repository.MovieRepository
 }
 
-func NewMoviesServiceImpl(queries *db.Queries) *MoviesServiceImpl {
+func NewMoviesServiceImpl(movieRepository repository.MovieRepository) *MoviesServiceImpl {
 	return &MoviesServiceImpl{
-		q: queries,
-	}
-}
-
-func dbMovieToMovie(movie db.Movie) *models.Movie {
-	ticketPrice, _ := movie.TicketPrice.Float64Value()
-
-	return &models.Movie{
-		ID:          movie.ID.Bytes,
-		Title:       movie.Title.String,
-		Director:    movie.Director.String,
-		ReleaseDate: movie.ReleaseAt.Time,
-		TicketPrice: ticketPrice.Float64,
-		CreatedAt:   movie.CreatedAt.Time,
-		UpdatedAt:   movie.UpdatedAt.Time,
+		movieRepository: movieRepository,
 	}
 }
 
 func (s *MoviesServiceImpl) GetAll() ([]*models.Movie, error) {
-	dbMovies, err := s.q.GetAllMovies(context.Background())
-	if err != nil {
-		return nil, err
-	}
-
-	var movies []*models.Movie
-	for _, mm := range dbMovies {
-		movies = append(movies, dbMovieToMovie(mm))
-	}
-
-	return movies, nil
+	return s.movieRepository.GetAll()
 }
 
-func (s *MoviesServiceImpl) GetByID(id uuid.UUID) (*models.Movie, error) {
-	dbMovie, err := s.q.GetMovie(context.Background(), db2.ToUUID(id))
-	if err != nil {
-		return nil, err
-	}
-
-	movie := dbMovieToMovie(dbMovie)
-
-	return movie, nil
+func (s *MoviesServiceImpl) Get(id uuid.UUID) (*models.Movie, error) {
+	return s.movieRepository.GetByID(id)
 }
 
 func (s *MoviesServiceImpl) Create(param models.CreateMovieParam) (*models.Movie, error) {
-	dbParam := db.CreateMovieParams{
-		Title:       db2.ToText(param.Title),
-		Director:    db2.ToText(param.Director),
-		ReleaseAt:   db2.ToDate(param.ReleaseDate),
-		TicketPrice: db2.ToNumeric(big.NewInt(int64(param.TicketPrice))), // TODO research and fix this type
-	}
-	dbMovie, err := s.q.CreateMovie(context.Background(), dbParam)
-
-	if err != nil {
-		return nil, err
-	}
-
-	movie := dbMovieToMovie(dbMovie)
-
-	return movie, nil
+	return s.movieRepository.Save(param)
 }
 
 func (s *MoviesServiceImpl) Update(id uuid.UUID, param models.UpdateMovieParam) (*models.Movie, error) {
-	dbParam := db.UpdateMovieParams{
-		ID:        db2.ToUUID(id),
-		Title:     db2.ToText(param.Title),
-		Director:  db2.ToText(param.Director),
-		ReleaseAt: db2.ToDate(param.ReleaseDate),
-		// TODO research and fix this type , i think it should be string
-		TicketPrice: db2.ToNumeric(big.NewInt(int64(param.TicketPrice))),
-		UpdatedAt:   db2.ToTimeStamp(time.Now().UTC()),
-	}
-	dbMovie, err := s.q.UpdateMovie(context.Background(), dbParam)
-
-	if err != nil {
-		return nil, err
-	}
-
-	movie := dbMovieToMovie(dbMovie)
-
-	return movie, nil
+	return s.movieRepository.UpdateByID(id, param)
 }
 
 func (s *MoviesServiceImpl) Delete(id uuid.UUID) error {
-	return s.q.DeleteMovie(context.Background(), pgtype.UUID{
-		Bytes: id,
-		Valid: true,
-	})
+	return s.movieRepository.DeleteByID(id)
 }

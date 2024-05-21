@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log"
+	"testGoApi/internal/repository"
 
 	"testGoApi/configs"
 	"testGoApi/internal/db"
@@ -22,8 +23,8 @@ func main() {
 
 	apiServer := server.NewServer(conn)
 	routes.AddRoutes(apiServer, &routes.ApplicationServices{
-		MovieService:  services.NewMoviesServiceImpl(pQueries),
-		PersonService: services.NewPersonServiceImpl(pQueries),
+		MovieService:  services.NewMoviesServiceImpl(repository.NewMoviesRepositoryImpl(pQueries)),
+		PersonService: services.NewPersonServiceImpl(repository.NewPersonRepositoryImpl(pQueries)),
 	})
 	apiServer.Start(ctx)
 }

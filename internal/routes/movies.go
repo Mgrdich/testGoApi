@@ -14,7 +14,7 @@ func GetMoviesRouter(movieStoreService services.MovieService) func(router chi.Ro
 		r.Post("/", moviesController.HandleCreateMovie)
 
 		r.Route("/{id}", func(r chi.Router) {
-			r.Use(middlewares.GetContextIdFunc(movieStoreService.GetByID, middlewares.SetMovieCtx))
+			r.Use(middlewares.GetContextIdFunc(movieStoreService.Get, middlewares.SetMovieCtx))
 			r.Get("/", moviesController.HandleGetMovie)
 			r.Put("/", moviesController.HandleUpdateMovie)
 			r.Delete("/", moviesController.HandleDeleteMovie)
