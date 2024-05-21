@@ -6,11 +6,13 @@ services:
       context: .
     ports:
       - 8080:8080
+    depends_on: [ postgres ]
 
   postgres:
     image: 'postgres:16.2'
     ports:
       - 5433:5432
+    container_name: testGoApiPostgres
     restart: always
     environment:
       - POSTGRES_USER=test
