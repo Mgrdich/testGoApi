@@ -14,16 +14,12 @@ import (
 
 type mockMovieService struct{}
 
-func newMockMovieService() *mockMovieService {
-	return &mockMovieService{}
-}
-
 func (*mockMovieService) GetAll() ([]*models.Movie, error) {
 	return nil, nil
 }
 
 func (*mockMovieService) Get(id uuid.UUID) (*models.Movie, error) {
-	return nil, nil
+	return &models.Movie{ID: id}, nil
 }
 
 func (*mockMovieService) Create(param models.CreateMovieParam) (*models.Movie, error) {
@@ -52,7 +48,7 @@ func setMovieCtx() context.Context {
 }
 
 func TestMoviesController_HandleGetAllMovies(t *testing.T) {
-	controller := NewMoviesController(newMockMovieService())
+	controller := NewMoviesController(&mockMovieService{})
 	req := NewRequest(t, http.MethodGet, "/movies", nil)
 
 	rr := ExecuteRequest(req, controller.HandleGetAllMovies, nil)
@@ -61,7 +57,7 @@ func TestMoviesController_HandleGetAllMovies(t *testing.T) {
 }
 
 func TestMoviesController_HandleGetMovie(t *testing.T) {
-	controller := NewMoviesController(newMockMovieService())
+	controller := NewMoviesController(&mockMovieService{})
 	req := NewRequest(t, http.MethodGet, "/movies/1", nil)
 	ctx := setMovieCtx()
 
@@ -83,7 +79,7 @@ func TestMoviesController_HandleCreateMovie(t *testing.T) {
 		t.Error("Error encoding JSON:", err)
 	}
 
-	controller := NewMoviesController(newMockMovieService())
+	controller := NewMoviesController(&mockMovieService{})
 
 	// json content-type
 	req := NewRequest(t, http.MethodPost, "/movies", bytes.NewBuffer(jsonData))
@@ -107,7 +103,7 @@ func TestMoviesController_HandleUpdateMovie(t *testing.T) {
 		t.Error("Error encoding JSON:", err)
 	}
 
-	controller := NewMoviesController(newMockMovieService())
+	controller := NewMoviesController(&mockMovieService{})
 	req := NewRequest(t, http.MethodPut, "/movies/1", bytes.NewBuffer(jsonData))
 	ctx := setMovieCtx()
 
@@ -117,7 +113,7 @@ func TestMoviesController_HandleUpdateMovie(t *testing.T) {
 }
 
 func TestMoviesController_HandleDeleteMovie(t *testing.T) {
-	controller := NewMoviesController(newMockMovieService())
+	controller := NewMoviesController(&mockMovieService{})
 	req := NewRequest(t, http.MethodDelete, "/movies/1", nil)
 	ctx := setMovieCtx()
 
