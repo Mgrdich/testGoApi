@@ -7,10 +7,10 @@ import (
 
 	"github.com/go-chi/render"
 	"github.com/google/uuid"
-	"testGoApi/internal/db"
 	"testGoApi/internal/middlewares"
 	"testGoApi/internal/models"
 	"testGoApi/internal/server"
+	"testGoApi/internal/services"
 	"testGoApi/internal/util"
 )
 
@@ -35,12 +35,12 @@ func (hr *movieDTO) Render(w http.ResponseWriter, r *http.Request) error {
 }
 
 type MoviesController struct {
-	moviesStore db.MoviesStore
+	MovieService services.MovieService
 }
 
-func NewMoviesController(store db.MoviesStore) *MoviesController {
+func NewMoviesController(store services.MovieService) *MoviesController {
 	return &MoviesController{
-		moviesStore: store,
+		MovieService: store,
 	}
 }
 
@@ -56,7 +56,7 @@ func (mC *MoviesController) HandleGetMovie(w http.ResponseWriter, r *http.Reques
 }
 
 func (mC *MoviesController) HandleGetAllMovies(w http.ResponseWriter, r *http.Request) {
-	movies, err := mC.moviesStore.GetAll()
+	movies, err := mC.MovieService.GetAll()
 	if err != nil {
 		var rnfErr *util.RecordNotFoundError
 		if errors.As(err, &rnfErr) {
@@ -100,7 +100,7 @@ func (mC *MoviesController) HandleCreateMovie(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	movie, err := mC.moviesStore.Create(models.CreateMovieParam{
+	movie, err := mC.MovieService.Create(models.CreateMovieParam{
 		ID:          uuid.New(),
 		Title:       data.Title,
 		Director:    data.Director,
@@ -151,7 +151,7 @@ func (mC *MoviesController) HandleUpdateMovie(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	updatedMovie, err := mC.moviesStore.Update(movie.ID, models.UpdateMovieParam{
+	updatedMovie, err := mC.MovieService.Update(movie.ID, models.UpdateMovieParam{
 		Title:       data.Title,
 		Director:    data.Director,
 		ReleaseDate: time.Now().UTC(),
@@ -180,7 +180,7 @@ func (mC *MoviesController) HandleDeleteMovie(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	err := mC.moviesStore.Delete(movie.ID)
+	err := mC.MovieService.Delete(movie.ID)
 	if err != nil {
 		var rnfErr *util.RecordNotFoundError
 		if errors.As(err, &rnfErr) {

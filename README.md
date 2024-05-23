@@ -36,6 +36,9 @@ make run
 ## For Linting on the local machine
 Install `golangci-lint` [Link](https://golangci-lint.run/welcome/install/) recommended way is to put it in the golang binary directory
 
+## Testing 
+Everything should have corresponding test suites except the repository for now
+
 ```shell 
 curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin VERSION_NUMBER_HERE
 ```

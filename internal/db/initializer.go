@@ -21,9 +21,9 @@ func GetPQueries() *db.Queries {
 	return pQueries
 }
 
-func ConnectPostgresql(url string) (*pgx.Conn, error) {
+func ConnectPostgresql(url string) (*pgx.Conn, *db.Queries, error) {
 	if postgresqlDbConnection != nil {
-		return nil, errors.New("database instance exists")
+		return nil, nil, errors.New("database instance exists")
 	}
 
 	conn, err := pgx.Connect(context.Background(), url)
@@ -35,5 +35,5 @@ func ConnectPostgresql(url string) (*pgx.Conn, error) {
 
 	pQueries = db.New(conn)
 
-	return conn, nil
+	return conn, pQueries, nil
 }

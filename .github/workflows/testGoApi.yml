@@ -17,8 +17,6 @@ env:
   SQLC_VERSION: '1.25.0'
 
 
-
-
 jobs:
   create-env-file:
     runs-on: ubuntu-latest
@@ -69,6 +67,33 @@ jobs:
           version: v1.57.1
 #          args: --timeout=30m --config=${{ github.workspace }}/.golangci.yml --issues-exit-code=0
           skip-cache: true
+
+  test:
+    needs: [create-env-file]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: [ '1.22.x' ]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go-version }}
+      - name: download .env file
+        uses: actions/download-artifact@v4
+        with:
+          name: env-file
+          path: .
+      - uses: sqlc-dev/setup-sqlc@v4
+        with:
+          sqlc-version: ${{ env.SQLC_VERSION }}
+      - run: make generate
+      - name: Install dependencies
+        run: make install
+      - name: Run tests
+        run: make test
 
   build:
     needs: [lint, create-env-file]

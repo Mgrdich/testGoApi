@@ -7,15 +7,16 @@ import (
 	"testGoApi/internal/services"
 )
 
-func GetPersonRouter(r chi.Router) {
-	personStoreService := services.NewPersonService()
-	personController := controller.NewPersonController(personStoreService)
+func GetPersonRouter(personStoreService services.PersonService) func(router chi.Router) {
+	return func(r chi.Router) {
+		personController := controller.NewPersonController(personStoreService)
 
-	r.Get("/", personController.HandleGetAllPerson)
-	r.Post("/", personController.HandleCreatePerson)
+		r.Get("/", personController.HandleGetAllPerson)
+		r.Post("/", personController.HandleCreatePerson)
 
-	r.Route("/{id}", func(r chi.Router) {
-		r.Use(middlewares.GetContextIdFunc(personStoreService.GetByID, middlewares.SetPersonCtx))
-		r.Get("/", personController.HandleGetPerson)
-	})
+		r.Route("/{id}", func(r chi.Router) {
+			r.Use(middlewares.GetContextIdFunc(personStoreService.Get, middlewares.SetPersonCtx))
+			r.Get("/", personController.HandleGetPerson)
+		})
+	}
 }

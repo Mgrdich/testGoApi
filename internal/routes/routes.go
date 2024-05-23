@@ -5,15 +5,21 @@ import (
 	"github.com/go-chi/render"
 	"testGoApi/internal/controller"
 	"testGoApi/internal/server"
+	"testGoApi/internal/services"
 )
 
-func AddRoutes(s *server.Server) {
+type ApplicationServices struct {
+	MovieService  services.MovieService
+	PersonService services.PersonService
+}
+
+func AddRoutes(s *server.Server, services *ApplicationServices) {
 	s.Router.Use(render.SetContentType(render.ContentTypeJSON))
 
 	s.Router.Get("/health", controller.HandleGetHealth)
 
 	s.Router.Route("/api/v1", func(r chi.Router) {
-		r.Route("/movies", GetMoviesRouter)
-		r.Route("/person", GetPersonRouter)
+		r.Route("/movies", GetMoviesRouter(services.MovieService))
+		r.Route("/person", GetPersonRouter(services.PersonService))
 	})
 }

@@ -7,16 +7,17 @@ import (
 	"testGoApi/internal/services"
 )
 
-func GetMoviesRouter(r chi.Router) {
-	movieStoreService := services.NewMoviesService()
-	moviesController := controller.NewMoviesController(movieStoreService)
-	r.Get("/", moviesController.HandleGetAllMovies)
-	r.Post("/", moviesController.HandleCreateMovie)
+func GetMoviesRouter(movieStoreService services.MovieService) func(router chi.Router) {
+	return func(r chi.Router) {
+		moviesController := controller.NewMoviesController(movieStoreService)
+		r.Get("/", moviesController.HandleGetAllMovies)
+		r.Post("/", moviesController.HandleCreateMovie)
 
-	r.Route("/{id}", func(r chi.Router) {
-		r.Use(middlewares.GetContextIdFunc(movieStoreService.GetByID, middlewares.SetMovieCtx))
-		r.Get("/", moviesController.HandleGetMovie)
-		r.Put("/", moviesController.HandleUpdateMovie)
-		r.Delete("/", moviesController.HandleDeleteMovie)
-	})
+		r.Route("/{id}", func(r chi.Router) {
+			r.Use(middlewares.GetContextIdFunc(movieStoreService.Get, middlewares.SetMovieCtx))
+			r.Get("/", moviesController.HandleGetMovie)
+			r.Put("/", moviesController.HandleUpdateMovie)
+			r.Delete("/", moviesController.HandleDeleteMovie)
+		})
+	}
 }

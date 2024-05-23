@@ -1,4 +1,4 @@
-package services
+package repository
 
 import (
 	"context"
@@ -12,17 +12,17 @@ import (
 	"testGoApi/internal/models"
 )
 
-type MoviesService struct {
+type MoviesRepositoryImpl struct {
 	q *db.Queries
 }
 
-func NewMoviesService() *MoviesService {
-	return &MoviesService{
-		q: db2.GetPQueries(),
+func NewMoviesRepositoryImpl(queries *db.Queries) *MoviesRepositoryImpl {
+	return &MoviesRepositoryImpl{
+		q: queries,
 	}
 }
 
-func dbMovieToMovie(movie db.Movie) *models.Movie {
+func mapDBMovieToModelMovie(movie db.Movie) *models.Movie {
 	ticketPrice, _ := movie.TicketPrice.Float64Value()
 
 	return &models.Movie{
@@ -36,7 +36,7 @@ func dbMovieToMovie(movie db.Movie) *models.Movie {
 	}
 }
 
-func (s *MoviesService) GetAll() ([]*models.Movie, error) {
+func (s *MoviesRepositoryImpl) GetAll() ([]*models.Movie, error) {
 	dbMovies, err := s.q.GetAllMovies(context.Background())
 	if err != nil {
 		return nil, err
@@ -44,24 +44,24 @@ func (s *MoviesService) GetAll() ([]*models.Movie, error) {
 
 	var movies []*models.Movie
 	for _, mm := range dbMovies {
-		movies = append(movies, dbMovieToMovie(mm))
+		movies = append(movies, mapDBMovieToModelMovie(mm))
 	}
 
 	return movies, nil
 }
 
-func (s *MoviesService) GetByID(id uuid.UUID) (*models.Movie, error) {
+func (s *MoviesRepositoryImpl) GetByID(id uuid.UUID) (*models.Movie, error) {
 	dbMovie, err := s.q.GetMovie(context.Background(), db2.ToUUID(id))
 	if err != nil {
 		return nil, err
 	}
 
-	movie := dbMovieToMovie(dbMovie)
+	movie := mapDBMovieToModelMovie(dbMovie)
 
 	return movie, nil
 }
 
-func (s *MoviesService) Create(param models.CreateMovieParam) (*models.Movie, error) {
+func (s *MoviesRepositoryImpl) Save(param models.CreateMovieParam) (*models.Movie, error) {
 	dbParam := db.CreateMovieParams{
 		Title:       db2.ToText(param.Title),
 		Director:    db2.ToText(param.Director),
@@ -74,12 +74,12 @@ func (s *MoviesService) Create(param models.CreateMovieParam) (*models.Movie, er
 		return nil, err
 	}
 
-	movie := dbMovieToMovie(dbMovie)
+	movie := mapDBMovieToModelMovie(dbMovie)
 
 	return movie, nil
 }
 
-func (s *MoviesService) Update(id uuid.UUID, param models.UpdateMovieParam) (*models.Movie, error) {
+func (s *MoviesRepositoryImpl) UpdateByID(id uuid.UUID, param models.UpdateMovieParam) (*models.Movie, error) {
 	dbParam := db.UpdateMovieParams{
 		ID:        db2.ToUUID(id),
 		Title:     db2.ToText(param.Title),
@@ -95,12 +95,12 @@ func (s *MoviesService) Update(id uuid.UUID, param models.UpdateMovieParam) (*mo
 		return nil, err
 	}
 
-	movie := dbMovieToMovie(dbMovie)
+	movie := mapDBMovieToModelMovie(dbMovie)
 
 	return movie, nil
 }
 
-func (s *MoviesService) Delete(id uuid.UUID) error {
+func (s *MoviesRepositoryImpl) DeleteByID(id uuid.UUID) error {
 	return s.q.DeleteMovie(context.Background(), pgtype.UUID{
 		Bytes: id,
 		Valid: true,
