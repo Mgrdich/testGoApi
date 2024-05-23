@@ -1,7 +1,9 @@
 package controller
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"net/http"
 	"testing"
 
@@ -25,7 +27,11 @@ func (*mockMovieService) Get(id uuid.UUID) (*models.Movie, error) {
 }
 
 func (*mockMovieService) Create(param models.CreateMovieParam) (*models.Movie, error) {
-	return nil, nil
+	return &models.Movie{
+		Title:       param.Title,
+		Director:    param.Director,
+		TicketPrice: param.TicketPrice,
+	}, nil
 }
 
 func (*mockMovieService) Delete(id uuid.UUID) error {
@@ -33,7 +39,12 @@ func (*mockMovieService) Delete(id uuid.UUID) error {
 }
 
 func (*mockMovieService) Update(id uuid.UUID, param models.UpdateMovieParam) (*models.Movie, error) {
-	return nil, nil
+	return &models.Movie{
+		ID:          id,
+		Title:       param.Title,
+		Director:    param.Director,
+		TicketPrice: param.TicketPrice,
+	}, nil
 }
 
 func setMovieCtx() context.Context {
@@ -60,18 +71,44 @@ func TestMoviesController_HandleGetMovie(t *testing.T) {
 }
 
 func TestMoviesController_HandleCreateMovie(t *testing.T) {
+	createParam := CreateMovieRequest{
+		Title:       "title",
+		Director:    "Director",
+		TicketPrice: 2,
+	}
+
+	jsonData, err := json.Marshal(createParam)
+
+	if err != nil {
+		t.Error("Error encoding JSON:", err)
+	}
+
 	controller := NewMoviesController(newMockMovieService())
-	req := NewRequest(t, http.MethodPost, "/movies", nil)
+
+	// json content-type
+	req := NewRequest(t, http.MethodPost, "/movies", bytes.NewBuffer(jsonData))
 	ctx := setMovieCtx()
 
 	rr := ExecuteRequest(req, controller.HandleCreateMovie, ctx)
 
-	CheckStatusOK(t, rr)
+	CheckStatusCreated(t, rr)
 }
 
 func TestMoviesController_HandleUpdateMovie(t *testing.T) {
+	updateParam := UpdateMovieRequest{
+		Title:       "title",
+		Director:    "Director",
+		TicketPrice: 2,
+	}
+
+	jsonData, err := json.Marshal(updateParam)
+
+	if err != nil {
+		t.Error("Error encoding JSON:", err)
+	}
+
 	controller := NewMoviesController(newMockMovieService())
-	req := NewRequest(t, http.MethodPut, "/movies/1", nil)
+	req := NewRequest(t, http.MethodPut, "/movies/1", bytes.NewBuffer(jsonData))
 	ctx := setMovieCtx()
 
 	rr := ExecuteRequest(req, controller.HandleUpdateMovie, ctx)

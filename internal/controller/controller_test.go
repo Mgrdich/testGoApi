@@ -33,6 +33,14 @@ func CheckStatusOK(t *testing.T, rr *httptest.ResponseRecorder) {
 	}
 }
 
+func CheckStatusCreated(t *testing.T, rr *httptest.ResponseRecorder) {
+	t.Helper()
+
+	if status := rr.Code; status != http.StatusCreated {
+		t.Errorf("Handler returned wrong status code. Expected: %d. Got: %d.", http.StatusCreated, status)
+	}
+}
+
 func NewRequest(t *testing.T, method, url string, body io.Reader) *http.Request {
 	t.Helper()
 
@@ -41,6 +49,8 @@ func NewRequest(t *testing.T, method, url string, body io.Reader) *http.Request 
 	if err != nil {
 		t.Errorf("Error creating a new request: %v", err)
 	}
+
+	req.Header.Set("Content-Type", "application/json")
 
 	return req
 }
