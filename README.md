@@ -17,6 +17,7 @@ POSTGRESQL=postgres://username:password@localhost:5432/db-name
 GOOSE_DRIVER=postgres
 GOOSE_DBSTRING=${POSTGRESQL}
 GOOSE_MIGRATION_DIR=./internal/db/migrations
+ENVIRONMENT=dev
 ```
 
 ```shell
@@ -46,7 +47,12 @@ curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/insta
 add the `$(go env GOPATH)` to `PATH`
 
 ## For Swagger 
-To generate Swagger documentation for the API, first, add annotations to the controllers. Here's an example:
+
+To generate Swagger documentation for the API, first, you need to install swaggo CLI:
+```bash
+go install github.com/swaggo/swag/cmd/swag@latest
+```
+Add annotations to the controllers. Here's an example:
 ```
 // HandleCreateUser creates a new user.
 // @Summary Create a new user
@@ -69,6 +75,7 @@ make gen-swagger
 ```
 After running the command, you can access the documentation of your API by running the project and visiting:
 http://localhost:8080/swagger/index.html
+* Make sure you have ENVIRONMENT=dev added in .env  
 
 ### For VsCode users
 ```json
