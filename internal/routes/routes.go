@@ -28,5 +28,4 @@ func AddRoutes(s *server.Server, services *ApplicationServices) {
 	if configs.GetAppConfig().Environment == "dev" {
 		s.Router.Mount("/swagger", httpSwagger.WrapHandler)
 	}
-
 }
