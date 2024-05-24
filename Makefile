@@ -5,7 +5,7 @@ generate:
 	sqlc generate
 
 gen-swagger:
-	swag init -g "cmd/server.go"
+	swag init -g cmd/server.go --outputTypes go,yaml
 
 diff:
 	sqlc diff

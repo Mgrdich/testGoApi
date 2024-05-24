@@ -60,7 +60,7 @@ jobs:
       - name: Install swag
         run: go install github.com/swaggo/swag/cmd/swag@latest
       - name: Initialize Swagger
-        run: swag init -g cmd/server.go
+        run: make gen-swagger
       - run: make sqlc-lint
       - run: make generate
       - name: go internal linting mechanism
@@ -99,7 +99,7 @@ jobs:
       - name: Install swag
         run: go install github.com/swaggo/swag/cmd/swag@latest
       - name: Initialize Swagger
-        run: swag init -g cmd/server.go
+        run: make gen-swagger
       - name: Run tests
         run: make test
 
@@ -126,7 +126,7 @@ jobs:
       - name: Install swag
         run: go install github.com/swaggo/swag/cmd/swag@latest
       - name: Initialize Swagger
-        run: swag init -g cmd/server.go
+        run: make gen-swagger
       - uses: sqlc-dev/setup-sqlc@v4
         with:
           sqlc-version: ${{ env.SQLC_VERSION }}
