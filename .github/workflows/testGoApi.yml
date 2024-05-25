@@ -58,7 +58,7 @@ jobs:
         with:
            sqlc-version: ${{ env.SQLC_VERSION }}
       - name: Install swag
-        run: go install github.com/swaggo/swag/cmd/swag@latest
+        run: go install github.com/swaggo/swag/cmd/swag@v1.16.3
       - name: Initialize Swagger
         run: make gen-swagger
       - run: make sqlc-lint
@@ -97,7 +97,7 @@ jobs:
       - name: Install dependencies
         run: make install
       - name: Install swag
-        run: go install github.com/swaggo/swag/cmd/swag@latest
+        run: go install github.com/swaggo/swag/cmd/swag@v1.16.3
       - name: Initialize Swagger
         run: make gen-swagger
       - name: Run tests
@@ -124,7 +124,7 @@ jobs:
       - name: Install dependencies
         run: make install
       - name: Install swag
-        run: go install github.com/swaggo/swag/cmd/swag@latest
+        run: go install github.com/swaggo/swag/cmd/swag@v1.16.3
       - name: Initialize Swagger
         run: make gen-swagger
       - uses: sqlc-dev/setup-sqlc@v4

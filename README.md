@@ -50,7 +50,7 @@ add the `$(go env GOPATH)` to `PATH`
 
 To generate Swagger documentation for the API, first, you need to install swaggo CLI:
 ```bash
-go install github.com/swaggo/swag/cmd/swag@latest
+go install github.com/swaggo/swag/cmd/swag@v1.16.3
 ```
 Add annotations to the controllers. Here's an example:
 ```
