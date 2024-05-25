@@ -3,6 +3,8 @@ package routes
 import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
+	httpSwagger "github.com/swaggo/http-swagger/v2"
+	"testGoApi/configs"
 	"testGoApi/internal/controller"
 	"testGoApi/internal/server"
 	"testGoApi/internal/services"
@@ -22,4 +24,8 @@ func AddRoutes(s *server.Server, services *ApplicationServices) {
 		r.Route("/movies", GetMoviesRouter(services.MovieService))
 		r.Route("/person", GetPersonRouter(services.PersonService))
 	})
+
+	if configs.GetAppConfig().Environment == "dev" {
+		s.Router.Mount("/swagger", httpSwagger.WrapHandler)
+	}
 }

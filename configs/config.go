@@ -10,6 +10,7 @@ import (
 type AppConfig struct {
 	Port          string
 	PostgresqlUrl string
+	Environment   string
 }
 
 var appConfig *AppConfig
@@ -24,6 +25,7 @@ func GetAppConfig() *AppConfig {
 		appConfig = &AppConfig{
 			Port:          os.Getenv("PORT"),
 			PostgresqlUrl: os.Getenv("POSTGRESQL"),
+			Environment:   os.Getenv("ENVIRONMENT"),
 		}
 	}
 

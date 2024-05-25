@@ -267,3 +267,5 @@ db-data/
 atlas.hcl
 
 **/sqlc/
+
+docs/

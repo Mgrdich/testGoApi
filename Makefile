@@ -4,6 +4,9 @@ export
 generate:
 	sqlc generate
 
+gen-swagger:
+	swag init -g cmd/server.go --outputTypes go,yaml
+
 diff:
 	sqlc diff
 
@@ -22,9 +25,9 @@ test:
 build_ci:
 	CGO_ENABLED=0 GOOS=linux go build -o server cmd/server.go
 
-build: generate build_ci
+build: generate gen-swagger build_ci
 
-run: generate
+run: generate gen-swagger
 	go run cmd/server.go
 
 install:
