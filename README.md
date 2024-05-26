@@ -13,7 +13,7 @@ Project demonstrates how to create Go Backend project using
 create `.env` file at root
 ```shell
 PORT=8080
-POSTGRESQL=postgres://username:password@localhost:5432/db-name
+POSTGRESQL=postgres://username:password@localhost:5433/testGoApi
 GOOSE_DRIVER=postgres
 GOOSE_DBSTRING=${POSTGRESQL}
 GOOSE_MIGRATION_DIR=./internal/db/migrations
