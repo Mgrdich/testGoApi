@@ -48,11 +48,12 @@ func NewMoviesController(store services.MovieService) *MoviesController {
 // @Summary Get a movie by context
 // @Description Retrieves a movie using the context set by middleware
 // @Tags movie
+// @Param id path string true "Movie ID"
 // @Accept json
 // @Produce json
 // @Success 200 {object} movieDTO
-// @Failure 400 {object} server.ErrorResponse
-// @Router /api/v1/movie [get]
+// @Failure 400 {object} server.HTTPError
+// @Router /api/v1/movies/{id} [get]
 func (mC *MoviesController) HandleGetMovie(w http.ResponseWriter, r *http.Request) {
 	movie, ok := middlewares.GetMovieCtx(r.Context())
 	if !ok {
@@ -71,8 +72,8 @@ func (mC *MoviesController) HandleGetMovie(w http.ResponseWriter, r *http.Reques
 // @Accept json
 // @Produce json
 // @Success 200 {array} movieDTO
-// @Failure 404 {object} server.ErrorResponse
-// @Failure 500 {object} server.ErrorResponse
+// @Failure 404 {object} server.HTTPError
+// @Failure 500 {object} server.HTTPError
 // @Router /api/v1/movies [get]
 func (mC *MoviesController) HandleGetAllMovies(w http.ResponseWriter, r *http.Request) {
 	movies, err := mC.MovieService.GetAll()
@@ -122,9 +123,8 @@ func (mr *CreateMovieRequest) Bind(r *http.Request) error {
 // @Produce json
 // @Param movie body CreateMovieRequest true "Create Movie Request"
 // @Success 201 {object} movieDTO
-// @Failure 400 {object} server.ErrorResponse
-// @Failure 409 {object} server.ErrorResponse
-// @Failure 500 {object} server.ErrorResponse
+// @Failure 400 {object} server.HTTPError
+// @Failure 500 {object} server.HTTPError
 // @Router /api/v1/movies [post]
 func (mC *MoviesController) HandleCreateMovie(w http.ResponseWriter, r *http.Request) {
 	data := &CreateMovieRequest{}
@@ -134,7 +134,6 @@ func (mC *MoviesController) HandleCreateMovie(w http.ResponseWriter, r *http.Req
 	}
 
 	movie, err := mC.MovieService.Create(models.CreateMovieParam{
-		ID:          uuid.New(),
 		Title:       data.Title,
 		Director:    data.Director,
 		ReleaseDate: time.Now().UTC(),
@@ -142,12 +141,6 @@ func (mC *MoviesController) HandleCreateMovie(w http.ResponseWriter, r *http.Req
 	})
 
 	if err != nil {
-		var dupKetErr *util.DuplicateKeyError
-		if errors.As(err, &dupKetErr) {
-			_ = render.Render(w, r, server.ErrorConflict(err))
-			return
-		}
-
 		_ = render.Render(w, r, server.ErrorInternalServerError)
 
 		return
@@ -182,9 +175,9 @@ func (mr *UpdateMovieRequest) Bind(r *http.Request) error {
 // @Param id path string true "Movie ID"
 // @Param movie body UpdateMovieRequest true "Update Movie Request"
 // @Success 200 {object} movieDTO
-// @Failure 400 {object} server.ErrorResponse
-// @Failure 404 {object} server.ErrorResponse
-// @Failure 500 {object} server.ErrorResponse
+// @Failure 400 {object} server.HTTPError
+// @Failure 404 {object} server.HTTPError
+// @Failure 500 {object} server.HTTPError
 // @Router /api/v1/movies/{id} [put]
 func (mC *MoviesController) HandleUpdateMovie(w http.ResponseWriter, r *http.Request) {
 	movie, ok := middlewares.GetMovieCtx(r.Context())
@@ -229,9 +222,9 @@ func (mC *MoviesController) HandleUpdateMovie(w http.ResponseWriter, r *http.Req
 // @Produce json
 // @Param id path string true "Movie ID"
 // @Success 200
-// @Failure 400 {object} server.ErrorResponse
-// @Failure 404 {object} server.ErrorResponse
-// @Failure 500 {object} server.ErrorResponse
+// @Failure 400 {object} server.HTTPError
+// @Failure 404 {object} server.HTTPError
+// @Failure 500 {object} server.HTTPError
 // @Router /api/v1/movies/{id} [delete]
 func (mC *MoviesController) HandleDeleteMovie(w http.ResponseWriter, r *http.Request) {
 	movie, ok := middlewares.GetMovieCtx(r.Context())

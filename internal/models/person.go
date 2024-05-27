@@ -14,7 +14,6 @@ type Person struct {
 }
 
 type CreatePerson struct {
-	ID        uuid.UUID
 	FirstName string
 	LastName  string
 }
