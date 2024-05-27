@@ -49,14 +49,8 @@ func (s *MemoryMoviesStore) Create(param models.CreateMovieParam) (*models.Movie
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	if _, ok := s.movies[param.ID]; ok {
-		return nil, &util.DuplicateKeyError{
-			ID: param.ID,
-		}
-	}
-
 	movie := models.Movie{
-		ID:          param.ID,
+		ID:          uuid.New(),
 		Title:       param.Title,
 		Director:    param.Director,
 		ReleaseDate: param.ReleaseDate,

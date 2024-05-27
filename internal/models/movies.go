@@ -17,7 +17,6 @@ type Movie struct {
 }
 
 type CreateMovieParam struct {
-	ID          uuid.UUID
 	Title       string
 	Director    string
 	ReleaseDate time.Time

@@ -51,8 +51,8 @@ func NewPersonController(store services.PersonService) *PersonController {
 // @Produce  json
 // @Param id path string true "Person ID"
 // @Success 200 {object} personDTO
-// @Failure 400 {object} server.ErrorResponse
-// @Failure 404 {object} server.ErrorResponse
+// @Failure 400 {object} server.HTTPError
+// @Failure 404 {object} server.HTTPError
 // @Router /api/v1/person/{id} [get]
 func (pC *PersonController) HandleGetPerson(w http.ResponseWriter, r *http.Request) {
 	personId := chi.URLParam(r, "id")
@@ -86,8 +86,8 @@ func (pC *PersonController) HandleGetPerson(w http.ResponseWriter, r *http.Reque
 // @Accept  json
 // @Produce  json
 // @Success 200 {array} personDTO
-// @Failure 404 {object} server.ErrorResponse
-// @Failure 500 {object} server.ErrorResponse
+// @Failure 404 {object} server.HTTPError
+// @Failure 500 {object} server.HTTPError
 // @Router /api/v1/person [get]
 func (pC *PersonController) HandleGetAllPerson(w http.ResponseWriter, r *http.Request) {
 	people, err := pC.PersonService.GetAll()
@@ -136,9 +136,8 @@ func (pr *CreatePersonRequest) Bind(r *http.Request) error {
 // @Produce json
 // @Param data body CreatePersonRequest true "Person data"
 // @Success 201 {object} personDTO
-// @Failure 400 {object} server.ErrorResponse
-// @Failure 409 {object} server.ErrorResponse
-// @Failure 500 {object} server.ErrorResponse
+// @Failure 400 {object} server.HTTPError
+// @Failure 500 {object} server.HTTPError
 // @Router /api/v1/person [post]
 func (pC *PersonController) HandleCreatePerson(w http.ResponseWriter, r *http.Request) {
 	data := &CreatePersonRequest{}
@@ -148,18 +147,11 @@ func (pC *PersonController) HandleCreatePerson(w http.ResponseWriter, r *http.Re
 	}
 
 	person, err := pC.PersonService.Create(models.CreatePerson{
-		ID:        uuid.New(),
 		FirstName: data.FirstName,
 		LastName:  data.LastName,
 	})
 
 	if err != nil {
-		var dupKetErr *util.DuplicateKeyError
-		if errors.As(err, &dupKetErr) {
-			_ = render.Render(w, r, server.ErrorConflict(err))
-			return
-		}
-
 		_ = render.Render(w, r, server.ErrorInternalServerError)
 
 		return
