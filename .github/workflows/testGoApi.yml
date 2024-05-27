@@ -18,26 +18,7 @@ env:
 
 
 jobs:
-  create-env-file:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Read .env file
-        id: set-env
-        run: |
-          touch .env
-          echo PORT=8080 >> .env
-          echo POSTGRESQL=${{ secrets.POSTGRESQL }} >> .env
-          echo GOOSE_DRIVER=postgres >> .env
-          echo GOOSE_DBSTRING=${{ secrets.POSTGRESQL }} >> .env
-          echo GOOSE_MIGRATION_DIR=./internal/db/migrations >> .env
-      - name: Upload .env file
-        uses: actions/upload-artifact@v4
-        with:
-          name: env-file
-          path: .env
-
   lint:
-    needs: create-env-file
     strategy:
       matrix:
         go-version: [ '1.22.x' ]
@@ -49,14 +30,19 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
           cache: false
-      - name: download .env file
-        uses: actions/download-artifact@v4
-        with:
-          name: env-file
-          path: .
+      - name: Create .env file
+        id: set-env
+        run: |
+          touch .env
+          echo PORT=${{ secrets.PORT }} >> .env
+          echo POSTGRESQL=${{ secrets.POSTGRESQL }} >> .env
+          echo GOOSE_DRIVER=postgres >> .env
+          echo GOOSE_DBSTRING=${{ secrets.POSTGRESQL }} >> .env
+          echo GOOSE_MIGRATION_DIR={{ GOOSE_MIGRATION_DIR }} >> .env
+          echo ENVIRONMENT=dev >> .env
       - uses: sqlc-dev/setup-sqlc@v4
         with:
-           sqlc-version: ${{ env.SQLC_VERSION }}
+          sqlc-version: ${{ env.SQLC_VERSION }}
       - name: Install swag
         run: go install github.com/swaggo/swag/cmd/swag@v1.16.3
       - name: Initialize Swagger
@@ -69,11 +55,10 @@ jobs:
         uses: golangci/golangci-lint-action@v4
         with:
           version: v1.57.1
-#          args: --timeout=30m --config=${{ github.workspace }}/.golangci.yml --issues-exit-code=0
+          #          args: --timeout=30m --config=${{ github.workspace }}/.golangci.yml --issues-exit-code=0
           skip-cache: true
 
   test:
-    needs: [create-env-file]
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -85,11 +70,16 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go-version }}
-      - name: download .env file
-        uses: actions/download-artifact@v4
-        with:
-          name: env-file
-          path: .
+      - name: Create .env file
+        id: set-env
+        run: |
+          touch .env
+          echo PORT=${{ secrets.PORT }} >> .env
+          echo POSTGRESQL=${{ secrets.POSTGRESQL }} >> .env
+          echo GOOSE_DRIVER=postgres >> .env
+          echo GOOSE_DBSTRING=${{ secrets.POSTGRESQL }} >> .env
+          echo GOOSE_MIGRATION_DIR={{ GOOSE_MIGRATION_DIR }} >> .env
+          echo ENVIRONMENT=dev >> .env
       - uses: sqlc-dev/setup-sqlc@v4
         with:
           sqlc-version: ${{ env.SQLC_VERSION }}
@@ -104,7 +94,7 @@ jobs:
         run: make test
 
   build:
-    needs: [lint, create-env-file]
+    needs: [lint]
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -116,11 +106,16 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go-version }}
-      - name: download .env file
-        uses: actions/download-artifact@v4
-        with:
-          name: env-file
-          path: .
+      - name: Create .env file
+        id: set-env
+        run: |
+          touch .env
+          echo PORT=${{ secrets.PORT }} >> .env
+          echo POSTGRESQL=${{ secrets.POSTGRESQL }} >> .env
+          echo GOOSE_DRIVER=postgres >> .env
+          echo GOOSE_DBSTRING=${{ secrets.POSTGRESQL }} >> .env
+          echo GOOSE_MIGRATION_DIR={{ GOOSE_MIGRATION_DIR }} >> .env
+          echo ENVIRONMENT=dev >> .env
       - name: Install dependencies
         run: make install
       - name: Install swag
