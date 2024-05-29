@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+
 	"github.com/google/uuid"
 	"testGoApi/internal/models"
 	"testGoApi/internal/repository"
@@ -29,7 +30,10 @@ func (s *MoviesServiceImpl) Create(ctx context.Context, param models.CreateMovie
 	return s.movieRepository.Save(ctx, param)
 }
 
-func (s *MoviesServiceImpl) Update(ctx context.Context, id uuid.UUID, param models.UpdateMovieParam) (*models.Movie, error) {
+func (s *MoviesServiceImpl) Update(
+	ctx context.Context,
+	id uuid.UUID,
+	param models.UpdateMovieParam) (*models.Movie, error) {
 	return s.movieRepository.UpdateByID(ctx, id, param)
 }
 

@@ -14,15 +14,15 @@ import (
 
 type mockMovieService struct{}
 
-func (*mockMovieService) GetAll() ([]*models.Movie, error) {
+func (*mockMovieService) GetAll(_ context.Context) ([]*models.Movie, error) {
 	return nil, nil
 }
 
-func (*mockMovieService) Get(id uuid.UUID) (*models.Movie, error) {
+func (*mockMovieService) Get(_ context.Context, id uuid.UUID) (*models.Movie, error) {
 	return &models.Movie{ID: id}, nil
 }
 
-func (*mockMovieService) Create(param models.CreateMovieParam) (*models.Movie, error) {
+func (*mockMovieService) Create(_ context.Context, param models.CreateMovieParam) (*models.Movie, error) {
 	return &models.Movie{
 		Title:       param.Title,
 		Director:    param.Director,
@@ -30,11 +30,11 @@ func (*mockMovieService) Create(param models.CreateMovieParam) (*models.Movie, e
 	}, nil
 }
 
-func (*mockMovieService) Delete(id uuid.UUID) error {
+func (*mockMovieService) Delete(_ context.Context, id uuid.UUID) error {
 	return nil
 }
 
-func (*mockMovieService) Update(id uuid.UUID, param models.UpdateMovieParam) (*models.Movie, error) {
+func (*mockMovieService) Update(_ context.Context, id uuid.UUID, param models.UpdateMovieParam) (*models.Movie, error) {
 	return &models.Movie{
 		ID:          id,
 		Title:       param.Title,
