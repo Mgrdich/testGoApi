@@ -1,6 +1,8 @@
 package services
 
 import (
+	"context"
+
 	"github.com/google/uuid"
 	"testGoApi/internal/models"
 	"testGoApi/internal/repository"
@@ -16,22 +18,25 @@ func NewMoviesServiceImpl(movieRepository repository.MovieRepository) *MoviesSer
 	}
 }
 
-func (s *MoviesServiceImpl) GetAll() ([]*models.Movie, error) {
-	return s.movieRepository.GetAll()
+func (s *MoviesServiceImpl) GetAll(ctx context.Context) ([]*models.Movie, error) {
+	return s.movieRepository.GetAll(ctx)
 }
 
-func (s *MoviesServiceImpl) Get(id uuid.UUID) (*models.Movie, error) {
-	return s.movieRepository.GetByID(id)
+func (s *MoviesServiceImpl) Get(ctx context.Context, id uuid.UUID) (*models.Movie, error) {
+	return s.movieRepository.GetByID(ctx, id)
 }
 
-func (s *MoviesServiceImpl) Create(param models.CreateMovieParam) (*models.Movie, error) {
-	return s.movieRepository.Save(param)
+func (s *MoviesServiceImpl) Create(ctx context.Context, param models.CreateMovieParam) (*models.Movie, error) {
+	return s.movieRepository.Save(ctx, param)
 }
 
-func (s *MoviesServiceImpl) Update(id uuid.UUID, param models.UpdateMovieParam) (*models.Movie, error) {
-	return s.movieRepository.UpdateByID(id, param)
+func (s *MoviesServiceImpl) Update(
+	ctx context.Context,
+	id uuid.UUID,
+	param models.UpdateMovieParam) (*models.Movie, error) {
+	return s.movieRepository.UpdateByID(ctx, id, param)
 }
 
-func (s *MoviesServiceImpl) Delete(id uuid.UUID) error {
-	return s.movieRepository.DeleteByID(id)
+func (s *MoviesServiceImpl) Delete(ctx context.Context, id uuid.UUID) error {
+	return s.movieRepository.DeleteByID(ctx, id)
 }

@@ -1,6 +1,8 @@
 package services
 
 import (
+	"context"
+
 	"github.com/google/uuid"
 	"testGoApi/internal/models"
 	"testGoApi/internal/repository"
@@ -16,14 +18,14 @@ func NewPersonServiceImpl(personRepository repository.PersonRepository) *PersonS
 	}
 }
 
-func (s *PersonServiceImpl) GetAll() ([]*models.Person, error) {
-	return s.personRepository.GetAll()
+func (s *PersonServiceImpl) GetAll(ctx context.Context) ([]*models.Person, error) {
+	return s.personRepository.GetAll(ctx)
 }
 
-func (s *PersonServiceImpl) Get(id uuid.UUID) (*models.Person, error) {
-	return s.personRepository.GetByID(id)
+func (s *PersonServiceImpl) Get(ctx context.Context, id uuid.UUID) (*models.Person, error) {
+	return s.personRepository.GetByID(ctx, id)
 }
 
-func (s *PersonServiceImpl) Create(param models.CreatePerson) (*models.Person, error) {
-	return s.personRepository.Save(param)
+func (s *PersonServiceImpl) Create(ctx context.Context, param models.CreatePerson) (*models.Person, error) {
+	return s.personRepository.Save(ctx, param)
 }

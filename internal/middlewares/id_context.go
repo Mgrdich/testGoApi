@@ -29,7 +29,7 @@ func GetContextIdFunc[K models.Models](getByIdFunc util.GetByIDFunc[K],
 				return
 			}
 
-			storeValue, err := getByIdFunc(id)
+			storeValue, err := getByIdFunc(r.Context(), id)
 
 			if err != nil {
 				_ = render.Render(w, r, server.ErrorNotFound)

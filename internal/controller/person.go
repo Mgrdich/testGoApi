@@ -68,7 +68,8 @@ func (pC *PersonController) HandleGetPerson(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	person, err := pC.PersonService.Get(id)
+	// TODO context should be used here
+	person, err := pC.PersonService.Get(r.Context(), id)
 
 	if err != nil {
 		_ = render.Render(w, r, server.ErrorNotFound)
@@ -90,7 +91,7 @@ func (pC *PersonController) HandleGetPerson(w http.ResponseWriter, r *http.Reque
 // @Failure 500 {object} server.HTTPError
 // @Router /api/v1/person [get]
 func (pC *PersonController) HandleGetAllPerson(w http.ResponseWriter, r *http.Request) {
-	people, err := pC.PersonService.GetAll()
+	people, err := pC.PersonService.GetAll(r.Context())
 	if err != nil {
 		var rnfErr *util.RecordNotFoundError
 		if errors.As(err, &rnfErr) {
@@ -146,7 +147,7 @@ func (pC *PersonController) HandleCreatePerson(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	person, err := pC.PersonService.Create(models.CreatePerson{
+	person, err := pC.PersonService.Create(r.Context(), models.CreatePerson{
 		FirstName: data.FirstName,
 		LastName:  data.LastName,
 	})
