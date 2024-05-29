@@ -76,7 +76,7 @@ func (mC *MoviesController) HandleGetMovie(w http.ResponseWriter, r *http.Reques
 // @Failure 500 {object} server.HTTPError
 // @Router /api/v1/movies [get]
 func (mC *MoviesController) HandleGetAllMovies(w http.ResponseWriter, r *http.Request) {
-	movies, err := mC.MovieService.GetAll()
+	movies, err := mC.MovieService.GetAll(r.Context())
 	if err != nil {
 		var rnfErr *util.RecordNotFoundError
 		if errors.As(err, &rnfErr) {
@@ -133,7 +133,7 @@ func (mC *MoviesController) HandleCreateMovie(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	movie, err := mC.MovieService.Create(models.CreateMovieParam{
+	movie, err := mC.MovieService.Create(r.Context(), models.CreateMovieParam{
 		Title:       data.Title,
 		Director:    data.Director,
 		ReleaseDate: time.Now().UTC(),
@@ -192,7 +192,7 @@ func (mC *MoviesController) HandleUpdateMovie(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	updatedMovie, err := mC.MovieService.Update(movie.ID, models.UpdateMovieParam{
+	updatedMovie, err := mC.MovieService.Update(r.Context(), movie.ID, models.UpdateMovieParam{
 		Title:       data.Title,
 		Director:    data.Director,
 		ReleaseDate: time.Now().UTC(),
@@ -233,7 +233,7 @@ func (mC *MoviesController) HandleDeleteMovie(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	err := mC.MovieService.Delete(movie.ID)
+	err := mC.MovieService.Delete(r.Context(), movie.ID)
 	if err != nil {
 		var rnfErr *util.RecordNotFoundError
 		if errors.As(err, &rnfErr) {

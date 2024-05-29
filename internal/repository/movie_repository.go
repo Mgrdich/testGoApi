@@ -36,8 +36,8 @@ func mapDBMovieToModelMovie(movie db.Movie) *models.Movie {
 	}
 }
 
-func (s *MoviesRepositoryImpl) GetAll() ([]*models.Movie, error) {
-	dbMovies, err := s.q.GetAllMovies(context.Background())
+func (s *MoviesRepositoryImpl) GetAll(ctx context.Context) ([]*models.Movie, error) {
+	dbMovies, err := s.q.GetAllMovies(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -50,8 +50,8 @@ func (s *MoviesRepositoryImpl) GetAll() ([]*models.Movie, error) {
 	return movies, nil
 }
 
-func (s *MoviesRepositoryImpl) GetByID(id uuid.UUID) (*models.Movie, error) {
-	dbMovie, err := s.q.GetMovie(context.Background(), db2.ToUUID(id))
+func (s *MoviesRepositoryImpl) GetByID(ctx context.Context, id uuid.UUID) (*models.Movie, error) {
+	dbMovie, err := s.q.GetMovie(ctx, db2.ToUUID(id))
 	if err != nil {
 		return nil, err
 	}
@@ -61,14 +61,14 @@ func (s *MoviesRepositoryImpl) GetByID(id uuid.UUID) (*models.Movie, error) {
 	return movie, nil
 }
 
-func (s *MoviesRepositoryImpl) Save(param models.CreateMovieParam) (*models.Movie, error) {
+func (s *MoviesRepositoryImpl) Save(ctx context.Context, param models.CreateMovieParam) (*models.Movie, error) {
 	dbParam := db.CreateMovieParams{
 		Title:       db2.ToText(param.Title),
 		Director:    db2.ToText(param.Director),
 		ReleaseAt:   db2.ToDate(param.ReleaseDate),
 		TicketPrice: db2.ToNumeric(big.NewInt(int64(param.TicketPrice))), // TODO research and fix this type
 	}
-	dbMovie, err := s.q.CreateMovie(context.Background(), dbParam)
+	dbMovie, err := s.q.CreateMovie(ctx, dbParam)
 
 	if err != nil {
 		return nil, err
@@ -79,7 +79,10 @@ func (s *MoviesRepositoryImpl) Save(param models.CreateMovieParam) (*models.Movi
 	return movie, nil
 }
 
-func (s *MoviesRepositoryImpl) UpdateByID(id uuid.UUID, param models.UpdateMovieParam) (*models.Movie, error) {
+func (s *MoviesRepositoryImpl) UpdateByID(
+	ctx context.Context,
+	id uuid.UUID,
+	param models.UpdateMovieParam) (*models.Movie, error) {
 	dbParam := db.UpdateMovieParams{
 		ID:        db2.ToUUID(id),
 		Title:     db2.ToText(param.Title),
@@ -89,7 +92,7 @@ func (s *MoviesRepositoryImpl) UpdateByID(id uuid.UUID, param models.UpdateMovie
 		TicketPrice: db2.ToNumeric(big.NewInt(int64(param.TicketPrice))),
 		UpdatedAt:   db2.ToTimeStamp(time.Now().UTC()),
 	}
-	dbMovie, err := s.q.UpdateMovie(context.Background(), dbParam)
+	dbMovie, err := s.q.UpdateMovie(ctx, dbParam)
 
 	if err != nil {
 		return nil, err
@@ -100,8 +103,8 @@ func (s *MoviesRepositoryImpl) UpdateByID(id uuid.UUID, param models.UpdateMovie
 	return movie, nil
 }
 
-func (s *MoviesRepositoryImpl) DeleteByID(id uuid.UUID) error {
-	return s.q.DeleteMovie(context.Background(), pgtype.UUID{
+func (s *MoviesRepositoryImpl) DeleteByID(ctx context.Context, id uuid.UUID) error {
+	return s.q.DeleteMovie(ctx, pgtype.UUID{
 		Bytes: id,
 		Valid: true,
 	})

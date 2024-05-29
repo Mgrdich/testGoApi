@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"errors"
 	"testing"
 
@@ -16,23 +17,26 @@ type MockMovieRepository struct {
 	DeleteByIDFunc func(id uuid.UUID) error
 }
 
-func (m *MockMovieRepository) GetAll() ([]*models.Movie, error) {
+func (m *MockMovieRepository) GetAll(_ context.Context) ([]*models.Movie, error) {
 	return m.GetAllFunc()
 }
 
-func (m *MockMovieRepository) GetByID(id uuid.UUID) (*models.Movie, error) {
+func (m *MockMovieRepository) GetByID(_ context.Context, id uuid.UUID) (*models.Movie, error) {
 	return m.GetByIDFunc(id)
 }
 
-func (m *MockMovieRepository) Save(param models.CreateMovieParam) (*models.Movie, error) {
+func (m *MockMovieRepository) Save(_ context.Context, param models.CreateMovieParam) (*models.Movie, error) {
 	return m.SaveFunc(param)
 }
 
-func (m *MockMovieRepository) UpdateByID(id uuid.UUID, param models.UpdateMovieParam) (*models.Movie, error) {
+func (m *MockMovieRepository) UpdateByID(
+	_ context.Context,
+	id uuid.UUID,
+	param models.UpdateMovieParam) (*models.Movie, error) {
 	return m.UpdateByIDFunc(id, param)
 }
 
-func (m *MockMovieRepository) DeleteByID(id uuid.UUID) error {
+func (m *MockMovieRepository) DeleteByID(_ context.Context, id uuid.UUID) error {
 	return m.DeleteByIDFunc(id)
 }
 
@@ -50,7 +54,7 @@ func TestGetAll(t *testing.T) {
 
 	service := NewMoviesServiceImpl(mockRepo)
 
-	movies, err := service.GetAll()
+	movies, err := service.GetAll(context.Background())
 
 	if err != nil {
 		t.Fatalf("expected no error, got %v", err)
@@ -76,7 +80,7 @@ func TestGet(t *testing.T) {
 
 	service := NewMoviesServiceImpl(mockRepo)
 
-	movie, err := service.Get(id)
+	movie, err := service.Get(context.Background(), id)
 
 	if err != nil {
 		t.Fatalf("expected no error, got %v", err)
@@ -99,7 +103,7 @@ func TestCreate(t *testing.T) {
 
 	service := NewMoviesServiceImpl(mockRepo)
 
-	movie, err := service.Create(createParam)
+	movie, err := service.Create(context.Background(), createParam)
 
 	if err != nil {
 		t.Fatalf("expected no error, got %v", err)
@@ -126,7 +130,7 @@ func TestUpdate(t *testing.T) {
 
 	service := NewMoviesServiceImpl(mockRepo)
 
-	movie, err := service.Update(id, updateParam)
+	movie, err := service.Update(context.Background(), id, updateParam)
 
 	if err != nil {
 		t.Fatalf("expected no error, got %v", err)
@@ -151,7 +155,7 @@ func TestDelete(t *testing.T) {
 
 	service := NewMoviesServiceImpl(mockRepo)
 
-	err := service.Delete(id)
+	err := service.Delete(context.Background(), id)
 
 	if err != nil {
 		t.Fatalf("expected no error, got %v", err)
