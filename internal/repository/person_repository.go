@@ -28,8 +28,8 @@ func mapDBPersonToModelPerson(person db.Person) *models.Person {
 	}
 }
 
-func (s *PersonRepositoryImpl) GetAll() ([]*models.Person, error) {
-	dbPeople, err := s.q.GetAllPerson(context.Background())
+func (s *PersonRepositoryImpl) GetAll(ctx context.Context) ([]*models.Person, error) {
+	dbPeople, err := s.q.GetAllPerson(ctx)
 
 	if err != nil {
 		return nil, err
@@ -44,8 +44,8 @@ func (s *PersonRepositoryImpl) GetAll() ([]*models.Person, error) {
 	return people, nil
 }
 
-func (s *PersonRepositoryImpl) GetByID(id uuid.UUID) (*models.Person, error) {
-	dbPerson, err := s.q.GetPerson(context.Background(), db2.ToUUID(id))
+func (s *PersonRepositoryImpl) GetByID(ctx context.Context, id uuid.UUID) (*models.Person, error) {
+	dbPerson, err := s.q.GetPerson(ctx, db2.ToUUID(id))
 	if err != nil {
 		return nil, err
 	}
@@ -55,12 +55,12 @@ func (s *PersonRepositoryImpl) GetByID(id uuid.UUID) (*models.Person, error) {
 	return person, nil
 }
 
-func (s *PersonRepositoryImpl) Save(param models.CreatePerson) (*models.Person, error) {
+func (s *PersonRepositoryImpl) Save(ctx context.Context, param models.CreatePerson) (*models.Person, error) {
 	dbParam := db.CreatePersonParams{
 		FirstName: db2.ToText(param.FirstName),
 		LastName:  db2.ToText(param.LastName),
 	}
-	dbPerson, err := s.q.CreatePerson(context.Background(), dbParam)
+	dbPerson, err := s.q.CreatePerson(ctx, dbParam)
 
 	if err != nil {
 		return nil, err

@@ -15,7 +15,7 @@ type MovieRepository interface {
 }
 
 type PersonRepository interface {
-	GetAll() ([]*models.Person, error)
-	GetByID(id uuid.UUID) (*models.Person, error)
-	Save(param models.CreatePerson) (*models.Person, error)
+	GetAll(ctx context.Context) ([]*models.Person, error)
+	GetByID(ctx context.Context, id uuid.UUID) (*models.Person, error)
+	Save(ctx context.Context, param models.CreatePerson) (*models.Person, error)
 }

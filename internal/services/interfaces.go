@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+
 	"github.com/google/uuid"
 	"testGoApi/internal/models"
 )
@@ -15,7 +16,7 @@ type MovieService interface {
 }
 
 type PersonService interface {
-	GetAll() ([]*models.Person, error)
-	Get(id uuid.UUID) (*models.Person, error)
-	Create(param models.CreatePerson) (*models.Person, error)
+	GetAll(ctx context.Context) ([]*models.Person, error)
+	Get(ctx context.Context, id uuid.UUID) (*models.Person, error)
+	Create(ctx context.Context, param models.CreatePerson) (*models.Person, error)
 }
