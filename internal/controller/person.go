@@ -68,6 +68,7 @@ func (pC *PersonController) HandleGetPerson(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
+	// TODO context should be used here
 	person, err := pC.PersonService.Get(r.Context(), id)
 
 	if err != nil {
