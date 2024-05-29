@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 	"github.com/google/uuid"
+	"testGoApi/internal/middlewares"
 	"testGoApi/internal/models"
 	"testGoApi/internal/server"
 	"testGoApi/internal/services"
@@ -55,23 +55,9 @@ func NewPersonController(store services.PersonService) *PersonController {
 // @Failure 404 {object} server.HTTPError
 // @Router /api/v1/person/{id} [get]
 func (pC *PersonController) HandleGetPerson(w http.ResponseWriter, r *http.Request) {
-	personId := chi.URLParam(r, "id")
-	if personId == "" {
-		_ = render.Render(w, r, server.ErrorBadRequest)
-		return
-	}
+	person, ok := middlewares.GetPersonCtx(r.Context())
 
-	id, err := uuid.Parse(personId)
-
-	if err != nil {
-		_ = render.Render(w, r, server.ErrorBadRequest)
-		return
-	}
-
-	// TODO context should be used here
-	person, err := pC.PersonService.Get(r.Context(), id)
-
-	if err != nil {
+	if !ok {
 		_ = render.Render(w, r, server.ErrorNotFound)
 		return
 	}
