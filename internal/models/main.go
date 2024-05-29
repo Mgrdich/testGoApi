@@ -1,5 +1,5 @@
 package models
 
 type Models interface {
-	Movie | Person
+	Movie | Person | User
 }

@@ -37,9 +37,9 @@ type PersonController struct {
 	PersonService services.PersonService
 }
 
-func NewPersonController(store services.PersonService) *PersonController {
+func NewPersonController(personService services.PersonService) *PersonController {
 	return &PersonController{
-		PersonService: store,
+		PersonService: personService,
 	}
 }
 

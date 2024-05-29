@@ -38,9 +38,9 @@ type MoviesController struct {
 	MovieService services.MovieService
 }
 
-func NewMoviesController(store services.MovieService) *MoviesController {
+func NewMoviesController(movieService services.MovieService) *MoviesController {
 	return &MoviesController{
-		MovieService: store,
+		MovieService: movieService,
 	}
 }
 
@@ -133,7 +133,7 @@ func (mC *MoviesController) HandleCreateMovie(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	movie, err := mC.MovieService.Create(r.Context(), models.CreateMovieParam{
+	movie, err := mC.MovieService.Create(r.Context(), models.CreateMovie{
 		Title:       data.Title,
 		Director:    data.Director,
 		ReleaseDate: time.Now().UTC(),
@@ -192,7 +192,7 @@ func (mC *MoviesController) HandleUpdateMovie(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	updatedMovie, err := mC.MovieService.Update(r.Context(), movie.ID, models.UpdateMovieParam{
+	updatedMovie, err := mC.MovieService.Update(r.Context(), movie.ID, models.UpdateMovie{
 		Title:       data.Title,
 		Director:    data.Director,
 		ReleaseDate: time.Now().UTC(),

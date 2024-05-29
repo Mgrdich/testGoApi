@@ -45,7 +45,7 @@ func (s *MemoryMoviesStore) GetByID(id uuid.UUID) (*models.Movie, error) {
 	return &m, nil
 }
 
-func (s *MemoryMoviesStore) Create(param models.CreateMovieParam) (*models.Movie, error) {
+func (s *MemoryMoviesStore) Create(param models.CreateMovie) (*models.Movie, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -64,7 +64,7 @@ func (s *MemoryMoviesStore) Create(param models.CreateMovieParam) (*models.Movie
 	return &movie, nil
 }
 
-func (s *MemoryMoviesStore) Update(id uuid.UUID, param models.UpdateMovieParam) (*models.Movie, error) {
+func (s *MemoryMoviesStore) Update(id uuid.UUID, param models.UpdateMovie) (*models.Movie, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 

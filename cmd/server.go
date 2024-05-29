@@ -31,6 +31,8 @@ func main() {
 	routes.AddRoutes(apiServer, &routes.ApplicationServices{
 		MovieService:  services.NewMoviesServiceImpl(repository.NewMoviesRepositoryImpl(pQueries)),
 		PersonService: services.NewPersonServiceImpl(repository.NewPersonRepositoryImpl(pQueries)),
+		UserService:   services.NewUserServiceImpl(repository.NewUserRepositoryImpl(pQueries)),
+		TokenService:  services.NewTokenServiceImpl(),
 	})
 	apiServer.Start(ctx)
 }

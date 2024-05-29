@@ -13,6 +13,8 @@ import (
 type ApplicationServices struct {
 	MovieService  services.MovieService
 	PersonService services.PersonService
+	UserService   services.UserService
+	TokenService  services.TokenService
 }
 
 func AddRoutes(s *server.Server, services *ApplicationServices) {
@@ -23,6 +25,7 @@ func AddRoutes(s *server.Server, services *ApplicationServices) {
 	s.Router.Route("/api/v1", func(r chi.Router) {
 		r.Route("/movies", GetMoviesRouter(services.MovieService))
 		r.Route("/person", GetPersonRouter(services.PersonService))
+		r.Route("/user", GetUserRouter(services.UserService, services.TokenService))
 	})
 
 	if configs.GetAppConfig().Environment == "dev" {

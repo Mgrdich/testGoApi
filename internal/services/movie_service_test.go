@@ -12,8 +12,8 @@ import (
 type MockMovieRepository struct {
 	GetAllFunc     func() ([]*models.Movie, error)
 	GetByIDFunc    func(id uuid.UUID) (*models.Movie, error)
-	SaveFunc       func(param models.CreateMovieParam) (*models.Movie, error)
-	UpdateByIDFunc func(id uuid.UUID, param models.UpdateMovieParam) (*models.Movie, error)
+	SaveFunc       func(param models.CreateMovie) (*models.Movie, error)
+	UpdateByIDFunc func(id uuid.UUID, param models.UpdateMovie) (*models.Movie, error)
 	DeleteByIDFunc func(id uuid.UUID) error
 }
 
@@ -25,14 +25,14 @@ func (m *MockMovieRepository) GetByID(_ context.Context, id uuid.UUID) (*models.
 	return m.GetByIDFunc(id)
 }
 
-func (m *MockMovieRepository) Save(_ context.Context, param models.CreateMovieParam) (*models.Movie, error) {
+func (m *MockMovieRepository) Save(_ context.Context, param models.CreateMovie) (*models.Movie, error) {
 	return m.SaveFunc(param)
 }
 
 func (m *MockMovieRepository) UpdateByID(
 	_ context.Context,
 	id uuid.UUID,
-	param models.UpdateMovieParam) (*models.Movie, error) {
+	param models.UpdateMovie) (*models.Movie, error) {
 	return m.UpdateByIDFunc(id, param)
 }
 
@@ -96,10 +96,10 @@ func TestGet(t *testing.T) {
 }
 
 func TestCreate(t *testing.T) {
-	createParam := models.CreateMovieParam{Title: "New Movie"}
+	createParam := models.CreateMovie{Title: "New Movie"}
 	expectedMovie := &models.Movie{ID: uuid.New(), Title: "New Movie"}
 
-	SaveFunc := func(param models.CreateMovieParam) (*models.Movie, error) {
+	SaveFunc := func(param models.CreateMovie) (*models.Movie, error) {
 		return expectedMovie, nil
 	}
 
@@ -122,10 +122,10 @@ func TestCreate(t *testing.T) {
 
 func TestUpdate(t *testing.T) {
 	id := uuid.New()
-	updateParam := models.UpdateMovieParam{Title: "Updated Movie"}
+	updateParam := models.UpdateMovie{Title: "Updated Movie"}
 	expectedMovie := &models.Movie{ID: id, Title: "Updated Movie"}
 
-	UpdateByIDFunc := func(movieID uuid.UUID, param models.UpdateMovieParam) (*models.Movie, error) {
+	UpdateByIDFunc := func(movieID uuid.UUID, param models.UpdateMovie) (*models.Movie, error) {
 		if movieID == id {
 			return expectedMovie, nil
 		}
