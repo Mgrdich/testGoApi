@@ -16,13 +16,13 @@ func GetContextIdFunc[K models.Models](getByIdFunc util.GetByIDFunc[K],
 	contextSetter func(ctx context.Context, value *K) context.Context) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			movieID := chi.URLParam(r, "id")
-			if movieID == "" {
+			slugId := chi.URLParam(r, "id")
+			if slugId == "" {
 				_ = render.Render(w, r, server.ErrorBadRequest)
 				return
 			}
 
-			id, err := uuid.Parse(movieID)
+			id, err := uuid.Parse(slugId)
 
 			if err != nil {
 				_ = render.Render(w, r, server.ErrorBadRequest)
@@ -36,7 +36,7 @@ func GetContextIdFunc[K models.Models](getByIdFunc util.GetByIDFunc[K],
 				return
 			}
 
-			// Set movie information in the request context
+			// Set data information in the request context
 			ctx := contextSetter(r.Context(), storeValue)
 			next.ServeHTTP(w, r.WithContext(ctx))
 		})
