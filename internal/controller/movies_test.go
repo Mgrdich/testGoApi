@@ -83,9 +83,8 @@ func TestMoviesController_HandleCreateMovie(t *testing.T) {
 
 	// json content-type
 	req := NewRequest(t, http.MethodPost, "/movies", bytes.NewBuffer(jsonData))
-	ctx := setMovieCtx()
 
-	rr := ExecuteRequest(req, controller.HandleCreateMovie, ctx)
+	rr := ExecuteRequest(req, controller.HandleCreateMovie, nil)
 
 	CheckStatusCreated(t, rr)
 }
