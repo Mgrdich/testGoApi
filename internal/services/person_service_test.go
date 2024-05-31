@@ -27,7 +27,7 @@ func (m *MockPersonRepository) Save(_ context.Context, param models.CreatePerson
 	return m.SaveFunc(param)
 }
 
-func TestGetAllPerson(t *testing.T) {
+func TestPersonService_GetAll(t *testing.T) {
 
 	expectedPersons := []*models.Person{
 		{ID: uuid.New(), FirstName: "Test 1", LastName: "Test 1"},
@@ -56,7 +56,7 @@ func TestGetAllPerson(t *testing.T) {
 	}
 }
 
-func TestGetPersonByID(t *testing.T) {
+func TestPersonService_Get(t *testing.T) {
 	id := uuid.New()
 	expectedPerson := &models.Person{
 		ID:        id,
@@ -89,7 +89,7 @@ func TestGetPersonByID(t *testing.T) {
 	}
 }
 
-func TestCreatePerson(t *testing.T) {
+func TestPersonService_Create(t *testing.T) {
 	createParams := models.CreatePerson{
 		FirstName: "Test 1",
 		LastName:  "Test 1",
