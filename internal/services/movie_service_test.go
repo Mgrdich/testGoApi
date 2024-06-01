@@ -3,11 +3,11 @@ package services
 import (
 	"context"
 	"errors"
-	"testGoApi/internal/test_helpers"
 	"testing"
 
 	"github.com/google/uuid"
 	"testGoApi/internal/models"
+	"testGoApi/internal/test_helpers"
 )
 
 func TestGetAll(t *testing.T) {
@@ -44,6 +44,7 @@ func TestGet(t *testing.T) {
 		if movieID == id {
 			return expectedMovie, nil
 		}
+
 		return nil, errors.New("movie not found")
 	}
 
@@ -98,6 +99,7 @@ func TestUpdate(t *testing.T) {
 		if movieID == id {
 			return expectedMovie, nil
 		}
+
 		return nil, errors.New("movie not found")
 	}
 
@@ -125,6 +127,7 @@ func TestDelete(t *testing.T) {
 		if movieID == id {
 			return nil
 		}
+
 		return errors.New("movie not found")
 	}
 

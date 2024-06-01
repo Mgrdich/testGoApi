@@ -3,15 +3,15 @@ package services
 import (
 	"context"
 	"errors"
+	"testing"
+	"time"
+
 	"github.com/google/uuid"
 	"testGoApi/internal/models"
 	"testGoApi/internal/test_helpers"
-	"testing"
-	"time"
 )
 
 func TestPersonService_GetAll(t *testing.T) {
-
 	expectedPersons := []*models.Person{
 		{ID: uuid.New(), FirstName: "Test 1", LastName: "Test 1"},
 		{ID: uuid.New(), FirstName: "Test 2", LastName: "Test 2"},
@@ -52,6 +52,7 @@ func TestPersonService_Get(t *testing.T) {
 		if id == personId {
 			return expectedPerson, nil
 		}
+
 		return nil, errors.New("person not found")
 	}
 
@@ -88,6 +89,7 @@ func TestPersonService_Create(t *testing.T) {
 		if param.FirstName != "" && param.LastName != "" {
 			return expectedPerson, nil
 		}
+
 		return nil, errors.New("first name and last name must be provided")
 	}
 	mockRepo := &test_helpers.MockPersonRepository{

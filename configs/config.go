@@ -21,9 +21,11 @@ const projectDirName = "testGoApi"
 func loadEnv() {
 	projectName := regexp.MustCompile(`^(.*` + projectDirName + `)`)
 	currentWorkDirectory, err := os.Getwd()
+
 	if err != nil {
 		log.Fatal("Failed to get current working directory", err)
 	}
+
 	rootPath := projectName.Find([]byte(currentWorkDirectory))
 
 	err = godotenv.Load(string(rootPath) + `/.env`)

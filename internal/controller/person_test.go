@@ -5,10 +5,11 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"testing"
+
 	"testGoApi/internal/middlewares"
 	"testGoApi/internal/models"
 	"testGoApi/internal/test_helpers"
-	"testing"
 )
 
 func setPersonContext() context.Context {
@@ -28,7 +29,6 @@ func TestPersonController_HandleGetAllPerson(t *testing.T) {
 }
 
 func TestPersonController_HandleGetPerson(t *testing.T) {
-
 	controller := NewPersonController(&test_helpers.MockPersonService{})
 
 	req := test_helpers.NewRequest(t, http.MethodGet, "/person/1", nil)

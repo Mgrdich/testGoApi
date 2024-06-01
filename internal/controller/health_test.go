@@ -3,8 +3,9 @@ package controller
 import (
 	"encoding/json"
 	"net/http"
-	"testGoApi/internal/test_helpers"
 	"testing"
+
+	"testGoApi/internal/test_helpers"
 )
 
 func TestHandleGetHealth(t *testing.T) {

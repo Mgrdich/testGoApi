@@ -1,13 +1,14 @@
 package routes
 
 import (
-	"github.com/go-chi/chi/v5"
 	"net/http"
 	"net/http/httptest"
+	"testing"
+
+	"github.com/go-chi/chi/v5"
 	"testGoApi/configs"
 	"testGoApi/internal/server"
 	"testGoApi/internal/test_helpers"
-	"testing"
 )
 
 type endpointsTestCase struct {

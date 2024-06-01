@@ -3,9 +3,10 @@ package test_helpers
 import (
 	"context"
 	"errors"
+	"time"
+
 	"github.com/google/uuid"
 	"testGoApi/internal/models"
-	"time"
 )
 
 type MockPersonService struct{}
@@ -26,6 +27,7 @@ func (m *MockPersonService) Get(_ context.Context, id uuid.UUID) (*models.Person
 	if id != person.ID {
 		return nil, errors.New("person not found")
 	}
+
 	return person, nil
 }
 func (m *MockPersonService) Create(_ context.Context, param models.CreatePerson) (*models.Person, error) {
