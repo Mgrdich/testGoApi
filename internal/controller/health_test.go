@@ -3,15 +3,18 @@ package controller
 import (
 	"encoding/json"
 	"net/http"
+	"testGoApi/internal/test_helpers"
 	"testing"
 )
 
 func TestHandleGetHealth(t *testing.T) {
-	req := NewRequest(t, http.MethodGet, "/health", nil)
+	req := test_helpers.NewRequest(t, http.MethodGet, "/health", nil)
 
-	rr := ExecuteRequest(req, HandleGetHealth, nil)
+	rr := test_helpers.ExecuteRequest(req, HandleGetHealth, nil)
 
-	CheckStatusOK(t, rr)
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("Handler returned wrong status code. Expected: %d. Got: %d.", http.StatusOK, status)
+	}
 
 	var response healthResponse
 
