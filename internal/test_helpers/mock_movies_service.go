@@ -21,7 +21,7 @@ func (*MockMovieService) Create(_ context.Context, param models.CreateMovieParam
 		TicketPrice: param.TicketPrice,
 	}, nil
 }
-func (*MockMovieService) Delete(_ context.Context, id uuid.UUID) error {
+func (*MockMovieService) Delete(_ context.Context, _ uuid.UUID) error {
 	return nil
 }
 func (*MockMovieService) Update(_ context.Context, id uuid.UUID, param models.UpdateMovieParam) (*models.Movie, error) {
