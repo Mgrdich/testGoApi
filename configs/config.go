@@ -28,7 +28,7 @@ func loadEnv() {
 
 	rootPath := projectName.Find([]byte(currentWorkDirectory))
 
-	err = godotenv.Load(string(rootPath) + `/.env`)
+	err = godotenv.Load(string(rootPath) + "/.env")
 
 	if err != nil {
 		log.Fatalf("Error loading .env file")
