@@ -5,27 +5,10 @@ import (
 	"errors"
 	"github.com/google/uuid"
 	"testGoApi/internal/models"
+	"testGoApi/internal/test_helpers"
 	"testing"
 	"time"
 )
-
-type MockPersonRepository struct {
-	GetAllFunc  func() ([]*models.Person, error)
-	GetByIDFunc func(id uuid.UUID) (*models.Person, error)
-	SaveFunc    func(param models.CreatePerson) (*models.Person, error)
-}
-
-func (m *MockPersonRepository) GetAll(_ context.Context) ([]*models.Person, error) {
-	return m.GetAllFunc()
-}
-
-func (m *MockPersonRepository) GetByID(_ context.Context, id uuid.UUID) (*models.Person, error) {
-	return m.GetByIDFunc(id)
-}
-
-func (m *MockPersonRepository) Save(_ context.Context, param models.CreatePerson) (*models.Person, error) {
-	return m.SaveFunc(param)
-}
 
 func TestPersonService_GetAll(t *testing.T) {
 
@@ -37,7 +20,7 @@ func TestPersonService_GetAll(t *testing.T) {
 	GetAllFunc := func() ([]*models.Person, error) {
 		return expectedPersons, nil
 	}
-	mockRepo := &MockPersonRepository{
+	mockRepo := &test_helpers.MockPersonRepository{
 		GetAllFunc: GetAllFunc,
 	}
 
@@ -72,7 +55,7 @@ func TestPersonService_Get(t *testing.T) {
 		return nil, errors.New("person not found")
 	}
 
-	mockRepo := &MockPersonRepository{
+	mockRepo := &test_helpers.MockPersonRepository{
 		GetByIDFunc: getByIDFunc,
 	}
 
@@ -107,7 +90,7 @@ func TestPersonService_Create(t *testing.T) {
 		}
 		return nil, errors.New("first name and last name must be provided")
 	}
-	mockRepo := &MockPersonRepository{
+	mockRepo := &test_helpers.MockPersonRepository{
 		SaveFunc: SaveFunc,
 	}
 
