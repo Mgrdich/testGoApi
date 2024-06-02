@@ -3,6 +3,8 @@ package configs
 import (
 	"log"
 	"os"
+	"path"
+	"regexp"
 
 	"github.com/joho/godotenv"
 )
@@ -15,10 +17,28 @@ type AppConfig struct {
 
 var appConfig *AppConfig
 
-func GetAppConfig() *AppConfig {
-	err := godotenv.Load(".env")
+const projectDirName = "testGoApi"
+
+func loadEnv() {
+	projectName := regexp.MustCompile(`^(.*` + projectDirName + `)`)
+	currentWorkDirectory, err := os.Getwd()
+
 	if err != nil {
-		log.Fatalf("Error loading .env file")
+		log.Fatalf("Failed to get current working directory error: %v", err)
+	}
+
+	rootPath := projectName.Find([]byte(currentWorkDirectory))
+
+	err = godotenv.Load(path.Join(string(rootPath), ".env"))
+
+	if err != nil {
+		log.Fatalf("Error loading .env file error: %v", err)
+	}
+}
+
+func GetAppConfig() *AppConfig {
+	if appConfig == nil {
+		loadEnv()
 	}
 
 	if appConfig == nil {
@@ -30,4 +50,7 @@ func GetAppConfig() *AppConfig {
 	}
 
 	return appConfig
+}
+func SetAppConfig(config *AppConfig) {
+	appConfig = config
 }

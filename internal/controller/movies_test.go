@@ -7,63 +7,38 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/google/uuid"
 	"testGoApi/internal/middlewares"
 	"testGoApi/internal/models"
+	"testGoApi/internal/test_helpers"
 )
 
-type mockMovieService struct{}
-
-func (*mockMovieService) GetAll(_ context.Context) ([]*models.Movie, error) {
-	return nil, nil
-}
-
-func (*mockMovieService) Get(_ context.Context, id uuid.UUID) (*models.Movie, error) {
-	return &models.Movie{ID: id}, nil
-}
-
-func (*mockMovieService) Create(_ context.Context, param models.CreateMovieParam) (*models.Movie, error) {
-	return &models.Movie{
-		Title:       param.Title,
-		Director:    param.Director,
-		TicketPrice: param.TicketPrice,
-	}, nil
-}
-
-func (*mockMovieService) Delete(_ context.Context, id uuid.UUID) error {
-	return nil
-}
-
-func (*mockMovieService) Update(_ context.Context, id uuid.UUID, param models.UpdateMovieParam) (*models.Movie, error) {
-	return &models.Movie{
-		ID:          id,
-		Title:       param.Title,
-		Director:    param.Director,
-		TicketPrice: param.TicketPrice,
-	}, nil
-}
+var mockMoviesService = test_helpers.NewMockMovieService()
 
 func setMovieCtx() context.Context {
 	return middlewares.SetMovieCtx(context.Background(), &models.Movie{})
 }
 
 func TestMoviesController_HandleGetAllMovies(t *testing.T) {
-	controller := NewMoviesController(&mockMovieService{})
-	req := NewRequest(t, http.MethodGet, "/movies", nil)
+	controller := NewMoviesController(mockMoviesService)
+	req := test_helpers.NewRequest(t, http.MethodGet, "/movies", nil)
 
-	rr := ExecuteRequest(req, controller.HandleGetAllMovies, nil)
+	rr := test_helpers.ExecuteRequest(req, controller.HandleGetAllMovies, nil)
 
-	CheckStatusOK(t, rr)
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("Handler returned wrong status code. Expected: %d. Got: %d.", http.StatusOK, status)
+	}
 }
 
 func TestMoviesController_HandleGetMovie(t *testing.T) {
-	controller := NewMoviesController(&mockMovieService{})
-	req := NewRequest(t, http.MethodGet, "/movies/1", nil)
+	controller := NewMoviesController(mockMoviesService)
+	req := test_helpers.NewRequest(t, http.MethodGet, "/movies/1", nil)
 	ctx := setMovieCtx()
 
-	rr := ExecuteRequest(req, controller.HandleGetMovie, ctx)
+	rr := test_helpers.ExecuteRequest(req, controller.HandleGetMovie, ctx)
 
-	CheckStatusOK(t, rr)
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("Handler returned wrong status code. Expected: %d. Got: %d.", http.StatusOK, status)
+	}
 }
 
 func TestMoviesController_HandleCreateMovie(t *testing.T) {
@@ -79,15 +54,16 @@ func TestMoviesController_HandleCreateMovie(t *testing.T) {
 		t.Error("Error encoding JSON:", err)
 	}
 
-	controller := NewMoviesController(&mockMovieService{})
+	controller := NewMoviesController(mockMoviesService)
 
 	// json content-type
-	req := NewRequest(t, http.MethodPost, "/movies", bytes.NewBuffer(jsonData))
-	ctx := setMovieCtx()
+	req := test_helpers.NewRequest(t, http.MethodPost, "/movies", bytes.NewBuffer(jsonData))
 
-	rr := ExecuteRequest(req, controller.HandleCreateMovie, ctx)
+	rr := test_helpers.ExecuteRequest(req, controller.HandleCreateMovie, nil)
 
-	CheckStatusCreated(t, rr)
+	if status := rr.Code; status != http.StatusCreated {
+		t.Errorf("Handler returned wrong status code. Expected: %d. Got: %d.", http.StatusCreated, status)
+	}
 }
 
 func TestMoviesController_HandleUpdateMovie(t *testing.T) {
@@ -103,21 +79,25 @@ func TestMoviesController_HandleUpdateMovie(t *testing.T) {
 		t.Error("Error encoding JSON:", err)
 	}
 
-	controller := NewMoviesController(&mockMovieService{})
-	req := NewRequest(t, http.MethodPut, "/movies/1", bytes.NewBuffer(jsonData))
+	controller := NewMoviesController(mockMoviesService)
+	req := test_helpers.NewRequest(t, http.MethodPut, "/movies/1", bytes.NewBuffer(jsonData))
 	ctx := setMovieCtx()
 
-	rr := ExecuteRequest(req, controller.HandleUpdateMovie, ctx)
+	rr := test_helpers.ExecuteRequest(req, controller.HandleUpdateMovie, ctx)
 
-	CheckStatusOK(t, rr)
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("Handler returned wrong status code. Expected: %d. Got: %d.", http.StatusOK, status)
+	}
 }
 
 func TestMoviesController_HandleDeleteMovie(t *testing.T) {
-	controller := NewMoviesController(&mockMovieService{})
-	req := NewRequest(t, http.MethodDelete, "/movies/1", nil)
+	controller := NewMoviesController(mockMoviesService)
+	req := test_helpers.NewRequest(t, http.MethodDelete, "/movies/1", nil)
 	ctx := setMovieCtx()
 
-	rr := ExecuteRequest(req, controller.HandleDeleteMovie, ctx)
+	rr := test_helpers.ExecuteRequest(req, controller.HandleDeleteMovie, ctx)
 
-	CheckStatusOK(t, rr)
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("Handler returned wrong status code. Expected: %d. Got: %d.", http.StatusOK, status)
+	}
 }
