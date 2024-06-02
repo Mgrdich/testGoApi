@@ -3,6 +3,7 @@ package configs
 import (
 	"log"
 	"os"
+	"path"
 	"regexp"
 
 	"github.com/joho/godotenv"
@@ -23,20 +24,22 @@ func loadEnv() {
 	currentWorkDirectory, err := os.Getwd()
 
 	if err != nil {
-		log.Fatal("Failed to get current working directory", err)
+		log.Fatalf("Failed to get current working directory error: %v", err)
 	}
 
 	rootPath := projectName.Find([]byte(currentWorkDirectory))
 
-	err = godotenv.Load(string(rootPath) + "/.env")
+	err = godotenv.Load(path.Join(string(rootPath), "/.env"))
 
 	if err != nil {
-		log.Fatalf("Error loading .env file")
+		log.Fatalf("Error loading .env file error: %v", err)
 	}
 }
 
 func GetAppConfig() *AppConfig {
-	loadEnv()
+	if appConfig == nil {
+		loadEnv()
+	}
 
 	if appConfig == nil {
 		appConfig = &AppConfig{
