@@ -11,6 +11,10 @@ import (
 
 type MockPersonService struct{}
 
+func NewMockPersonService() *MockPersonService {
+	return &MockPersonService{}
+}
+
 var person = &models.Person{
 	ID:        uuid.New(),
 	FirstName: "Test",

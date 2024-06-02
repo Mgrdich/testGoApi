@@ -9,6 +9,10 @@ import (
 
 type MockMovieService struct{}
 
+func NewMockMovieService() *MockMovieService {
+	return &MockMovieService{}
+}
+
 func (*MockMovieService) GetAll(_ context.Context) ([]*models.Movie, error) {
 	return nil, nil
 }

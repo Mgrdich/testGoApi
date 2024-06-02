@@ -12,12 +12,14 @@ import (
 	"testGoApi/internal/test_helpers"
 )
 
+var mockMoviesService = test_helpers.NewMockMovieService()
+
 func setMovieCtx() context.Context {
 	return middlewares.SetMovieCtx(context.Background(), &models.Movie{})
 }
 
 func TestMoviesController_HandleGetAllMovies(t *testing.T) {
-	controller := NewMoviesController(&test_helpers.MockMovieService{})
+	controller := NewMoviesController(mockMoviesService)
 	req := test_helpers.NewRequest(t, http.MethodGet, "/movies", nil)
 
 	rr := test_helpers.ExecuteRequest(req, controller.HandleGetAllMovies, nil)
@@ -28,7 +30,7 @@ func TestMoviesController_HandleGetAllMovies(t *testing.T) {
 }
 
 func TestMoviesController_HandleGetMovie(t *testing.T) {
-	controller := NewMoviesController(&test_helpers.MockMovieService{})
+	controller := NewMoviesController(mockMoviesService)
 	req := test_helpers.NewRequest(t, http.MethodGet, "/movies/1", nil)
 	ctx := setMovieCtx()
 
@@ -52,7 +54,7 @@ func TestMoviesController_HandleCreateMovie(t *testing.T) {
 		t.Error("Error encoding JSON:", err)
 	}
 
-	controller := NewMoviesController(&test_helpers.MockMovieService{})
+	controller := NewMoviesController(mockMoviesService)
 
 	// json content-type
 	req := test_helpers.NewRequest(t, http.MethodPost, "/movies", bytes.NewBuffer(jsonData))
@@ -77,7 +79,7 @@ func TestMoviesController_HandleUpdateMovie(t *testing.T) {
 		t.Error("Error encoding JSON:", err)
 	}
 
-	controller := NewMoviesController(&test_helpers.MockMovieService{})
+	controller := NewMoviesController(mockMoviesService)
 	req := test_helpers.NewRequest(t, http.MethodPut, "/movies/1", bytes.NewBuffer(jsonData))
 	ctx := setMovieCtx()
 
@@ -89,7 +91,7 @@ func TestMoviesController_HandleUpdateMovie(t *testing.T) {
 }
 
 func TestMoviesController_HandleDeleteMovie(t *testing.T) {
-	controller := NewMoviesController(&test_helpers.MockMovieService{})
+	controller := NewMoviesController(mockMoviesService)
 	req := test_helpers.NewRequest(t, http.MethodDelete, "/movies/1", nil)
 	ctx := setMovieCtx()
 

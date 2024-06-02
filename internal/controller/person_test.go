@@ -12,12 +12,14 @@ import (
 	"testGoApi/internal/test_helpers"
 )
 
+var mockPersonService = test_helpers.NewMockPersonService()
+
 func setPersonContext() context.Context {
 	return middlewares.SetPersonCtx(context.Background(), &models.Person{})
 }
 
 func TestPersonController_HandleGetAllPerson(t *testing.T) {
-	controller := NewPersonController(&test_helpers.MockPersonService{})
+	controller := NewPersonController(mockPersonService)
 
 	req := test_helpers.NewRequest(t, http.MethodGet, "/person", nil)
 
@@ -29,7 +31,7 @@ func TestPersonController_HandleGetAllPerson(t *testing.T) {
 }
 
 func TestPersonController_HandleGetPerson(t *testing.T) {
-	controller := NewPersonController(&test_helpers.MockPersonService{})
+	controller := NewPersonController(mockPersonService)
 
 	req := test_helpers.NewRequest(t, http.MethodGet, "/person/1", nil)
 	ctx := setPersonContext()
@@ -48,7 +50,7 @@ func TestPersonController_HandleCreatePerson(t *testing.T) {
 	}
 	jsonData, _ := json.Marshal(personParams)
 
-	controller := NewPersonController(&test_helpers.MockPersonService{})
+	controller := NewPersonController(mockPersonService)
 
 	req := test_helpers.NewRequest(t, http.MethodPost, "/person", bytes.NewBuffer(jsonData))
 
