@@ -39,6 +39,8 @@ func loadEnv() {
 	}
 }
 
+// GetAppConfig is the Singleton getter for the AppConfig
+// This should be used in the application wherever we need to get the application config
 func GetAppConfig() *AppConfig {
 	if appConfig == nil {
 		loadEnv()
@@ -60,6 +62,7 @@ func GetAppConfig() *AppConfig {
 	return appConfig
 }
 
+// SetAppConfig should only be in test
 func SetAppConfig(config *AppConfig) {
 	appConfig = config
 }
