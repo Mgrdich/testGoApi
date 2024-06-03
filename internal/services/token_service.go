@@ -49,3 +49,7 @@ func (s *TokenServiceImpl) VerifyJWT(tokenString string) error {
 
 	return nil
 }
+
+func (s *TokenServiceImpl) ParseJWT(tokenString string) (*models.User, error) {
+	return nil, nil
+}

@@ -45,7 +45,7 @@ func (r *UserRepositoryImpl) GetByUsername(ctx context.Context, username string)
 	return user, nil
 }
 
-func (r *UserRepositoryImpl) Create(ctx context.Context, param models.CreateUser) (*models.User, error) {
+func (r *UserRepositoryImpl) Save(ctx context.Context, param models.CreateUser) (*models.User, error) {
 	dbParam := db.CreateUserParams{
 		Username: db2.ToText(param.Username),
 		Password: db2.ToText(param.Password),
