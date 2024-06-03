@@ -41,7 +41,7 @@ func TestAddRoutes(t *testing.T) {
 
 	for _, endpoint := range endpointsTestCases {
 		t.Run(endpoint.name, func(t *testing.T) {
-			rr := validateRegisteredRoute(t, s.Router, endpoint.input)
+			rr := createNewRequest(t, s.Router, http.MethodGet, endpoint.input)
 			if status := rr.Code; status != http.StatusOK {
 				t.Errorf("Route %s not found. Expected status code: %d. Got: %d.", endpoint.input, http.StatusOK, rr.Code)
 			}
@@ -67,21 +67,11 @@ func TestAddRoutesNonDevEnvironment(t *testing.T) {
 
 	endpoint := "/swagger/index.html"
 
-	rr := validateRegisteredRoute(t, s.Router, endpoint)
+	rr := createNewRequest(t, s.Router, http.MethodGet, endpoint)
 
 	if status := rr.Code; status != http.StatusNotFound {
 		t.Errorf("Route %s not found. Expected status code: %d. Got: %d.", endpoint, http.StatusNotFound, rr.Code)
 	}
-}
-
-func validateRegisteredRoute(t *testing.T, r *chi.Mux, endpoint string) *httptest.ResponseRecorder {
-	t.Helper()
-
-	// Create a request to the endpoint
-	rr := createNewRequest(t, r, http.MethodGet, endpoint)
-
-	// Check if the response status code indicates the route is registered
-	return rr
 }
 
 func createNewRequest(t *testing.T, r *chi.Mux, method string, endpoint string) *httptest.ResponseRecorder {
