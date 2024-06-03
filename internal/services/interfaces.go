@@ -24,6 +24,7 @@ type PersonService interface {
 type TokenService interface {
 	GenerateJWT(user *models.User) (string, error)
 	VerifyJWT(tokenString string) error
+	ParseJWT(tokenString string) (*models.User, error)
 }
 
 type UserService interface {

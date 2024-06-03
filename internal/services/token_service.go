@@ -19,7 +19,7 @@ func NewTokenServiceImpl() *TokenServiceImpl {
 	}
 }
 
-func (s *TokenServiceImpl) GenerateJWT(user models.User) (string, error) {
+func (s *TokenServiceImpl) GenerateJWT(user *models.User) (string, error) {
 	expirationToken := time.Duration(s.appConfig.TokenExpirationMinutes)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user": user,
