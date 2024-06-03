@@ -32,8 +32,11 @@ func Authentication(tokenService services.TokenService) func(next http.Handler) 
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			tokenString := r.Header.Get("Authorization")
 			if tokenString == "" {
-				w.WriteHeader(http.StatusUnauthorized)
 				log.Print("Missing authorization header")
+
+				_ = render.Render(w, r, server.ErrorUnauthorized)
+
+				return
 			}
 
 			tokenString = tokenString[len("Bearer "):]
@@ -72,7 +75,7 @@ func Authorized(roles ...models.UserRole) func(next http.Handler) http.Handler {
 			isAuthorized := false
 
 			for _, role := range roles {
-				if role == user.Role {
+				if userRole, ok := models.LookUpRole(user.Role); role == userRole && ok {
 					isAuthorized = true
 					break
 				}

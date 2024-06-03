@@ -4,10 +4,12 @@ type EnvironmentsType int
 
 const (
 	DevEnvironment EnvironmentsType = iota
+	ProdEnvironment
 )
 
 var envs = [...]string{
-	DevEnvironment: "dev",
+	DevEnvironment:  "dev",
+	ProdEnvironment: "prod",
 }
 
 var envsMap map[string]EnvironmentsType

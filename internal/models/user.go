@@ -18,6 +18,9 @@ var rolesWordToTypeMap map[string]UserRole
 var rolesTypeToWord map[UserRole]string
 
 func init() {
+	rolesTypeToWord = make(map[UserRole]string)
+	rolesWordToTypeMap = make(map[string]UserRole)
+
 	for i := 0; i < len(roles); i++ {
 		value := roles[i]
 		userRoleIndex := UserRole(i)
@@ -34,6 +37,12 @@ func LookUpRoleString(role UserRole) string {
 	}
 
 	return roleStr
+}
+
+func LookUpRole(roleStr string) (UserRole, bool) {
+	role, ok := rolesWordToTypeMap[roleStr]
+
+	return role, ok
 }
 
 type User struct {
