@@ -16,9 +16,6 @@ func ValidatePassword(s string) (isValid, sevenOrMore, number, upper, special bo
 			special = true
 		case unicode.IsLetter(c) || c == ' ':
 			letters++
-		default:
-			//return false, false, false, false
-
 		}
 	}
 

@@ -56,7 +56,7 @@ func GetAppConfig() *AppConfig {
 		env, ok := util.LookUpEnv(osEnv)
 
 		if !ok {
-			log.Fatalf("can not parse this enviroment value %v", osEnv)
+			log.Fatalf("can not parse this environment value %v", osEnv)
 		}
 
 		appConfig = &AppConfig{
