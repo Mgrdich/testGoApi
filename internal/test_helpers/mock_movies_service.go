@@ -19,7 +19,7 @@ func (*MockMovieService) GetAll(_ context.Context) ([]*models.Movie, error) {
 func (*MockMovieService) Get(_ context.Context, id uuid.UUID) (*models.Movie, error) {
 	return &models.Movie{ID: id}, nil
 }
-func (*MockMovieService) Create(_ context.Context, param models.CreateMovieParam) (*models.Movie, error) {
+func (*MockMovieService) Create(_ context.Context, param models.CreateMovie) (*models.Movie, error) {
 	return &models.Movie{
 		Title:       param.Title,
 		Director:    param.Director,
@@ -29,7 +29,7 @@ func (*MockMovieService) Create(_ context.Context, param models.CreateMovieParam
 func (*MockMovieService) Delete(_ context.Context, _ uuid.UUID) error {
 	return nil
 }
-func (*MockMovieService) Update(_ context.Context, id uuid.UUID, param models.UpdateMovieParam) (*models.Movie, error) {
+func (*MockMovieService) Update(_ context.Context, id uuid.UUID, param models.UpdateMovie) (*models.Movie, error) {
 	return &models.Movie{
 		ID:          id,
 		Title:       param.Title,
