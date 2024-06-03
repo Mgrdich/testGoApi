@@ -38,7 +38,7 @@ func (uS *UserServiceImpl) Login(ctx context.Context, param models.LoginUser) (s
 	return uS.tokenService.GenerateJWT(&models.TokenizedUser{
 		ID:       user.ID,
 		Username: user.Username,
-		Role:     user.Role,
+		Role:     models.LookUpRoleString(user.Role),
 	})
 }
 

@@ -2,10 +2,11 @@ package controller
 
 import (
 	"errors"
-	"github.com/google/uuid"
 	"net/http"
 
 	"github.com/go-chi/render"
+	"github.com/google/uuid"
+	"testGoApi/internal/middlewares"
 	"testGoApi/internal/models"
 	"testGoApi/internal/server"
 	"testGoApi/internal/services"
@@ -128,9 +129,9 @@ func (uC *UserController) HandleRegisterUser(w http.ResponseWriter, r *http.Requ
 }
 
 type userDto struct {
-	ID       uuid.UUID       `json:"id"`
-	Username string          `json:"username"`
-	Role     models.UserRole `json:"role"`
+	ID       uuid.UUID `json:"id"`
+	Username string    `json:"username"`
+	Role     string    `json:"role"`
 }
 
 func (hr *userDto) Render(_ http.ResponseWriter, _ *http.Request) error {
@@ -138,5 +139,16 @@ func (hr *userDto) Render(_ http.ResponseWriter, _ *http.Request) error {
 }
 
 func (uC *UserController) HandleUserMe(w http.ResponseWriter, r *http.Request) {
+	user, ok := middlewares.GetTokenizedUserCtx(r.Context())
 
+	if !ok {
+		_ = render.Render(w, r, server.ErrorBadRequest)
+		return
+	}
+
+	_ = render.Render(w, r, &userDto{
+		ID:       user.ID,
+		Username: user.Username,
+		Role:     user.Role,
+	})
 }

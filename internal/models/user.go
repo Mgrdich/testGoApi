@@ -9,6 +9,33 @@ const (
 	BasicRole
 )
 
+var roles = [...]string{
+	AdminRole: "admin",
+	BasicRole: "user",
+}
+
+var rolesWordToTypeMap map[string]UserRole
+var rolesTypeToWord map[UserRole]string
+
+func init() {
+	for i := 0; i < len(roles); i++ {
+		value := roles[i]
+		userRoleIndex := UserRole(i)
+		rolesWordToTypeMap[value] = userRoleIndex
+		rolesTypeToWord[userRoleIndex] = value
+	}
+}
+
+func LookUpRoleString(role UserRole) string {
+	roleStr, ok := rolesTypeToWord[role]
+
+	if !ok {
+		return ""
+	}
+
+	return roleStr
+}
+
 type User struct {
 	ID       uuid.UUID
 	Username string
@@ -19,7 +46,7 @@ type User struct {
 type TokenizedUser struct {
 	ID       uuid.UUID
 	Username string
-	Role     UserRole
+	Role     string // for the frontend
 }
 
 type CreateUser struct {
