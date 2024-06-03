@@ -8,12 +8,13 @@ import (
 	"strconv"
 
 	"github.com/joho/godotenv"
+	"testGoApi/internal/util"
 )
 
 type AppConfig struct {
 	Port                   string
 	PostgresqlUrl          string
-	Environment            string
+	Environment            util.EnvironmentsType
 	JwtSecretKey           string
 	TokenExpirationMinutes int
 }
@@ -51,10 +52,17 @@ func GetAppConfig() *AppConfig {
 			log.Fatalf("Token Expire should be of type integer error: %v", err)
 		}
 
+		osEnv := os.Getenv("ENVIRONMENT")
+		env, ok := util.LookUpEnv(osEnv)
+
+		if !ok {
+			log.Fatalf("can not parse this enviroment value %v", osEnv)
+		}
+
 		appConfig = &AppConfig{
 			Port:                   os.Getenv("PORT"),
 			PostgresqlUrl:          os.Getenv("POSTGRESQL"),
-			Environment:            os.Getenv("ENVIRONMENT"),
+			Environment:            env,
 			JwtSecretKey:           os.Getenv("JWT_SECRET_KEY"),
 			TokenExpirationMinutes: TokenExpirationMinutes}
 	}

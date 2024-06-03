@@ -10,6 +10,7 @@ import (
 	"testGoApi/internal/middlewares"
 	"testGoApi/internal/server"
 	"testGoApi/internal/services"
+	"testGoApi/internal/util"
 )
 
 type ApplicationServices struct {
@@ -38,7 +39,7 @@ func AddRoutes(s *server.Server, services *ApplicationServices) {
 		})
 	})
 
-	if configs.GetAppConfig().Environment == "dev" {
+	if configs.GetAppConfig().Environment == util.DevEnvironment {
 		s.Router.Mount("/swagger", httpSwagger.WrapHandler)
 	}
 }

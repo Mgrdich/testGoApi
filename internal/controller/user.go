@@ -67,7 +67,11 @@ func (uC *UserController) HandleLoginUser(w http.ResponseWriter, r *http.Request
 
 	// TODO password check should be here
 
-	token, err := uC.TokenService.GenerateJWT(user)
+	token, err := uC.TokenService.GenerateJWT(&models.TokenizedUser{
+		ID:       user.ID,
+		Username: user.Username,
+		Role:     user.Role,
+	})
 
 	if err != nil {
 		_ = render.Render(w, r, server.ErrorInternalServerError)
