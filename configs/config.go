@@ -63,6 +63,7 @@ func GetAppConfig() *AppConfig {
 }
 
 // SetAppConfig should only be in test
+// AppConfig config should be read from the .env files
 func SetAppConfig(config *AppConfig) {
 	appConfig = config
 }
