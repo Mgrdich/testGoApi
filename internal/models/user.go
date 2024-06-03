@@ -16,6 +16,12 @@ type User struct {
 	Role     UserRole
 }
 
+type TokenizedUser struct {
+	ID       uuid.UUID
+	Username string
+	Role     UserRole
+}
+
 type CreateUser struct {
 	Username string
 	Password string

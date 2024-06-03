@@ -50,6 +50,21 @@ var ErrorInternalServerError = &ErrorResponse{
 	},
 }
 
+// ErrorForbidden represents an internal server error.
+var ErrorForbidden = &ErrorResponse{
+	HTTPError: &HTTPError{
+		HTTPStatusCode: http.StatusForbidden,
+		StatusText:     "Forbidden",
+	},
+}
+
+var ErrorUnauthorized = &ErrorResponse{
+	HTTPError: &HTTPError{
+		HTTPStatusCode: http.StatusUnauthorized,
+		StatusText:     "Unauthorized",
+	},
+}
+
 // ErrorConflict returns an error response for a conflict error.
 func ErrorConflict(err error) render.Renderer {
 	return &ErrorResponse{

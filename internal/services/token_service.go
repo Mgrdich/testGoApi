@@ -19,7 +19,7 @@ func NewTokenServiceImpl() *TokenServiceImpl {
 	}
 }
 
-func (s *TokenServiceImpl) GenerateJWT(user *models.User) (string, error) {
+func (s *TokenServiceImpl) GenerateJWT(user *models.TokenizedUser) (string, error) {
 	expirationToken := time.Duration(s.appConfig.TokenExpirationMinutes)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user": user,
@@ -50,6 +50,6 @@ func (s *TokenServiceImpl) VerifyJWT(tokenString string) error {
 	return nil
 }
 
-func (s *TokenServiceImpl) ParseJWT(tokenString string) (*models.User, error) {
+func (s *TokenServiceImpl) ParseJWT(tokenString string) (*models.TokenizedUser, error) {
 	return nil, nil
 }

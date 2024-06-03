@@ -22,9 +22,9 @@ type PersonService interface {
 }
 
 type TokenService interface {
-	GenerateJWT(user *models.User) (string, error)
+	GenerateJWT(user *models.TokenizedUser) (string, error)
 	VerifyJWT(tokenString string) error
-	ParseJWT(tokenString string) (*models.User, error)
+	ParseJWT(tokenString string) (*models.TokenizedUser, error)
 }
 
 type UserService interface {
