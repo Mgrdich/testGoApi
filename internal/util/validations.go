@@ -18,10 +18,11 @@ func ValidatePassword(s string) (isValid, sevenOrMore, number, upper, special bo
 			letters++
 		default:
 			//return false, false, false, false
+
 		}
 	}
 
-	sevenOrMore = letters >= 7
+	sevenOrMore = letters >= 7 && letters < 70
 	isValid = sevenOrMore && number && upper && special
 
 	return

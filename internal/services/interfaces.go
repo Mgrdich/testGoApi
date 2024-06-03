@@ -28,6 +28,6 @@ type TokenService interface {
 }
 
 type UserService interface {
-	Get(ctx context.Context, username string) (*models.User, error)
+	Login(ctx context.Context, parser models.LoginUser) (string, error)
 	Create(ctx context.Context, param models.CreateUser) (*models.User, error)
 }

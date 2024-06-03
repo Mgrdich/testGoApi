@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"github.com/google/uuid"
 
 	db2 "testGoApi/internal/db"
 	db "testGoApi/internal/db/sqlc"
@@ -57,6 +58,18 @@ func (r *UserRepositoryImpl) Save(ctx context.Context, param models.CreateUser) 
 	}
 
 	dbUser, err := r.q.CreateUser(ctx, dbParam)
+
+	if err != nil {
+		return nil, err
+	}
+
+	user := mapDBUserToModelUser(&dbUser)
+
+	return user, nil
+}
+
+func (r *UserRepositoryImpl) GetByID(ctx context.Context, id uuid.UUID) (*models.User, error) {
+	dbUser, err := r.q.GetByID(ctx, db2.ToUUID(id))
 
 	if err != nil {
 		return nil, err

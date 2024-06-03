@@ -2,6 +2,7 @@ package controller
 
 import (
 	"errors"
+	"github.com/google/uuid"
 	"net/http"
 
 	"github.com/go-chi/render"
@@ -12,14 +13,12 @@ import (
 )
 
 type UserController struct {
-	UserService  services.UserService
-	TokenService services.TokenService
+	UserService services.UserService
 }
 
-func NewUserController(userService services.UserService, tokenService services.TokenService) *UserController {
+func NewUserController(userService services.UserService) *UserController {
 	return &UserController{
-		UserService:  userService,
-		TokenService: tokenService,
+		UserService: userService,
 	}
 }
 
@@ -53,7 +52,10 @@ func (uC *UserController) HandleLoginUser(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	user, err := uC.UserService.Get(r.Context(), data.Username)
+	token, err := uC.UserService.Login(r.Context(), models.LoginUser{
+		Username: data.Username,
+		Password: data.Password,
+	})
 
 	if err != nil {
 		var rnfErr *util.RecordNotFoundError
@@ -62,18 +64,6 @@ func (uC *UserController) HandleLoginUser(w http.ResponseWriter, r *http.Request
 			return
 		}
 
-		_ = render.Render(w, r, server.ErrorInternalServerError)
-	}
-
-	// TODO password check should be here
-
-	token, err := uC.TokenService.GenerateJWT(&models.TokenizedUser{
-		ID:       user.ID,
-		Username: user.Username,
-		Role:     user.Role,
-	})
-
-	if err != nil {
 		_ = render.Render(w, r, server.ErrorInternalServerError)
 	}
 
@@ -123,11 +113,9 @@ func (uC *UserController) HandleRegisterUser(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	passwordHashed := "asd"
-
 	_, err := uC.UserService.Create(r.Context(), models.CreateUser{
 		Username: data.Username,
-		Password: passwordHashed,
+		Password: data.Password,
 		Role:     models.BasicRole,
 	})
 
@@ -140,6 +128,7 @@ func (uC *UserController) HandleRegisterUser(w http.ResponseWriter, r *http.Requ
 }
 
 type userDto struct {
+	ID       uuid.UUID       `json:"id"`
 	Username string          `json:"username"`
 	Role     models.UserRole `json:"role"`
 }

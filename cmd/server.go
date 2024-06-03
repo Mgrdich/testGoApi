@@ -28,11 +28,13 @@ func main() {
 	defer conn.Close(context.Background())
 
 	apiServer := server.NewServer(conn)
+
+	tokenService := services.NewTokenServiceImpl()
 	routes.AddRoutes(apiServer, &routes.ApplicationServices{
 		MovieService:  services.NewMoviesServiceImpl(repository.NewMoviesRepositoryImpl(pQueries)),
 		PersonService: services.NewPersonServiceImpl(repository.NewPersonRepositoryImpl(pQueries)),
-		UserService:   services.NewUserServiceImpl(repository.NewUserRepositoryImpl(pQueries)),
-		TokenService:  services.NewTokenServiceImpl(),
+		UserService:   services.NewUserServiceImpl(repository.NewUserRepositoryImpl(pQueries), tokenService),
+		TokenService:  tokenService,
 	})
 	apiServer.Start(ctx)
 }

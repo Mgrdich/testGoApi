@@ -27,3 +27,8 @@ type CreateUser struct {
 	Password string
 	Role     UserRole
 }
+
+type LoginUser struct {
+	Username string
+	Password string
+}

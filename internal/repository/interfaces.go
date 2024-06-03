@@ -23,5 +23,6 @@ type PersonRepository interface {
 
 type UserRepository interface {
 	GetByUsername(ctx context.Context, username string) (*models.User, error)
+	GetByID(ctx context.Context, id uuid.UUID) (*models.User, error)
 	Save(ctx context.Context, param models.CreateUser) (*models.User, error)
 }
