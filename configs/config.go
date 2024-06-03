@@ -3,9 +3,9 @@ package configs
 import (
 	"log"
 	"os"
-	"strconv"
 	"path"
 	"regexp"
+	"strconv"
 
 	"github.com/joho/godotenv"
 )
@@ -43,18 +43,18 @@ func GetAppConfig() *AppConfig {
 	if appConfig == nil {
 		loadEnv()
 
-	TokenExpirationMinutes, err := strconv.Atoi(os.Getenv("TOKEN_EXPIRE"))
+		TokenExpirationMinutes, err := strconv.Atoi(os.Getenv("TOKEN_EXPIRE"))
 
-	if err != nil {
-		log.Fatalf("Token Expire should be of type integer error: %v", err)
-	}
+		if err != nil {
+			log.Fatalf("Token Expire should be of type integer error: %v", err)
+		}
 
-	appConfig = &AppConfig{
+		appConfig = &AppConfig{
 			Port:                   os.Getenv("PORT"),
 			PostgresqlUrl:          os.Getenv("POSTGRESQL"),
 			Environment:            os.Getenv("ENVIRONMENT"),
 			JwtSecretKey:           os.Getenv("JWT_SECRET_KEY"),
-			TokenExpirationMinutes: TokenExpirationMinutes,}
+			TokenExpirationMinutes: TokenExpirationMinutes}
 	}
 
 	return appConfig
