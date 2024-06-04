@@ -53,9 +53,9 @@ type User struct {
 }
 
 type TokenizedUser struct {
-	ID       uuid.UUID
-	Username string
-	Role     string // for the frontend
+	ID       uuid.UUID `json:"id"`
+	Username string    `json:"username"`
+	Role     string    `json:"role"` // for the frontend
 }
 
 type CreateUser struct {

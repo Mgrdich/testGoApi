@@ -41,8 +41,9 @@ func Authentication(tokenService services.TokenService) func(next http.Handler) 
 			}
 
 			tokenString = tokenString[len("Bearer "):]
+			token, err := tokenService.VerifyJWT(tokenString)
 
-			if err := tokenService.VerifyJWT(tokenString); err != nil {
+			if err != nil {
 				log.Println(err)
 
 				_ = render.Render(w, r, server.ErrorForbidden)
@@ -50,7 +51,7 @@ func Authentication(tokenService services.TokenService) func(next http.Handler) 
 				return
 			}
 
-			user, err := tokenService.ParseJWT(tokenString)
+			user, err := tokenService.ParseJWT(token)
 
 			if err != nil {
 				log.Println(err)

@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"testGoApi/internal/models"
 )
@@ -23,8 +24,8 @@ type PersonService interface {
 
 type TokenService interface {
 	GenerateJWT(user *models.TokenizedUser) (string, error)
-	VerifyJWT(tokenString string) error
-	ParseJWT(tokenString string) (*models.TokenizedUser, error)
+	VerifyJWT(tokenString string) (*jwt.Token, error)
+	ParseJWT(token *jwt.Token) (*models.TokenizedUser, error)
 }
 
 type UserService interface {

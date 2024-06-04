@@ -1,6 +1,8 @@
 package services
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
 	"time"
 
@@ -19,10 +21,19 @@ func NewTokenServiceImpl() *TokenServiceImpl {
 	}
 }
 
+type userClaimType string
+
 func (s *TokenServiceImpl) GenerateJWT(user *models.TokenizedUser) (string, error) {
 	expirationToken := time.Duration(s.appConfig.TokenExpirationMinutes)
+
+	// Marshal the user data to JSON
+	userJSON, err := json.Marshal(user)
+	if err != nil {
+		return "", err
+	}
+
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"user": user,
+		"user": userClaimType(userJSON),
 		"exp":  time.Now().Add(expirationToken * time.Minute).Unix(),
 	})
 
@@ -34,22 +45,43 @@ func (s *TokenServiceImpl) GenerateJWT(user *models.TokenizedUser) (string, erro
 	return tokenString, nil
 }
 
-func (s *TokenServiceImpl) VerifyJWT(tokenString string) error {
+func (s *TokenServiceImpl) VerifyJWT(tokenString string) (*jwt.Token, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return s.appConfig.JwtSecretKey, nil
 	})
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if !token.Valid {
-		return fmt.Errorf("invalid token")
+		return nil, fmt.Errorf("invalid token")
 	}
 
-	return nil
+	return token, nil
 }
 
-func (s *TokenServiceImpl) ParseJWT(tokenString string) (*models.TokenizedUser, error) {
-	return nil, nil
+func (s *TokenServiceImpl) ParseJWT(token *jwt.Token) (*models.TokenizedUser, error) {
+	if !token.Valid {
+		return nil, fmt.Errorf("invalid token")
+	}
+
+	if claims, ok := token.Claims.(jwt.MapClaims); ok {
+		userJSON, ok := claims["user"].(userClaimType)
+
+		if !ok {
+			return nil, errors.New("invalid user claim")
+		}
+
+		var user *models.TokenizedUser
+		err := json.Unmarshal([]byte(userJSON), &user)
+
+		if err != nil {
+			return nil, err
+		}
+
+		return user, nil
+	}
+
+	return nil, errors.New("claiming token failed")
 }

@@ -177,9 +177,9 @@ func (hr *userDto) Render(_ http.ResponseWriter, _ *http.Request) error {
 	return nil
 }
 
-// HandleUserMe get the information of the current user
-// @Summary Create a new person
-// @Description Creates a new person with the provided data
+// HandleUserMe Get the information of the current user
+// @Summary Get the user information
+// @Description Gets the current user information data
 // @Tags user
 // @Accept json
 // @Produce json
