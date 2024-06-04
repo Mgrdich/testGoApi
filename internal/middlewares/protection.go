@@ -9,6 +9,7 @@ import (
 	"testGoApi/internal/models"
 	"testGoApi/internal/server"
 	"testGoApi/internal/services"
+	"testGoApi/internal/util"
 )
 
 type userContextKeyType int
@@ -42,14 +43,20 @@ func Authentication(tokenService services.TokenService) func(next http.Handler) 
 			tokenString = tokenString[len("Bearer "):]
 
 			if err := tokenService.VerifyJWT(tokenString); err != nil {
+				log.Println(err)
+
 				_ = render.Render(w, r, server.ErrorForbidden)
+
 				return
 			}
 
 			user, err := tokenService.ParseJWT(tokenString)
 
 			if err != nil {
+				log.Println(err)
+
 				_ = render.Render(w, r, server.ErrorForbidden)
+
 				return
 			}
 
@@ -68,12 +75,16 @@ func Authorized(roles ...models.UserRole) func(next http.Handler) http.Handler {
 			user, ok := GetTokenizedUserCtx(r.Context())
 
 			if !ok {
+				log.Println(util.NewContextCouldNotBeFetchedError())
+
 				_ = render.Render(w, r, server.ErrorForbidden)
+
 				return
 			}
 
 			isAuthorized := false
 
+			// TODO this should be done in a util function
 			for _, role := range roles {
 				if userRole, ok := models.LookUpRole(user.Role); role == userRole && ok {
 					isAuthorized = true
@@ -82,7 +93,10 @@ func Authorized(roles ...models.UserRole) func(next http.Handler) http.Handler {
 			}
 
 			if !isAuthorized {
+				log.Printf("User is not Authorized %v\n", roles)
+
 				_ = render.Render(w, r, server.ErrorForbidden)
+
 				return
 			}
 

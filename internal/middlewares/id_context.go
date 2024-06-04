@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"context"
+	"log"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -18,21 +19,30 @@ func GetContextIdFunc[K models.Models](getByIdFunc util.GetByIDFunc[K],
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			slugId := chi.URLParam(r, "id")
 			if slugId == "" {
+				log.Println(util.NewSlugIDIsNotDefined())
+
 				_ = render.Render(w, r, server.ErrorBadRequest)
+
 				return
 			}
 
 			id, err := uuid.Parse(slugId)
 
 			if err != nil {
+				log.Println(err)
+
 				_ = render.Render(w, r, server.ErrorBadRequest)
+
 				return
 			}
 
 			storeValue, err := getByIdFunc(r.Context(), id)
 
 			if err != nil {
+				log.Println(err)
+
 				_ = render.Render(w, r, server.ErrorNotFound)
+
 				return
 			}
 
