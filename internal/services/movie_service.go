@@ -26,14 +26,14 @@ func (s *MoviesServiceImpl) Get(ctx context.Context, id uuid.UUID) (*models.Movi
 	return s.movieRepository.GetByID(ctx, id)
 }
 
-func (s *MoviesServiceImpl) Create(ctx context.Context, param models.CreateMovieParam) (*models.Movie, error) {
+func (s *MoviesServiceImpl) Create(ctx context.Context, param models.CreateMovie) (*models.Movie, error) {
 	return s.movieRepository.Save(ctx, param)
 }
 
 func (s *MoviesServiceImpl) Update(
 	ctx context.Context,
 	id uuid.UUID,
-	param models.UpdateMovieParam) (*models.Movie, error) {
+	param models.UpdateMovie) (*models.Movie, error) {
 	return s.movieRepository.UpdateByID(ctx, id, param)
 }
 

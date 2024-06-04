@@ -6,9 +6,9 @@ import (
 	"testGoApi/internal/models"
 )
 
-type movieContentKeyType int
+type movieContextKeyType int
 
-const movieContextKey movieContentKeyType = 0
+const movieContextKey movieContextKeyType = 0
 
 // GetMovieCtx GetMovieContext retrieves movie information from the context
 func GetMovieCtx(ctx context.Context) (*models.Movie, bool) {

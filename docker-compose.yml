@@ -19,4 +19,6 @@ services:
       - POSTGRES_PASSWORD=test
       - POSTGRES_DB=testGoApi
     volumes:
-      - /etc/pg-data/testGoApi:/var/lib/postgresql/data/
+      - pgdata:/var/lib/postgresql/data/
+volumes:
+  pgdata:

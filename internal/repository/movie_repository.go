@@ -61,7 +61,7 @@ func (s *MoviesRepositoryImpl) GetByID(ctx context.Context, id uuid.UUID) (*mode
 	return movie, nil
 }
 
-func (s *MoviesRepositoryImpl) Save(ctx context.Context, param models.CreateMovieParam) (*models.Movie, error) {
+func (s *MoviesRepositoryImpl) Save(ctx context.Context, param models.CreateMovie) (*models.Movie, error) {
 	dbParam := db.CreateMovieParams{
 		Title:       db2.ToText(param.Title),
 		Director:    db2.ToText(param.Director),
@@ -82,7 +82,7 @@ func (s *MoviesRepositoryImpl) Save(ctx context.Context, param models.CreateMovi
 func (s *MoviesRepositoryImpl) UpdateByID(
 	ctx context.Context,
 	id uuid.UUID,
-	param models.UpdateMovieParam) (*models.Movie, error) {
+	param models.UpdateMovie) (*models.Movie, error) {
 	dbParam := db.UpdateMovieParams{
 		ID:        db2.ToUUID(id),
 		Title:     db2.ToText(param.Title),

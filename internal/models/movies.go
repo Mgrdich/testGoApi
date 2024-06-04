@@ -16,14 +16,14 @@ type Movie struct {
 	UpdatedAt   time.Time
 }
 
-type CreateMovieParam struct {
+type CreateMovie struct {
 	Title       string
 	Director    string
 	ReleaseDate time.Time
 	TicketPrice float64
 }
 
-type UpdateMovieParam struct {
+type UpdateMovie struct {
 	Title       string
 	Director    string
 	ReleaseDate time.Time

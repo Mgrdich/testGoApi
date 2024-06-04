@@ -6,9 +6,9 @@ import (
 	"testGoApi/internal/models"
 )
 
-type personContentKeyType int
+type personContextKeyType int
 
-const personContextKey personContentKeyType = 0
+const personContextKey personContextKeyType = 0
 
 // GetPersonCtx retrieves person information from the context
 func GetPersonCtx(ctx context.Context) (*models.Person, bool) {

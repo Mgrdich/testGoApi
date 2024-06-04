@@ -18,6 +18,8 @@ GOOSE_DRIVER=postgres
 GOOSE_DBSTRING=${POSTGRESQL}
 GOOSE_MIGRATION_DIR=./internal/db/migrations
 ENVIRONMENT=dev
+JWT_SECRET_KEY=SomeSecretKeyHere
+TOKEN_EXPIRE=10 # in minutes
 ```
 
 ```shell
