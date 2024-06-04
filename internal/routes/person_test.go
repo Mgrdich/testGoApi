@@ -2,38 +2,36 @@ package routes
 
 import (
 	"net/http"
-	"net/http/httptest"
 	"testing"
 
 	"github.com/go-chi/chi/v5"
 	"testGoApi/internal/test_helpers"
 )
 
+type HttpRouteTestCase struct {
+	name   string
+	method string
+	path   string
+}
+
 var personService = test_helpers.NewMockPersonService()
 
 func Test_GetPersonRouter(t *testing.T) {
 	r := chi.NewRouter()
-
 	GetPersonRouter(personService)(r)
 
-	testCases := []struct {
-		name   string
-		method string
-		path   string
-	}{
+	httpRouteTestCase := []HttpRouteTestCase{
 		{name: "GET /", method: http.MethodGet, path: "/"},
 		{name: "POST /", method: http.MethodPost, path: "/"},
 		{name: "GET /{id}", method: http.MethodGet, path: "/123123123"},
 	}
-	for _, testCase := range testCases {
-		t.Run(testCase.name, func(t *testing.T) {
-			req := httptest.NewRequest(testCase.method, testCase.path, nil)
 
-			rr := httptest.NewRecorder()
-			r.ServeHTTP(rr, req)
+	for _, httpRoute := range httpRouteTestCase {
+		t.Run(httpRoute.name, func(t *testing.T) {
+			rr := validateRegisteredRoute(t, r, httpRoute.method, httpRoute.path)
 
 			if status := rr.Code; status == http.StatusNotFound {
-				t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusNotFound)
+				t.Errorf("Route %s not found. Expected status code: %d. Got: %d.", httpRoute.path, http.StatusNotFound, rr.Code)
 			}
 		})
 	}
