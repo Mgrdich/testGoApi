@@ -4,6 +4,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"testGoApi/internal/controller"
 	"testGoApi/internal/middlewares"
+	"testGoApi/internal/models"
 	"testGoApi/internal/services"
 )
 
@@ -11,7 +12,7 @@ func GetPersonRouter(personService services.PersonService) func(router chi.Route
 	return func(r chi.Router) {
 		personController := controller.NewPersonController(personService)
 
-		r.Get("/", personController.HandleGetAllPerson)
+		r.With(middlewares.Authorized(models.AdminRole)).Get("/", personController.HandleGetAllPerson)
 		r.Post("/", personController.HandleCreatePerson)
 
 		r.Route("/{id}", func(r chi.Router) {

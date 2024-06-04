@@ -21,8 +21,6 @@ func NewTokenServiceImpl() *TokenServiceImpl {
 	}
 }
 
-type userClaimType string
-
 func (s *TokenServiceImpl) GenerateJWT(user *models.TokenizedUser) (string, error) {
 	expirationToken := time.Duration(s.appConfig.TokenExpirationMinutes)
 
@@ -33,7 +31,7 @@ func (s *TokenServiceImpl) GenerateJWT(user *models.TokenizedUser) (string, erro
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"user": userClaimType(userJSON),
+		"user": string(userJSON),
 		"exp":  time.Now().Add(expirationToken * time.Minute).Unix(),
 	})
 
@@ -67,7 +65,7 @@ func (s *TokenServiceImpl) ParseJWT(token *jwt.Token) (*models.TokenizedUser, er
 	}
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok {
-		userJSON, ok := claims["user"].(userClaimType)
+		userJSON, ok := claims["user"].(string)
 
 		if !ok {
 			return nil, errors.New("invalid user claim")
