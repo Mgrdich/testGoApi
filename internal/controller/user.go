@@ -133,7 +133,7 @@ func (registerUserRequest *registerUserRequest) Bind(r *http.Request) error {
 // @Accept json
 // @Produce json
 // @Param data body registerUserRequest true "user register data"
-// @Success 201 {object} NewOkDto
+// @Success 201 {object} OKDto
 // @Failure 400 {object} server.HTTPError
 // @Failure 500 {object} server.HTTPError
 // @Router /api/v1/user/register [post]
@@ -180,14 +180,14 @@ func (hr *userDto) Render(_ http.ResponseWriter, _ *http.Request) error {
 // HandleUserMe get the information of the current user
 // @Summary Create a new person
 // @Description Creates a new person with the provided data
-// @Tags person
+// @Tags user
 // @Accept json
 // @Produce json
 // @Param data body CreatePersonRequest true "Person data"
 // @Success 200 {object} userDto
 // @Failure 400 {object} server.HTTPError
 // @Failure 500 {object} server.HTTPError
-// @Router /api/v1/person [post]
+// @Router /api/v1/user/me [post]
 func (uC *UserController) HandleUserMe(w http.ResponseWriter, r *http.Request) {
 	user, ok := middlewares.GetTokenizedUserCtx(r.Context())
 

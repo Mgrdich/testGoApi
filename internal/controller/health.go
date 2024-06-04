@@ -11,7 +11,7 @@ import (
 // @Description Returns the health status of the service
 // @Tags health
 // @Produce json
-// @Success 200 {object} NewOkDto
+// @Success 200 {object} OKDto
 // @Router /health [get]
 func HandleGetHealth(w http.ResponseWriter, r *http.Request) {
 	_ = render.Render(w, r, NewOkDto())

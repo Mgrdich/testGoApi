@@ -15,7 +15,7 @@ type AppConfig struct {
 	Port                   string
 	PostgresqlUrl          string
 	Environment            util.EnvironmentsType
-	JwtSecretKey           string
+	JwtSecretKey           []byte
 	TokenExpirationMinutes int
 }
 
@@ -63,7 +63,7 @@ func GetAppConfig() *AppConfig {
 			Port:                   os.Getenv("PORT"),
 			PostgresqlUrl:          os.Getenv("POSTGRESQL"),
 			Environment:            env,
-			JwtSecretKey:           os.Getenv("JWT_SECRET_KEY"),
+			JwtSecretKey:           []byte(os.Getenv("JWT_SECRET_KEY")),
 			TokenExpirationMinutes: TokenExpirationMinutes}
 	}
 
