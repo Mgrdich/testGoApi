@@ -19,3 +19,14 @@ type RecordNotFoundError struct{}
 func (e *RecordNotFoundError) Error() string {
 	return "record not found"
 }
+
+type ContextCouldNotBeFetchedError struct {
+}
+
+func (e *ContextCouldNotBeFetchedError) Error() string {
+	return "Context could not be fetched"
+}
+
+func NewContextCouldNotBeFetchedError() *ContextCouldNotBeFetchedError {
+	return &ContextCouldNotBeFetchedError{}
+}

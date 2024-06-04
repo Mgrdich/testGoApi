@@ -2,6 +2,7 @@ package controller
 
 import (
 	"errors"
+	"log"
 	"net/http"
 	"time"
 
@@ -57,7 +58,10 @@ func NewMoviesController(movieService services.MovieService) *MoviesController {
 func (mC *MoviesController) HandleGetMovie(w http.ResponseWriter, r *http.Request) {
 	movie, ok := middlewares.GetMovieCtx(r.Context())
 	if !ok {
+		log.Println(util.NewContextCouldNotBeFetchedError())
+
 		_ = render.Render(w, r, server.ErrorBadRequest)
+
 		return
 	}
 
@@ -78,7 +82,10 @@ func (mC *MoviesController) HandleGetMovie(w http.ResponseWriter, r *http.Reques
 func (mC *MoviesController) HandleGetAllMovies(w http.ResponseWriter, r *http.Request) {
 	movies, err := mC.MovieService.GetAll(r.Context())
 	if err != nil {
+		log.Println(err)
+
 		var rnfErr *util.RecordNotFoundError
+
 		if errors.As(err, &rnfErr) {
 			_ = render.Render(w, r, server.ErrorNotFound)
 			return
@@ -94,7 +101,10 @@ func (mC *MoviesController) HandleGetAllMovies(w http.ResponseWriter, r *http.Re
 
 	err = render.RenderList(w, r, moviesDTO)
 	if err != nil {
+		log.Println(err)
+
 		_ = render.Render(w, r, server.ErrorConflict(err))
+
 		return
 	}
 }
@@ -129,7 +139,10 @@ func (mr *CreateMovieRequest) Bind(r *http.Request) error {
 func (mC *MoviesController) HandleCreateMovie(w http.ResponseWriter, r *http.Request) {
 	data := &CreateMovieRequest{}
 	if err := render.Bind(r, data); err != nil {
+		log.Println(err)
+
 		_ = render.Render(w, r, server.ErrorBadRequest)
+
 		return
 	}
 
@@ -141,6 +154,8 @@ func (mC *MoviesController) HandleCreateMovie(w http.ResponseWriter, r *http.Req
 	})
 
 	if err != nil {
+		log.Println(err)
+
 		_ = render.Render(w, r, server.ErrorInternalServerError)
 
 		return
@@ -182,13 +197,19 @@ func (mr *UpdateMovieRequest) Bind(r *http.Request) error {
 func (mC *MoviesController) HandleUpdateMovie(w http.ResponseWriter, r *http.Request) {
 	movie, ok := middlewares.GetMovieCtx(r.Context())
 	if !ok {
+		log.Println(util.NewContextCouldNotBeFetchedError())
+
 		_ = render.Render(w, r, server.ErrorBadRequest)
+
 		return
 	}
 
 	data := &UpdateMovieRequest{}
 	if err := render.Bind(r, data); err != nil {
+		log.Println(err)
+
 		_ = render.Render(w, r, server.ErrorBadRequest)
+
 		return
 	}
 
@@ -200,6 +221,8 @@ func (mC *MoviesController) HandleUpdateMovie(w http.ResponseWriter, r *http.Req
 	})
 
 	if err != nil {
+		log.Println(err)
+
 		var rnfError *util.RecordNotFoundError
 		if errors.As(err, &rnfError) {
 			_ = render.Render(w, r, server.ErrorNotFound)
@@ -229,12 +252,17 @@ func (mC *MoviesController) HandleUpdateMovie(w http.ResponseWriter, r *http.Req
 func (mC *MoviesController) HandleDeleteMovie(w http.ResponseWriter, r *http.Request) {
 	movie, ok := middlewares.GetMovieCtx(r.Context())
 	if !ok {
+		log.Println(util.NewContextCouldNotBeFetchedError())
+
 		_ = render.Render(w, r, server.ErrorBadRequest)
+
 		return
 	}
 
 	err := mC.MovieService.Delete(r.Context(), movie.ID)
 	if err != nil {
+		log.Println(err)
+
 		var rnfErr *util.RecordNotFoundError
 		if errors.As(err, &rnfErr) {
 			_ = render.Render(w, r, server.ErrorNotFound)
@@ -250,7 +278,10 @@ func (mC *MoviesController) HandleDeleteMovie(w http.ResponseWriter, r *http.Req
 	_, err = w.Write(nil)
 
 	if err != nil {
+		log.Println(err)
+
 		_ = render.Render(w, r, server.ErrorInternalServerError)
+
 		return
 	}
 }

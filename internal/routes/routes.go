@@ -29,7 +29,7 @@ func AddRoutes(s *server.Server, services *ApplicationServices) {
 	s.Router.Get("/health", controller.HandleGetHealth)
 
 	s.Router.Route("/api/v1", func(r chi.Router) {
-		r.Route("/user", GetUserRouter(services.UserService))
+		r.Route("/user", GetUserRouter(services.UserService, services.TokenService))
 
 		// Authenticated routes
 		r.Group(func(r chi.Router) {

@@ -2,6 +2,7 @@ package controller
 
 import (
 	"errors"
+	"log"
 	"net/http"
 
 	"github.com/go-chi/render"
@@ -46,10 +47,24 @@ func (hr *tokenDTO) Render(_ http.ResponseWriter, _ *http.Request) error {
 	return nil
 }
 
+// HandleLoginUser logs the user into the system
+// @Summary logs the user into the system
+// @Description logs the user into the system and creates a token
+// @Tags user
+// @Accept json
+// @Produce json
+// @Param data body loginUserRequest true "user login Data"
+// @Success 200 {object} tokenDTO
+// @Failure 400 {object} server.HTTPError
+// @Failure 500 {object} server.HTTPError
+// @Router /api/v1/user/login [post]
 func (uC *UserController) HandleLoginUser(w http.ResponseWriter, r *http.Request) {
 	data := &loginUserRequest{}
 	if err := render.Bind(r, data); err != nil {
+		log.Println(err)
+
 		_ = render.Render(w, r, server.ErrorBadRequest)
+
 		return
 	}
 
@@ -59,13 +74,18 @@ func (uC *UserController) HandleLoginUser(w http.ResponseWriter, r *http.Request
 	})
 
 	if err != nil {
+		log.Print(err)
+
 		var rnfErr *util.RecordNotFoundError
+
 		if errors.As(err, &rnfErr) {
 			_ = render.Render(w, r, server.ErrorNotFound)
 			return
 		}
 
 		_ = render.Render(w, r, server.ErrorInternalServerError)
+
+		return
 	}
 
 	_ = render.Render(w, r, &tokenDTO{
@@ -74,7 +94,7 @@ func (uC *UserController) HandleLoginUser(w http.ResponseWriter, r *http.Request
 }
 
 // registerUserRequest represents the request payload for creating a person
-// @Description ser request
+// @Description register user request
 type registerUserRequest struct {
 	Username       string `json:"username"`
 	Password       string `json:"password"`
@@ -88,8 +108,8 @@ func (registerUserRequest *registerUserRequest) Bind(r *http.Request) error {
 		return errors.New("missing required Fields")
 	}
 
-	if len(registerUserRequest.Username) < 3 {
-		return errors.New("username should be at least 4 letters")
+	if len(registerUserRequest.Username) < 3 || len(registerUserRequest.Username) > 30 {
+		return errors.New("username should be at least 4 letters and 30 letters most")
 	}
 
 	if registerUserRequest.Password != registerUserRequest.RepeatPassword {
@@ -106,11 +126,25 @@ func (registerUserRequest *registerUserRequest) Bind(r *http.Request) error {
 	return nil
 }
 
+// HandleRegisterUser registers a new user
+// @Summary Create a new user
+// @Description Creates a new user with the provided data
+// @Tags user
+// @Accept json
+// @Produce json
+// @Param data body registerUserRequest true "user register data"
+// @Success 201 {object} NewOkDto
+// @Failure 400 {object} server.HTTPError
+// @Failure 500 {object} server.HTTPError
+// @Router /api/v1/user/register [post]
 func (uC *UserController) HandleRegisterUser(w http.ResponseWriter, r *http.Request) {
 	data := &registerUserRequest{}
 
 	if err := render.Bind(r, data); err != nil {
+		log.Println(err)
+
 		_ = render.Render(w, r, server.ErrorBadRequest)
+
 		return
 	}
 
@@ -121,11 +155,16 @@ func (uC *UserController) HandleRegisterUser(w http.ResponseWriter, r *http.Requ
 	})
 
 	if err != nil {
+		log.Println(err)
+
 		_ = render.Render(w, r, server.ErrorInternalServerError)
+
 		return
 	}
 
-	_ = render.Render(w, r, nil)
+	render.Status(r, http.StatusCreated)
+
+	_ = render.Render(w, r, NewOkDto())
 }
 
 type userDto struct {
@@ -138,11 +177,25 @@ func (hr *userDto) Render(_ http.ResponseWriter, _ *http.Request) error {
 	return nil
 }
 
+// HandleUserMe get the information of the current user
+// @Summary Create a new person
+// @Description Creates a new person with the provided data
+// @Tags person
+// @Accept json
+// @Produce json
+// @Param data body CreatePersonRequest true "Person data"
+// @Success 200 {object} userDto
+// @Failure 400 {object} server.HTTPError
+// @Failure 500 {object} server.HTTPError
+// @Router /api/v1/person [post]
 func (uC *UserController) HandleUserMe(w http.ResponseWriter, r *http.Request) {
 	user, ok := middlewares.GetTokenizedUserCtx(r.Context())
 
 	if !ok {
+		log.Println(util.NewContextCouldNotBeFetchedError())
+
 		_ = render.Render(w, r, server.ErrorBadRequest)
+
 		return
 	}
 

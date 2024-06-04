@@ -2,6 +2,7 @@ package controller
 
 import (
 	"errors"
+	"log"
 	"net/http"
 	"time"
 
@@ -58,7 +59,10 @@ func (pC *PersonController) HandleGetPerson(w http.ResponseWriter, r *http.Reque
 	person, ok := middlewares.GetPersonCtx(r.Context())
 
 	if !ok {
+		log.Println(util.NewContextCouldNotBeFetchedError())
+
 		_ = render.Render(w, r, server.ErrorNotFound)
+
 		return
 	}
 
@@ -79,7 +83,10 @@ func (pC *PersonController) HandleGetPerson(w http.ResponseWriter, r *http.Reque
 func (pC *PersonController) HandleGetAllPerson(w http.ResponseWriter, r *http.Request) {
 	people, err := pC.PersonService.GetAll(r.Context())
 	if err != nil {
+		log.Println(err)
+
 		var rnfErr *util.RecordNotFoundError
+
 		if errors.As(err, &rnfErr) {
 			_ = render.Render(w, r, server.ErrorNotFound)
 			return
@@ -95,7 +102,10 @@ func (pC *PersonController) HandleGetAllPerson(w http.ResponseWriter, r *http.Re
 
 	err = render.RenderList(w, r, peopleDTO)
 	if err != nil {
+		log.Println(err)
+
 		_ = render.Render(w, r, server.ErrorConflict(err))
+
 		return
 	}
 }
@@ -129,7 +139,10 @@ func (pr *CreatePersonRequest) Bind(r *http.Request) error {
 func (pC *PersonController) HandleCreatePerson(w http.ResponseWriter, r *http.Request) {
 	data := &CreatePersonRequest{}
 	if err := render.Bind(r, data); err != nil {
+		log.Println(err)
+
 		_ = render.Render(w, r, server.ErrorBadRequest)
+
 		return
 	}
 
@@ -139,6 +152,8 @@ func (pC *PersonController) HandleCreatePerson(w http.ResponseWriter, r *http.Re
 	})
 
 	if err != nil {
+		log.Println(err)
+
 		_ = render.Render(w, r, server.ErrorInternalServerError)
 
 		return

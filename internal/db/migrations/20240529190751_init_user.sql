@@ -5,13 +5,13 @@ CREATE TABLE USERS
 (
     id uuid PRIMARY KEY DEFAULT GEN_RANDOM_UUID(),
     username VARCHAR(30) UNIQUE,
-    password VARCHAR(30),
+    password VARCHAR(72),
     role ROLE NOT NULL
 );
 -- +goose StatementEnd
 
 -- +goose Down
 -- +goose StatementBegin
-DROP TYPE IF EXISTS ROLE;
 DROP TABLE USERS;
+DROP TYPE IF EXISTS ROLE;
 -- +goose StatementEnd

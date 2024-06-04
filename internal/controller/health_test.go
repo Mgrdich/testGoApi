@@ -17,7 +17,7 @@ func TestHandleGetHealth(t *testing.T) {
 		t.Errorf("Handler returned wrong status code. Expected: %d. Got: %d.", http.StatusOK, status)
 	}
 
-	var response healthResponse
+	var response OKDto
 
 	if err := json.NewDecoder(rr.Body).Decode(&response); err != nil {
 		t.Errorf("Error decoding response body: %v", err)

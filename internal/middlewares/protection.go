@@ -32,7 +32,7 @@ func Authentication(tokenService services.TokenService) func(next http.Handler) 
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			tokenString := r.Header.Get("Authorization")
 			if tokenString == "" {
-				log.Print("Missing authorization header")
+				log.Println("Missing authorization header")
 
 				_ = render.Render(w, r, server.ErrorUnauthorized)
 
