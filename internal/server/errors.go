@@ -50,6 +50,13 @@ var ErrorInternalServerError = &ErrorResponse{
 	},
 }
 
+var ErrorMethodNotAllowed = &ErrorResponse{
+	HTTPError: &HTTPError{
+		HTTPStatusCode: http.StatusMethodNotAllowed,
+		StatusText:     "Method Not Allowed",
+	},
+}
+
 // ErrorForbidden represents an internal server error.
 var ErrorForbidden = &ErrorResponse{
 	HTTPError: &HTTPError{
