@@ -40,8 +40,9 @@ func TestUserController_HandleLoginUser(t *testing.T) {
 func TestUserController_HandleRegisterUser(t *testing.T) {
 	controller := NewUserController(test_helpers.NewMockUserService())
 	param := registerUserRequest{
-		Username: username,
-		Password: password,
+		Username:       username,
+		Password:       password,
+		RepeatPassword: password,
 	}
 	jsonData, err := json.Marshal(param)
 

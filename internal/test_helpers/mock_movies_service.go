@@ -14,7 +14,13 @@ func NewMockMovieService() *MockMovieService {
 }
 
 func (*MockMovieService) GetAll(_ context.Context) ([]*models.Movie, error) {
-	return nil, nil
+	movies := []*models.Movie{
+		{ID: uuid.New()},
+		{ID: uuid.New()},
+		{ID: uuid.New()},
+	}
+
+	return movies, nil
 }
 
 func (*MockMovieService) Get(_ context.Context, id uuid.UUID) (*models.Movie, error) {
