@@ -14,6 +14,16 @@ type UserServiceImpl struct {
 	tokenService   TokenService
 }
 
+func GenerateHashPassword(password string) (string, error) {
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+
+	if err != nil {
+		return "", err
+	}
+
+	return string(hash), nil
+}
+
 func NewUserServiceImpl(userRepository repository.UserRepository, tokenService TokenService) *UserServiceImpl {
 	return &UserServiceImpl{
 		userRepository: userRepository,
@@ -45,13 +55,13 @@ func (uS *UserServiceImpl) Login(ctx context.Context, param models.LoginUser) (s
 func (uS *UserServiceImpl) Create(ctx context.Context, param models.CreateUser) (*models.User, error) {
 	password := param.Password
 
-	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	hash, err := GenerateHashPassword(password)
 
 	if err != nil {
 		return nil, err
 	}
 
-	param.Password = string(hash)
+	param.Password = hash
 
 	return uS.userRepository.Save(ctx, param)
 }

@@ -10,7 +10,8 @@ import (
 )
 
 const username = "username"
-const password = "passwordpassword"
+const password = "password"
+const basicRole = models.BasicRole
 
 type MockUserRepository struct {
 	GetByUsernameFunc func(username string) (*models.User, error)
@@ -33,13 +34,19 @@ func (m *MockUserRepository) GetByID(_ context.Context, id uuid.UUID) (*models.U
 func TestNewUserService_Login(t *testing.T) {
 	tokenService := NewTokenServiceImpl()
 
+	hash, err := GenerateHashPassword(password)
+
+	if err != nil {
+		t.Fatalf("Generte hash expected no error, got %v", err)
+	}
+
 	userService := NewUserServiceImpl(&MockUserRepository{
 		GetByUsernameFunc: func(username string) (*models.User, error) {
 			return &models.User{
 				ID:       uuid.New(),
 				Username: username,
-				Password: password,
-				Role:     0,
+				Password: hash,
+				Role:     models.BasicRole,
 			}, nil
 		},
 	}, tokenService)
@@ -64,7 +71,7 @@ func TestNewUserService_Login(t *testing.T) {
 		t.Fatalf("ParseJWT expected no error, got %v", err)
 	}
 
-	if user.Username != username {
+	if role, ok := models.LookUpRole(user.Role); user.Username != username && ok && role == basicRole {
 		t.Fatalf("Usernanme values should match with the content in the token")
 	}
 }
@@ -85,16 +92,21 @@ func TestNewUserService_Create(t *testing.T) {
 	created, err := userService.Create(context.Background(), models.CreateUser{
 		Username: username,
 		Password: password,
-		Role:     0,
+		Role:     basicRole,
 	})
 
 	if err != nil {
 		t.Fatalf("expected no error, got %v", err)
 	}
 
-	// TODO check the role as well or password maybe?
-	if created.Username != username {
-		t.Fatalf("Usernanme values should match with the created value")
+	hash, err := GenerateHashPassword(password)
+
+	if err != nil {
+		t.Fatalf("Generte hash expected no error, got %v", err)
+	}
+
+	if created.Username != username && created.Role == basicRole && created.Password == hash {
+		t.Fatalf("User Fields values should match with the created value")
 	}
 }
 
