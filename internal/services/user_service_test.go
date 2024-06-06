@@ -3,6 +3,8 @@ package services
 import (
 	"context"
 	"errors"
+	"testGoApi/configs"
+	"testGoApi/internal/util"
 	"testing"
 
 	"github.com/google/uuid"
@@ -33,6 +35,12 @@ func (m *MockUserRepository) GetByID(_ context.Context, id uuid.UUID) (*models.U
 }
 
 func TestNewUserService_Login(t *testing.T) {
+	configs.SetAppConfig(&configs.AppConfig{
+		Environment:            util.DevEnvironment,
+		TokenExpirationMinutes: 10,
+		JwtSecretKey:           []byte("DummyJWTSecretKey"),
+	})
+
 	tokenService := NewTokenServiceImpl()
 
 	hash, err := GenerateHashPassword(password)
