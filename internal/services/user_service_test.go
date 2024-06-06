@@ -3,13 +3,13 @@ package services
 import (
 	"context"
 	"errors"
-	"testGoApi/configs"
-	"testGoApi/internal/util"
 	"testing"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
+	"testGoApi/configs"
 	"testGoApi/internal/models"
+	"testGoApi/internal/util"
 )
 
 const username = "username"
