@@ -3,10 +3,10 @@ package services
 import (
 	"context"
 	"errors"
-	"golang.org/x/crypto/bcrypt"
 	"testing"
 
 	"github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
 	"testGoApi/internal/models"
 )
 
