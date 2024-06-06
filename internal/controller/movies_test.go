@@ -27,6 +27,12 @@ func TestMoviesController_HandleGetAllMovies(t *testing.T) {
 	if status := rr.Code; status != http.StatusOK {
 		t.Errorf("Handler returned wrong status code. Expected: %d. Got: %d.", http.StatusOK, status)
 	}
+
+	var response []movieDTO
+
+	if err := json.NewDecoder(rr.Body).Decode(&response); err != nil {
+		t.Errorf("Error decoding response body: %v", err)
+	}
 }
 
 func TestMoviesController_HandleGetMovie(t *testing.T) {
@@ -38,6 +44,12 @@ func TestMoviesController_HandleGetMovie(t *testing.T) {
 
 	if status := rr.Code; status != http.StatusOK {
 		t.Errorf("Handler returned wrong status code. Expected: %d. Got: %d.", http.StatusOK, status)
+	}
+
+	var response movieDTO
+
+	if err := json.NewDecoder(rr.Body).Decode(&response); err != nil {
+		t.Errorf("Error decoding response body: %v", err)
 	}
 }
 
@@ -64,6 +76,12 @@ func TestMoviesController_HandleCreateMovie(t *testing.T) {
 	if status := rr.Code; status != http.StatusCreated {
 		t.Errorf("Handler returned wrong status code. Expected: %d. Got: %d.", http.StatusCreated, status)
 	}
+
+	var response movieDTO
+
+	if err = json.NewDecoder(rr.Body).Decode(&response); err != nil {
+		t.Errorf("Error decoding response body: %v", err)
+	}
 }
 
 func TestMoviesController_HandleUpdateMovie(t *testing.T) {
@@ -87,6 +105,12 @@ func TestMoviesController_HandleUpdateMovie(t *testing.T) {
 
 	if status := rr.Code; status != http.StatusOK {
 		t.Errorf("Handler returned wrong status code. Expected: %d. Got: %d.", http.StatusOK, status)
+	}
+
+	var response movieDTO
+
+	if err = json.NewDecoder(rr.Body).Decode(&response); err != nil {
+		t.Errorf("Error decoding response body: %v", err)
 	}
 }
 

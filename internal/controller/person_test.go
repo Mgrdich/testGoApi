@@ -28,6 +28,12 @@ func TestPersonController_HandleGetAllPerson(t *testing.T) {
 	if status := rr.Code; status != http.StatusOK {
 		t.Errorf("Handler returned wrong status code. Expected: %d. Got: %d.", http.StatusOK, status)
 	}
+
+	var response []personDTO
+
+	if err := json.NewDecoder(rr.Body).Decode(&response); err != nil {
+		t.Errorf("Error decoding response body: %v", err)
+	}
 }
 
 func TestPersonController_HandleGetPerson(t *testing.T) {
@@ -40,6 +46,12 @@ func TestPersonController_HandleGetPerson(t *testing.T) {
 
 	if status := rr.Code; status != http.StatusOK {
 		t.Errorf("Handler returned wrong status code. Expected: %d. Got: %d.", http.StatusOK, status)
+	}
+
+	var response personDTO
+
+	if err := json.NewDecoder(rr.Body).Decode(&response); err != nil {
+		t.Errorf("Error decoding response body: %v", err)
 	}
 }
 
@@ -64,5 +76,11 @@ func TestPersonController_HandleCreatePerson(t *testing.T) {
 		if status := rr.Code; status != http.StatusCreated {
 			t.Errorf("Handler returned wrong status code. Expected: %d. Got: %d.", http.StatusCreated, status)
 		}
+	}
+
+	var response personDTO
+
+	if err := json.NewDecoder(rr.Body).Decode(&response); err != nil {
+		t.Errorf("Error decoding response body: %v", err)
 	}
 }
