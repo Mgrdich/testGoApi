@@ -67,7 +67,7 @@ func TestMoviesController_HandleGetMovie(t *testing.T) {
 	}
 
 	if response.ID != movie.ID {
-		t.Errorf("ID does not match: %v %v", response.Title, title)
+		t.Errorf("ID does not match: %v %v", response.ID, movie.ID)
 	}
 
 	if response.Title != movie.Title {
