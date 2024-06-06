@@ -44,7 +44,7 @@ func TestNewTokenService(t *testing.T) {
 		t.Fatalf("ID from the token should match the generated one %v  %v", user.ID, expectedUser.ID)
 	}
 
-	if user.Username != expectedUser.Username || user.ID != expectedUser.ID || user.Role != expectedUser.Role {
+	if user.Username != expectedUser.Username {
 		t.Fatalf("Username from the token should match the generated one %v  %v", user.Username, expectedUser.Username)
 	}
 

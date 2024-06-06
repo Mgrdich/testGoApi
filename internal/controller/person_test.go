@@ -48,7 +48,11 @@ func TestPersonController_HandleCreatePerson(t *testing.T) {
 		FirstName: "Test",
 		LastName:  "Test",
 	}
-	jsonData, _ := json.Marshal(personParams)
+	jsonData, err := json.Marshal(personParams)
+
+	if err != nil {
+		t.Errorf("Error encoding JSON: %v", err)
+	}
 
 	controller := NewPersonController(mockPersonService)
 

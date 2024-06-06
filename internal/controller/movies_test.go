@@ -51,7 +51,7 @@ func TestMoviesController_HandleCreateMovie(t *testing.T) {
 	jsonData, err := json.Marshal(createParam)
 
 	if err != nil {
-		t.Error("Error encoding JSON:", err)
+		t.Errorf("Error encoding JSON: %v", err)
 	}
 
 	controller := NewMoviesController(mockMoviesService)
@@ -76,7 +76,7 @@ func TestMoviesController_HandleUpdateMovie(t *testing.T) {
 	jsonData, err := json.Marshal(updateParam)
 
 	if err != nil {
-		t.Error("Error encoding JSON:", err)
+		t.Errorf("Error encoding JSON: %v", err)
 	}
 
 	controller := NewMoviesController(mockMoviesService)
