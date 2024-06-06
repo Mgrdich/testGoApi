@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"errors"
+	"golang.org/x/crypto/bcrypt"
 	"testing"
 
 	"github.com/google/uuid"
@@ -140,5 +141,24 @@ func TestNewUserService_Get(t *testing.T) {
 
 	if user != expectedUser {
 		t.Errorf("expected user to be %v, got %v", expectedUser, user)
+	}
+}
+
+func TestGenerateHashPassword(t *testing.T) {
+
+	expectedHash, err := GenerateHashPassword(password)
+
+	if err != nil {
+		t.Fatalf("Generte hash expected no error, got %v", err)
+	}
+
+	if err != nil {
+		t.Fatalf("Generte hash function expected no error, got %v", err)
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(expectedHash), []byte(password))
+
+	if err != nil {
+		t.Fatalf("Compare hash returned an error")
 	}
 }
