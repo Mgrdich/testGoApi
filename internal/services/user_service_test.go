@@ -153,7 +153,6 @@ func TestNewUserService_Get(t *testing.T) {
 }
 
 func TestGenerateHashPassword(t *testing.T) {
-
 	expectedHash, err := GenerateHashPassword(password)
 
 	if err != nil {
