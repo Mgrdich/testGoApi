@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"github.com/google/uuid"
 	"net/http"
 	"testing"
 
@@ -14,8 +15,10 @@ import (
 
 var mockMoviesService = test_helpers.NewMockMovieService()
 
-func setMovieCtx() context.Context {
-	return middlewares.SetMovieCtx(context.Background(), &models.Movie{})
+const title = "Title"
+
+func setMovieCtx(movie *models.Movie) context.Context {
+	return middlewares.SetMovieCtx(context.Background(), movie)
 }
 
 func TestMoviesController_HandleGetAllMovies(t *testing.T) {
@@ -33,12 +36,23 @@ func TestMoviesController_HandleGetAllMovies(t *testing.T) {
 	if err := json.NewDecoder(rr.Body).Decode(&response); err != nil {
 		t.Errorf("Error decoding response body: %v", err)
 	}
+
+	movies, err := mockMoviesService.GetAll(context.Background())
+
+	if err != nil {
+		t.Errorf("Mock Movie Servie Get all should not return err %v", err)
+	}
+
+	if len(response) != len(movies) {
+		t.Errorf("Service Returned and the Response returned should match %v %v", len(response), len(movies))
+	}
 }
 
 func TestMoviesController_HandleGetMovie(t *testing.T) {
 	controller := NewMoviesController(mockMoviesService)
 	req := test_helpers.NewRequest(t, http.MethodGet, "/movies/1", nil)
-	ctx := setMovieCtx()
+	movie := &models.Movie{ID: uuid.New(), Title: title}
+	ctx := setMovieCtx(movie)
 
 	rr := test_helpers.ExecuteRequest(req, controller.HandleGetMovie, ctx)
 
@@ -51,11 +65,19 @@ func TestMoviesController_HandleGetMovie(t *testing.T) {
 	if err := json.NewDecoder(rr.Body).Decode(&response); err != nil {
 		t.Errorf("Error decoding response body: %v", err)
 	}
+
+	if response.ID != movie.ID {
+		t.Errorf("ID does not match: %v %v", response.Title, title)
+	}
+
+	if response.Title != movie.Title {
+		t.Errorf("Title does not match: %v %v", response.Title, title)
+	}
 }
 
 func TestMoviesController_HandleCreateMovie(t *testing.T) {
 	createParam := CreateMovieRequest{
-		Title:       "title",
+		Title:       title,
 		Director:    "Director",
 		TicketPrice: 2,
 	}
@@ -82,11 +104,15 @@ func TestMoviesController_HandleCreateMovie(t *testing.T) {
 	if err = json.NewDecoder(rr.Body).Decode(&response); err != nil {
 		t.Errorf("Error decoding response body: %v", err)
 	}
+
+	if response.Title != createParam.Title {
+		t.Errorf("Title does not match: %v %v", response.Title, title)
+	}
 }
 
 func TestMoviesController_HandleUpdateMovie(t *testing.T) {
 	updateParam := UpdateMovieRequest{
-		Title:       "title",
+		Title:       title,
 		Director:    "Director",
 		TicketPrice: 2,
 	}
@@ -99,7 +125,8 @@ func TestMoviesController_HandleUpdateMovie(t *testing.T) {
 
 	controller := NewMoviesController(mockMoviesService)
 	req := test_helpers.NewRequest(t, http.MethodPut, "/movies/1", bytes.NewBuffer(jsonData))
-	ctx := setMovieCtx()
+	movie := &models.Movie{ID: uuid.New(), Title: updateParam.Title}
+	ctx := setMovieCtx(movie)
 
 	rr := test_helpers.ExecuteRequest(req, controller.HandleUpdateMovie, ctx)
 
@@ -112,12 +139,21 @@ func TestMoviesController_HandleUpdateMovie(t *testing.T) {
 	if err = json.NewDecoder(rr.Body).Decode(&response); err != nil {
 		t.Errorf("Error decoding response body: %v", err)
 	}
+
+	if response.ID != movie.ID {
+		t.Errorf("ID does not match: %v %v", response.Title, title)
+	}
+
+	if response.Title != movie.Title {
+		t.Errorf("Title does not match: %v %v", response.Title, title)
+	}
 }
 
 func TestMoviesController_HandleDeleteMovie(t *testing.T) {
 	controller := NewMoviesController(mockMoviesService)
 	req := test_helpers.NewRequest(t, http.MethodDelete, "/movies/1", nil)
-	ctx := setMovieCtx()
+	movie := &models.Movie{ID: uuid.New(), Title: title}
+	ctx := setMovieCtx(movie)
 
 	rr := test_helpers.ExecuteRequest(req, controller.HandleDeleteMovie, ctx)
 
