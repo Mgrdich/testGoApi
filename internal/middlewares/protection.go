@@ -22,8 +22,8 @@ func GetTokenizedUserCtx(ctx context.Context) (*models.TokenizedUser, bool) {
 	return person, ok
 }
 
-// setTokenizedUserCtx sets person information in the context
-func setTokenizedUserCtx(ctx context.Context, user *models.TokenizedUser) context.Context {
+// SetTokenizedUserCtx sets person information in the context
+func SetTokenizedUserCtx(ctx context.Context, user *models.TokenizedUser) context.Context {
 	return context.WithValue(ctx, userContextKey, user)
 }
 
@@ -61,7 +61,7 @@ func Authentication(tokenService services.TokenService) func(next http.Handler) 
 				return
 			}
 
-			ctx := setTokenizedUserCtx(r.Context(), user)
+			ctx := SetTokenizedUserCtx(r.Context(), user)
 
 			next.ServeHTTP(w, r.WithContext(ctx))
 		})

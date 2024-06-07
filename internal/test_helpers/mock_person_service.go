@@ -15,7 +15,13 @@ func NewMockPersonService() *MockPersonService {
 }
 
 func (m *MockPersonService) GetAll(_ context.Context) ([]*models.Person, error) {
-	return nil, nil
+	persons := []*models.Person{
+		{ID: uuid.New()},
+		{ID: uuid.New()},
+		{ID: uuid.New()},
+	}
+
+	return persons, nil
 }
 
 func (m *MockPersonService) Get(_ context.Context, id uuid.UUID) (*models.Person, error) {
