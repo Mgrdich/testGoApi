@@ -35,6 +35,16 @@ func TestUserController_HandleLoginUser(t *testing.T) {
 	if status := rr.Code; status != http.StatusOK {
 		t.Errorf("Handler returned wrong status code. Expected: %d. Got: %d.", http.StatusOK, status)
 	}
+
+	var response tokenDTO
+
+	if err = json.NewDecoder(rr.Body).Decode(&response); err != nil {
+		t.Errorf("Error decoding response body: %v", err)
+	}
+
+	if len(response.Token) == 0 {
+		t.Error("token should not be empty")
+	}
 }
 
 func TestUserController_HandleRegisterUser(t *testing.T) {
@@ -57,6 +67,16 @@ func TestUserController_HandleRegisterUser(t *testing.T) {
 	if status := rr.Code; status != http.StatusCreated {
 		t.Errorf("Handler returned wrong status code. Expected: %d. Got: %d.", http.StatusOK, status)
 	}
+
+	var response OKDto
+
+	if err = json.NewDecoder(rr.Body).Decode(&response); err != nil {
+		t.Errorf("Error decoding response body: %v", err)
+	}
+
+	if response.OK != true {
+		t.Error("Response back does not match the intention")
+	}
 }
 
 func TestUserController_HandleUserMe(t *testing.T) {
@@ -74,5 +94,19 @@ func TestUserController_HandleUserMe(t *testing.T) {
 
 	if status := rr.Code; status != http.StatusOK {
 		t.Errorf("Handler returned wrong status code. Expected: %d. Got: %d.", http.StatusOK, status)
+	}
+
+	var response userDto
+
+	if err := json.NewDecoder(rr.Body).Decode(&response); err != nil {
+		t.Errorf("Error decoding response body: %v", err)
+	}
+
+	if response.ID != user.ID {
+		t.Errorf("ID does not match: %v %v", response.ID, user.ID)
+	}
+
+	if response.Username != user.Username {
+		t.Errorf("Username does not match: %v %v", response.Username, user.Username)
 	}
 }
