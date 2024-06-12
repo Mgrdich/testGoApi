@@ -34,8 +34,8 @@ var ErrorRouteNotFound = &ErrorResponse{
 	},
 }
 
-// ErrorMethodNotFound represents a Method Not allowed error.
-var ErrorMethodNotFound = &ErrorResponse{
+// ErrorMethodNotAllowed represents a Method Not allowed error.
+var ErrorMethodNotAllowed = &ErrorResponse{
 	HTTPError: &HTTPError{
 		HTTPStatusCode: http.StatusNotFound,
 		StatusText:     "Method Not Allowed",
