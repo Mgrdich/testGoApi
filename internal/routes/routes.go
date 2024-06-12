@@ -26,6 +26,8 @@ func AddRoutes(s *server.Server, services *ApplicationServices) {
 	s.Router.Use(middleware.Recoverer)
 	s.Router.Use(render.SetContentType(render.ContentTypeJSON))
 
+	s.Router.NotFound(controller.HandleNotFound)
+
 	s.Router.Get("/health", controller.HandleGetHealth)
 
 	s.Router.Route("/api/v1", func(r chi.Router) {
