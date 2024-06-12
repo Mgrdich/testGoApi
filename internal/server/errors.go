@@ -34,6 +34,13 @@ var ErrorNotFound = &ErrorResponse{
 	},
 }
 
+var ErrorRouteNotFound = &ErrorResponse{
+	HTTPError: &HTTPError{
+		HTTPStatusCode: http.StatusNotFound,
+		StatusText:     "Page not found",
+	},
+}
+
 // ErrorBadRequest represents a bad request error.
 var ErrorBadRequest = &ErrorResponse{
 	HTTPError: &HTTPError{
