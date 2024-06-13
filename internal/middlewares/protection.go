@@ -105,29 +105,3 @@ func Authorized(roles ...models.UserRole) func(next http.Handler) http.Handler {
 		})
 	}
 }
-
-func AllowedMethods(methods ...string) func(next http.Handler) http.Handler {
-	return func(next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			if !util.Includes(methods, r.Method) {
-				_ = render.Render(w, r, server.ErrorMethodNotAllowed)
-				return
-			}
-
-			next.ServeHTTP(w, r)
-		})
-	}
-}
-
-func NotAllowedMethods(methods ...string) func(next http.Handler) http.Handler {
-	return func(next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			if util.Includes(methods, r.Method) {
-				_ = render.Render(w, r, server.ErrorMethodNotAllowed)
-				return
-			}
-
-			next.ServeHTTP(w, r)
-		})
-	}
-}
