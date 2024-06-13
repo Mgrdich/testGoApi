@@ -12,7 +12,8 @@ import (
 // @Description This endpoint handles requests to routes that do not exist.
 // @Tags errors
 // @Produce json
-// @Success 404 {object} render.Renderer "Route not found"
+// @Failure 404 {object} server.HTTPError
+// @Router /example-notfound [get]
 func HandleNotFound(w http.ResponseWriter, r *http.Request) {
 	_ = render.Render(w, r, server.ErrorRouteNotFound)
 }
@@ -22,7 +23,8 @@ func HandleNotFound(w http.ResponseWriter, r *http.Request) {
 // @Description This endpoint handles requests with HTTP methods that are not allowed on the given route.
 // @Tags errors
 // @Produce json
-// @Success 405 {object} render.Renderer "Method not allowed"
+// @Failure 405 {object} server.HTTPError
+// @Router /api/v1/person [patch]
 func HandleMethodNotAllowed(w http.ResponseWriter, r *http.Request) {
 	_ = render.Render(w, r, server.ErrorMethodNotAllowed)
 }
