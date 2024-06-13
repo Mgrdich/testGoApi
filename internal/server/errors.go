@@ -30,7 +30,7 @@ func (e *ErrorResponse) Render(w http.ResponseWriter, r *http.Request) error {
 var ErrorRouteNotFound = &ErrorResponse{
 	HTTPError: &HTTPError{
 		HTTPStatusCode: http.StatusNotFound,
-		StatusText:     "Error page not found",
+		StatusText:     "Page not found",
 	},
 }
 
