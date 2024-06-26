@@ -26,6 +26,22 @@ func (e *ErrorResponse) Render(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
+// ErrorRouteNotFound represents a route not found error.
+var ErrorRouteNotFound = &ErrorResponse{
+	HTTPError: &HTTPError{
+		HTTPStatusCode: http.StatusNotFound,
+		StatusText:     "Page not found",
+	},
+}
+
+// ErrorMethodNotAllowed represents a Method Not allowed error.
+var ErrorMethodNotAllowed = &ErrorResponse{
+	HTTPError: &HTTPError{
+		HTTPStatusCode: http.StatusMethodNotAllowed,
+		StatusText:     "Method Not Allowed",
+	},
+}
+
 // ErrorNotFound represents a not found error.
 var ErrorNotFound = &ErrorResponse{
 	HTTPError: &HTTPError{
