@@ -80,7 +80,7 @@ func TestNewUserService_Login(t *testing.T) {
 		t.Fatalf("ParseJWT expected no error, got %v", err)
 	}
 
-	if role, ok := models.LookUpRole(user.Role); user.Username != username && ok && role == basicRole {
+	if role, ok := models.LookUpRole(user.Role); user.Username != username || !ok || role != basicRole {
 		t.Fatalf("Usernanme values should match with the content in the token")
 	}
 }
@@ -108,13 +108,13 @@ func TestNewUserService_Create(t *testing.T) {
 		t.Fatalf("expected no error, got %v", err)
 	}
 
-	hash, err := GenerateHashPassword(password)
+	err = bcrypt.CompareHashAndPassword([]byte(created.Password), []byte(password))
 
 	if err != nil {
-		t.Fatalf("Generte hash expected no error, got %v", err)
+		t.Fatalf("Password does not match got %v", err)
 	}
 
-	if created.Username != username && created.Role == basicRole && created.Password == hash {
+	if created.Username != username || created.Role != basicRole {
 		t.Fatalf("User Fields values should match with the created value")
 	}
 }
