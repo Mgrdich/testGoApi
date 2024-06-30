@@ -183,7 +183,6 @@ func (hr *userDto) Render(_ http.ResponseWriter, _ *http.Request) error {
 // @Tags user
 // @Accept json
 // @Produce json
-// @Param data body CreatePersonRequest true "Person data"
 // @Success 200 {object} userDto
 // @Failure 400 {object} server.HTTPError
 // @Failure 500 {object} server.HTTPError
